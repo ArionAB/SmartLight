@@ -23,11 +23,14 @@ import FolderIcon from '@mui/icons-material/Folder';
 import { getProjectAction } from '@/utils/Store/Actions/ProjectAction';
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 import { setDrawer } from '@/utils/Store/Slices/miscSlice';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
 
 
 export const DrawerDialog = () => {
     const [open, setOpen] = useState(true)
+    const [drawerWidth, setDrawerWidth] = useState(350)
     const [openAddMarker, setOpenAddMarker] = useState(false)
     const [openStreet, setOpenStreet] = useState(false)
     const [openMarker, setOpenMarker] = useState(false)
@@ -75,6 +78,7 @@ export const DrawerDialog = () => {
             <SwipeableDrawer
                 anchor='left'
                 open={open}
+                variant="persistent"
                 onOpen={() => {
                     setOpen(true)
                     dispatch(setDrawer(true))
@@ -84,14 +88,18 @@ export const DrawerDialog = () => {
                     width: 350,
                     flexShrink: 0,
                     '& .MuiDrawer-paper': {
-                        width: 350,
+                        width: drawerWidth,
                         boxSizing: 'border-box',
+                        transition: '0.5s'
                     },
                 }}
             >
+                <IconButton onClick={() => drawerWidth === 350 ? setDrawerWidth(50) : setDrawerWidth(350)}>
+                    {drawerWidth === 350 ? <ChevronLeftIcon /> : <ChevronRightIcon />}
+                </IconButton>
                 <Divider />
                 <List>
-                    <ListItemButton onClick={() => setOpen(true)}>
+                    <ListItemButton onClick={() => setOpenAddMarker(true)}>
                         <ListItemIcon>
                             <CreateNewFolderIcon />
                         </ListItemIcon>
@@ -119,7 +127,7 @@ export const DrawerDialog = () => {
                                             <FolderIcon sx={{
                                                 color: '#F8D775'
                                             }} />
-                                            <Typography variant='h6'>{item?.name}</Typography>
+                                            <Typography variant={drawerWidth === 350 ? 'h6' : 'caption'}>{item?.name}</Typography>
                                         </Box>
                                     </AccordionSummary>
                                     <AccordionDetails>
@@ -235,7 +243,7 @@ export const DrawerDialog = () => {
             </ListItem>
           ))}
         </List> */}
-            </SwipeableDrawer>
+            </SwipeableDrawer >
         </>
 
     )
