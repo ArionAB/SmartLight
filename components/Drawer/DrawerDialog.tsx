@@ -21,10 +21,14 @@ import LightIcon from '@mui/icons-material/Light';
 import CellTowerIcon from '@mui/icons-material/CellTower';
 import FolderIcon from '@mui/icons-material/Folder';
 import { getProjectAction } from '@/utils/Store/Actions/ProjectAction';
+import SwipeableDrawer from '@mui/material/SwipeableDrawer';
+import { setDrawer } from '@/utils/Store/Slices/miscSlice';
+
 
 
 export const DrawerDialog = () => {
-    const [open, setOpen] = useState(false)
+    const [open, setOpen] = useState(true)
+    const [openAddMarker, setOpenAddMarker] = useState(false)
     const [openStreet, setOpenStreet] = useState(false)
     const [openMarker, setOpenMarker] = useState(false)
     const [selectedProject, setSelectedProject] = useState<ProjectModel>(null!)
@@ -33,10 +37,6 @@ export const DrawerDialog = () => {
     const [street_id, setStreet_id] = useState<string>('')
 
     const dispatch = useAppDispatch();
-
-    const handleDrawerClose = () => {
-        setOpen(false);
-    };
 
     const projectItems = useAppSelector(selectProjectItems)
     const streetItems = useAppSelector(selectStreetItems)
@@ -56,20 +56,14 @@ export const DrawerDialog = () => {
         setOpenMarker(true)
     }
 
-    // useEffect(() => {
+    useEffect(() => {
+        dispatch(setDrawer(open))
+    }, [open])
 
-    //     if (selectedProject?.id) {
-    //         // dispatch(getStreetAction(selectedProject.id))
-    //         dispatch(getStreetAction())
-    //         dispatch(getMarkersAction())
-    //     }
 
-    // }, [selectedProject])
-
-    console.log('projectItems', projectItems)
     return (
         <>
-            <Dialog open={open} onClose={handleDrawerClose}>
+            <Dialog open={openAddMarker} onClose={() => setOpenAddMarker(false)}>
                 <AddProject />
             </Dialog>
             <Dialog open={openStreet} onClose={() => setOpenStreet(false)}>
@@ -78,7 +72,14 @@ export const DrawerDialog = () => {
             <Dialog open={openMarker} onClose={() => setOpenMarker(false)}>
                 {/* <AddMarker /> */}
             </Dialog>
-            <Drawer
+            <SwipeableDrawer
+                anchor='left'
+                open={open}
+                onOpen={() => {
+                    setOpen(true)
+                    dispatch(setDrawer(true))
+                }}
+                onClose={() => setOpen(false)}
                 sx={{
                     width: 350,
                     flexShrink: 0,
@@ -87,14 +88,7 @@ export const DrawerDialog = () => {
                         boxSizing: 'border-box',
                     },
                 }}
-                variant="persistent"
-                anchor="left"
-                open={true}
             >
-                {/* <IconButton onClick={handleDrawerClose}> */}
-                {/* {theme.direction === 'ltr' ? <ChevronLeftIcon /> : <ChevronRightIcon />} */}
-                {/* <ChevronRightIcon /> */}
-                {/* </IconButton> */}
                 <Divider />
                 <List>
                     <ListItemButton onClick={() => setOpen(true)}>
@@ -241,7 +235,7 @@ export const DrawerDialog = () => {
             </ListItem>
           ))}
         </List> */}
-            </Drawer>
+            </SwipeableDrawer>
         </>
 
     )

@@ -1,10 +1,14 @@
 import { configureStore } from '@reduxjs/toolkit'
 import projectSlice from './Slices/projectSlice'
+import markersSlice from './Slices/markersSlice'
+import miscSlice from './Slices/miscSlice'
 
 export const makeStore = () => {
     return configureStore({
         reducer: {
-            project: projectSlice
+            project: projectSlice,
+            marker: markersSlice,
+            misc: miscSlice
         }
     })
 }

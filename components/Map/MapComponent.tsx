@@ -12,6 +12,8 @@ import AddLocationIcon from '@mui/icons-material/AddLocation';
 import { DraggableMarker } from './DraggableMarker';
 import { MyLocationMarker } from './MyLocationMarker';
 import { StreetMarkers } from './StreetMarkers';
+import { useAppSelector } from '@/utils/Store/hooks';
+import { selectIsDrawerOpen } from '@/utils/Store/Selectors/miscSelectors';
 
 interface MarkerData {
     coordinates: [number, number];
@@ -20,6 +22,8 @@ interface MarkerData {
 const MapComponent: FC = () => {
     const [currentLocation, setCurrentLocation] = useState<any>([]);
     const [markers, setMarkers] = useState<any[]>([])
+
+    const isDrawerOpen = useAppSelector(selectIsDrawerOpen)
 
 
     const getMyLocation = () => {
@@ -55,6 +59,9 @@ const MapComponent: FC = () => {
         markersArr.push(markersArr.length + 1)
         setMarkers(markersArr)
     }
+
+
+    console.log(isDrawerOpen, 'isDrawerOpen')
     return (
         <Box sx={{ position: 'relative', display: 'flex', justifyContent: "flex-end" }}>
             <Fab onClick={() => getMyLocation()}
@@ -77,7 +84,7 @@ const MapComponent: FC = () => {
                     <MapContainer center={currentLocation} zoom={13}
                         style={{
                             height: "calc(100vh - 64px)",
-                            width: "calc(100vw - 350px)",
+                            width: "100%",
                         }}>
                         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
                         <MyLocationMarker position={currentLocation} />
