@@ -2,7 +2,7 @@
 
 import Box from '@mui/material/Box';
 import React from 'react'
-import { Button, useTheme } from '@mui/material';
+import { Button, IconButton, useTheme } from '@mui/material';
 import Image from 'next/image';
 
 const Navbar = () => {
@@ -19,7 +19,9 @@ const Navbar = () => {
             margin: '0 auto',
             width: '100%'
         }}>
+            <IconButton>
 
+            </IconButton>
             <Box sx={{
                 display: 'flex',
                 justifyContent: "center",

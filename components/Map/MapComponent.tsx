@@ -72,7 +72,7 @@ const MapComponent: FC = () => {
             </Fab>
             <Fab onClick={() => handleAddDraggableMarkers()}
                 sx={{
-                    position: 'absolute', right: 0, bottom: 0, zIndex: '999', margin: '1rem', backgroundColor: "#eaeaea", padding: "1rem", borderRadius: "50%"
+                    position: 'absolute', right: 0, bottom: 200, zIndex: '999', margin: '1rem', backgroundColor: "#eaeaea", padding: "1rem", borderRadius: "50%"
                 }}>
                 <AddLocationIcon
                 />
