@@ -72,6 +72,8 @@ export const updateMarkerAction = (marker: TablesUpdate<'markers'>) => {
     return async (dispatch: any, getState: () => any) => {
         try {
 
+            console.log(marker)
+
             const { data, error } = await supabase
                 .from('markers')
                 .update(marker)
