@@ -15,13 +15,13 @@ export const AddMarker: FC<{
     position: PositionModel,
     selectedProject?: ProjectModel,
     selectedStreet?: Tables<'strazi'>,
-    setOpenMarker: Function
+    setOpen: Function
 }> = ({
     selectedMarker,
     position,
     selectedProject,
     selectedStreet,
-    setOpenMarker
+    setOpen
 }) => {
         const [marker, setMarker] = useState({
             proiect_id: selectedProject?.id ?? '',
@@ -85,7 +85,8 @@ export const AddMarker: FC<{
 
 
             dispatch(addMarkerAction(markerData)).then(() => {
-                setLoading(false)
+                setLoading(false),
+                    setOpen(false)
             })
 
 

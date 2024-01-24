@@ -30,11 +30,10 @@ export const DraggableMarker = ({ item, currentLocation }: any) => {
         setSelectedMarker(type)
         setOpen(true)
     }
-    console.log('DRAG', position)
     return (
         <>
             <Dialog open={open} onClose={() => setOpen(false)}>
-                <AddMarker position={position} selectedMarker={selectedMarker} />
+                <AddMarker position={position} selectedMarker={selectedMarker} setOpen={setOpen} />
             </Dialog>
             <Marker
                 //@ts-ignore 

@@ -81,7 +81,7 @@ export const DrawerDialog = () => {
                     position={{ lat: '', lng: '' }}
                     selectedProject={selectedProject}
                     selectedStreet={selectedStreet}
-                    setOpenMarker={setOpenMarker}
+                    setOpen={setOpenMarker}
                 />
             </Dialog>
             <SwipeableDrawer
