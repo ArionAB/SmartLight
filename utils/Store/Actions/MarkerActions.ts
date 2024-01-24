@@ -6,9 +6,6 @@ export const getMarkersAction = (street_id?: string) => {
     return async (dispatch: any, getState: () => any) => {
         try {
 
-
-
-
             if (street_id) {
                 let { data: markers, error } = await supabase
                     .from('markers')
@@ -37,8 +34,6 @@ export const getMarkersAction = (street_id?: string) => {
                     throw error;
                 }
             }
-
-
 
 
         } catch (error) {

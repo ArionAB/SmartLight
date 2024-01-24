@@ -43,6 +43,8 @@ export const StreetMarkers = () => {
                                         </Box>
 
                                     </Popup>
+
+                                    {/* @ts-ignore */}
                                     <Tooltip direction="top" offset={[0, -20]} opacity={1} permanent>
                                         {marker.number}
                                         <IconButton edge="end" aria-label="delete">

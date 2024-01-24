@@ -18,7 +18,7 @@ interface MarkerData {
     title: string;
 }
 const MapComponent: FC = () => {
-    const [currentLocation, setCurrentLocation] = useState([46.0685312, 23.5569152]);
+    const [currentLocation, setCurrentLocation] = useState<any>([]);
     const [markers, setMarkers] = useState<any[]>([])
 
 
@@ -31,6 +31,7 @@ const MapComponent: FC = () => {
             };
 
             const success = (position: any) => {
+                console.log(position)
                 const { latitude, longitude } = position.coords;
                 setCurrentLocation([latitude, longitude]);
             };
@@ -44,6 +45,10 @@ const MapComponent: FC = () => {
             console.error('Geolocation is not supported by this browser.');
         }
     };
+
+    useEffect(() => {
+        getMyLocation();
+    }, [])
 
     const handleAddDraggableMarkers = () => {
         let markersArr: any = [...markers]
@@ -66,26 +71,31 @@ const MapComponent: FC = () => {
                 />
             </Fab>
 
+            {
+                currentLocation.length > 0 && (
+                    //@ts-ignore
+                    <MapContainer center={currentLocation} zoom={13}
+                        style={{
+                            height: "calc(100vh - 64px)",
+                            width: "calc(100vw - 350px)",
+                        }}>
+                        <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+                        <MyLocationMarker position={currentLocation} />
+                        {
+                            markers.length > 0 && markers?.map((item) => {
+                                return (
+                                    <Box key={item} >
+                                        <DraggableMarker item={item} currentLocation={currentLocation} />
+                                    </Box>
+                                )
+                            })
+                        }
+                        <StreetMarkers />
 
-            <MapContainer center={currentLocation} zoom={13}
-                style={{
-                    height: "calc(100vh - 64px)",
-                    width: "calc(100vw - 350px)",
-                }}>
-                <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-                <MyLocationMarker position={currentLocation} />
-                {
-                    markers.length > 0 && markers?.map((item) => {
-                        return (
-                            <Box key={item} >
-                                <DraggableMarker item={item} />
-                            </Box>
-                        )
-                    })
-                }
-                <StreetMarkers />
+                    </MapContainer>
+                )
+            }
 
-            </MapContainer>
         </Box>
     )
 }

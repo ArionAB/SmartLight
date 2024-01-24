@@ -3,31 +3,24 @@
 
 import React, { useEffect, useState } from 'react'
 import Drawer from '@mui/material/Drawer';
-import { styled, useTheme } from '@mui/material/styles';
 import { Accordion, AccordionDetails, AccordionSummary, Avatar, Box, Button, ButtonGroup, Card, Dialog, Divider, IconButton, List, ListItem, ListItemAvatar, ListItemButton, ListItemIcon, ListItemText, Typography } from '@mui/material';
-import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import CreateNewFolderIcon from '@mui/icons-material/CreateNewFolder';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { AddProject } from './AddProject';
 import { useAppDispatch, useAppSelector } from '@/utils/Store/hooks';
 import { selectProjectItems, selectStreetItems } from '@/utils/Store/Selectors/projectSelectors';
-import { getProjectAction } from '@/utils/Store/Actions/GetProjectAction';
-import { Add, Folder, Light } from '@mui/icons-material';
+import { Add } from '@mui/icons-material';
 import { AddStreet } from './AddStreet';
 import { Enums, Tables } from '@/utils/Store/Models/Database';
-import { getStreetAction } from '@/utils/Store/Actions/GetStreetAction';
 import StackedLineChartIcon from '@mui/icons-material/StackedLineChart';
 import PowerInputIcon from '@mui/icons-material/PowerInput';
 import LinearScaleIcon from '@mui/icons-material/LinearScale';
-import { AddMarker } from './AddMarker';
-import { getMarkersAction } from '@/utils/Store/Actions/GetMarkersAction';
 import { ProjectModel } from '@/utils/Store/Models/Project/ProjectModel';
 import { StreetModel } from '@/utils/Store/Models/Project/StreetModel';
 import LightIcon from '@mui/icons-material/Light';
 import CellTowerIcon from '@mui/icons-material/CellTower';
 import FolderIcon from '@mui/icons-material/Folder';
+import { getProjectAction } from '@/utils/Store/Actions/ProjectAction';
 
 
 export const DrawerDialog = () => {

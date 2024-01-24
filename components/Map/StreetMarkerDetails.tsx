@@ -43,6 +43,7 @@ export const StreetMarkerDetails: FC<{
                 transform: 'translateX(16px)',
                 color: '#fff',
                 '& + .MuiSwitch-track': {
+                    //@ts-ignore
                     backgroundColor: theme.palette.mode === 'dark' ? '#2ECA45' : '#65C466',
                     opacity: 1,
                     border: 0,
@@ -57,11 +58,15 @@ export const StreetMarkerDetails: FC<{
             },
             '&.Mui-disabled .MuiSwitch-thumb': {
                 color:
+                    //@ts-ignore
                     theme.palette.mode === 'light'
+                        //@ts-ignore
                         ? theme.palette.grey[100]
+                        //@ts-ignore
                         : theme.palette.grey[600],
             },
             '&.Mui-disabled + .MuiSwitch-track': {
+                //@ts-ignore
                 opacity: theme.palette.mode === 'light' ? 0.7 : 0.3,
             },
         },
@@ -72,8 +77,10 @@ export const StreetMarkerDetails: FC<{
         },
         '& .MuiSwitch-track': {
             borderRadius: 26 / 2,
+            //@ts-ignore
             backgroundColor: theme.palette.mode === 'light' ? '#E9E9EA' : '#39393D',
             opacity: 1,
+            //@ts-ignore
             transition: theme.transitions.create(['background-color'], {
                 duration: 500,
             }),

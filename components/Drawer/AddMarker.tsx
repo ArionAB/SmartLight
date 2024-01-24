@@ -1,4 +1,3 @@
-import { getStreetAction } from '@/utils/Store/Actions/GetStreetAction'
 import { Enums, Tables, TablesInsert } from '@/utils/Store/Models/Database'
 import { selectProjectItems } from '@/utils/Store/Selectors/projectSelectors'
 import { useAppDispatch, useAppSelector } from '@/utils/Store/hooks'
@@ -7,6 +6,7 @@ import React, { FC, useEffect, useState } from 'react'
 import FileUploadComponent from '../FileUpload/FileUploadComponent'
 import supabase from '@/utils/supabase/createClient'
 import { PositionModel } from '@/utils/Store/Models/Markers/PositionModel'
+import { getStreetAction } from '@/utils/Store/Actions/StreetActions'
 
 export const AddMarker: FC<{
     selectedMarker: Enums<'marker_type'>,
@@ -109,7 +109,7 @@ export const AddMarker: FC<{
                                 onChange={(e) => handleChange(e)}
                             >
                                 {
-                                    projectItems?.map((item: Tables<'proiecte'>) => {
+                                    projectItems?.map((item: any) => {
                                         return (
                                             <MenuItem key={item.id} value={item.id}>
                                                 {item.name}

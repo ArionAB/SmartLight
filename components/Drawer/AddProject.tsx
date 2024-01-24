@@ -1,6 +1,6 @@
 'use client'
 
-import { addProjectAction } from '@/utils/Store/Actions/AddProjectAction';
+import { addProjectAction } from '@/utils/Store/Actions/ProjectAction';
 import { Container, Dialog, DialogTitle, FormGroup, TextField } from '@mui/material'
 import Button from '@mui/material/Button';
 import React, { FC, useState } from 'react'

@@ -24,6 +24,7 @@ export const MyLocationMarker: FC<{ position: any }> = ({
 
 
     return position === null ? null : (
+        //@ts-ignore
         <Marker position={position} icon={customIcon}>
             <Popup>You are here</Popup>
         </Marker>

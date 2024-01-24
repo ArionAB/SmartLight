@@ -1,11 +1,12 @@
-import { addStreetAction } from '@/utils/Store/Actions/AddStreetAction'
+import { addStreetAction } from '@/utils/Store/Actions/StreetActions'
 import { Tables, TablesInsert } from '@/utils/Store/Models/Database'
+import { ProjectModel } from '@/utils/Store/Models/Project/ProjectModel'
 import { useAppDispatch } from '@/utils/Store/hooks'
 import { Box, Button, DialogTitle, Divider, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, TextField } from '@mui/material'
 import React, { FC, useState } from 'react'
 
 export const AddStreet: FC<{
-    project: Tables<'proiecte'>
+    project: ProjectModel
 }> = ({ project }) => {
     const [form, setForm] = useState<TablesInsert<'strazi'>>({
         name: '',

@@ -6,11 +6,12 @@ import { FC, useCallback, useMemo, useRef, useState } from "react"
 import { Marker, Popup, Tooltip } from "react-leaflet"
 import { AddMarker } from "../Drawer/AddMarker"
 import { Enums } from "@/utils/Store/Models/Database"
+import { PositionModel } from "@/utils/Store/Models/Markers/PositionModel"
 
 
 
-export const DraggableMarker = ({ item }: any) => {
-    const [position, setPosition] = useState([46.0685312, 23.5569152])
+export const DraggableMarker = ({ item, currentLocation }: any) => {
+    const [position, setPosition] = useState(currentLocation)
     const [open, setOpen] = useState(false)
     const [selectedMarker, setSelectedMarker] = useState<Enums<'marker_type'>>('Lampa')
     const markerRef = useRef(null)
@@ -29,13 +30,14 @@ export const DraggableMarker = ({ item }: any) => {
         setSelectedMarker(type)
         setOpen(true)
     }
-
+    console.log('DRAG', position)
     return (
         <>
             <Dialog open={open} onClose={() => setOpen(false)}>
                 <AddMarker position={position} selectedMarker={selectedMarker} />
             </Dialog>
             <Marker
+                //@ts-ignore 
                 draggable={true}
                 eventHandlers={eventHandlers}
                 position={position}
@@ -47,6 +49,7 @@ export const DraggableMarker = ({ item }: any) => {
                         <Button onClick={() => handleOpenDialog('Lampa')} variant="contained" color="success" size='small' startIcon={<Add />}>Lampa</Button>
                     </ButtonGroup>
                 </Popup>
+                {/* @ts-ignore */}
                 <Tooltip direction="top" offset={[0, -20]} opacity={1} permanent>
                     {`Stalpul ${item}`}
                 </Tooltip>
