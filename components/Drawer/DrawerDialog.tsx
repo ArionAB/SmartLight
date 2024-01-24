@@ -25,6 +25,8 @@ import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 import { setDrawer } from '@/utils/Store/Slices/miscSlice';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import { StreetMarkerDetails } from '../Map/StreetMarkerDetails';
+import { AddMarker } from './AddMarker';
 
 
 
@@ -73,7 +75,7 @@ export const DrawerDialog = () => {
                 <AddStreet project={selectedProject} />
             </Dialog>
             <Dialog open={openMarker} onClose={() => setOpenMarker(false)}>
-                {/* <AddMarker /> */}
+                <AddMarker selectedMarker={selectedMarker} position={{ lat: '', lng: '' }} />
             </Dialog>
             <SwipeableDrawer
                 anchor='left'

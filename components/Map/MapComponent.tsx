@@ -72,7 +72,7 @@ const MapComponent: FC = () => {
             </Fab>
             <Fab onClick={() => handleAddDraggableMarkers()}
                 sx={{
-                    position: 'absolute', right: 0, bottom: 200, zIndex: '999', margin: '1rem', backgroundColor: "#eaeaea", padding: "1rem", borderRadius: "50%"
+                    position: 'absolute', right: 0, bottom: 0, zIndex: '999', margin: '1rem', backgroundColor: "#eaeaea", padding: "1rem", borderRadius: "50%"
                 }}>
                 <AddLocationIcon
                 />
@@ -83,7 +83,7 @@ const MapComponent: FC = () => {
                     //@ts-ignore
                     <MapContainer center={currentLocation} zoom={13}
                         style={{
-                            height: "calc(100vh - 64px)",
+                            height: "calc(100dvh - 64px)",
                             width: "100%",
                         }}>
                         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />

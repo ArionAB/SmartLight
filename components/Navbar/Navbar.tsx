@@ -28,7 +28,7 @@ const Navbar = () => {
                 width: '100%'
             }}>
                 <Image src="/Logo.jpeg" width='63' height='63' alt='Logo' />
-                <Button size='small' variant='contained' sx={{ background: palette.primary.light }}>Login</Button>
+                {/* <Button size='small' variant='contained' sx={{ background: palette.primary.light }}>Login</Button> */}
             </Box>
         </Box>
     )
