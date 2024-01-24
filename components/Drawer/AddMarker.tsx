@@ -7,23 +7,32 @@ import FileUploadComponent from '../FileUpload/FileUploadComponent'
 import supabase from '@/utils/supabase/createClient'
 import { PositionModel } from '@/utils/Store/Models/Markers/PositionModel'
 import { getStreetAction } from '@/utils/Store/Actions/StreetActions'
+import { ProjectModel } from '@/utils/Store/Models/Project/ProjectModel'
+import { addMarkerAction } from '@/utils/Store/Actions/MarkerActions'
 
 export const AddMarker: FC<{
     selectedMarker: Enums<'marker_type'>,
     position: PositionModel,
+    selectedProject?: ProjectModel,
+    selectedStreet?: Tables<'strazi'>,
+    setOpenMarker: Function
 }> = ({
     selectedMarker,
-    position
+    position,
+    selectedProject,
+    selectedStreet,
+    setOpenMarker
 }) => {
         const [marker, setMarker] = useState({
-            proiect_id: '',
-            street_id: '',
+            proiect_id: selectedProject?.id ?? '',
+            street_id: selectedStreet?.id ?? '',
             number: '',
             images: [],
             observatii: ''
         })
         const [streets, setStreets] = useState<Tables<'strazi'>[]>([])
         const [uploadedFiles, setUploadedFiles] = useState<File[]>([])
+        const [loading, setLoading] = useState(false)
 
         const dispatch = useAppDispatch()
         const projectItems = useAppSelector(selectProjectItems)
@@ -52,9 +61,9 @@ export const AddMarker: FC<{
             setUploadedFiles(newFiles)
         };
 
-        console.log('position', position.lat)
         const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
             e.preventDefault();
+            setLoading(true)
 
             const imageUrls: string[] = [];
             for (let file of uploadedFiles) {
@@ -75,17 +84,11 @@ export const AddMarker: FC<{
             }
 
 
-            const { data, error } = await supabase
-                .from('markers')
-                .insert([
-                    markerData
-                ])
-                .select();
+            dispatch(addMarkerAction(markerData)).then(() => {
+                setLoading(false)
+            })
 
 
-            if (error) {
-                console.error(error)
-            }
         }
 
 

@@ -27,6 +27,7 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { StreetMarkerDetails } from '../Map/StreetMarkerDetails';
 import { AddMarker } from './AddMarker';
+import { setFocusedProject } from '@/utils/Store/Slices/projectSlice';
 
 
 
@@ -66,16 +67,22 @@ export const DrawerDialog = () => {
     }, [open])
 
 
+
     return (
         <>
             <Dialog open={openAddMarker} onClose={() => setOpenAddMarker(false)}>
-                <AddProject />
+                <AddProject setOpenAddMarker={setOpenAddMarker} />
             </Dialog>
             <Dialog open={openStreet} onClose={() => setOpenStreet(false)}>
-                <AddStreet project={selectedProject} />
+                <AddStreet project={selectedProject} setOpenStreet={setOpenStreet} />
             </Dialog>
             <Dialog open={openMarker} onClose={() => setOpenMarker(false)}>
-                <AddMarker selectedMarker={selectedMarker} position={{ lat: '', lng: '' }} />
+                <AddMarker selectedMarker={selectedMarker}
+                    position={{ lat: '', lng: '' }}
+                    selectedProject={selectedProject}
+                    selectedStreet={selectedStreet}
+                    setOpenMarker={setOpenMarker}
+                />
             </Dialog>
             <SwipeableDrawer
                 anchor='left'
@@ -111,15 +118,16 @@ export const DrawerDialog = () => {
                 {
                     projectItems?.map((item: ProjectModel) => {
                         return (
-                            <Card key={item.id} sx={{
-                                marginBottom: "5px"
-                            }}>
-                                <Accordion  >
+                            <List>
+                                <Accordion sx={selectedProject?.id === item.id ? { border: "2px solid #0052cc" } : {}}>
                                     <AccordionSummary
                                         expandIcon={<ArrowDownwardIcon />}
                                         aria-controls="panel1-content"
                                         id="panel1-header"
-                                        onClick={() => setSelectedProject(item)}
+                                        onClick={() => {
+                                            setSelectedProject(item),
+                                                dispatch(setFocusedProject(item))
+                                        }}
                                     >
                                         <Box sx={{
                                             display: 'flex',
@@ -133,7 +141,7 @@ export const DrawerDialog = () => {
                                         </Box>
                                     </AccordionSummary>
                                     <AccordionDetails>
-                                        <Button variant="contained" size='small' startIcon={<Add />} onClick={() => handleAddStreet(item)}>
+                                        <Button variant="contained" size='small' color='info' startIcon={<Add />} onClick={() => handleAddStreet(item)}>
                                             Adauga strada
                                         </Button>
                                         <Box sx={{ display: 'flex' }} flexDirection={'column'} gap={2} marginTop={2}>
@@ -210,7 +218,7 @@ export const DrawerDialog = () => {
                                         </Box>
                                     </AccordionDetails>
                                 </Accordion>
-                            </Card>
+                            </List>
 
                         )
                     })

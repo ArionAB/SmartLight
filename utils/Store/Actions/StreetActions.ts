@@ -1,6 +1,6 @@
 import supabase from "../../supabase/createClient";
 import { TablesInsert } from "../Models/Database";
-import { setStreetItems } from "../Slices/projectSlice";
+import { setStreet, setStreetItems } from "../Slices/projectSlice";
 
 export const addStreetAction = (street: TablesInsert<'strazi'>) => {
     return async (dispatch: any, getState: () => any) => {
@@ -16,6 +16,7 @@ export const addStreetAction = (street: TablesInsert<'strazi'>) => {
 
             if (!error) {
                 console.log("street added", data)
+                dispatch(setStreet(data[0]))
             }
 
             if (error) {

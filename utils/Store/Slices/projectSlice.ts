@@ -4,7 +4,8 @@ import { ProjectModel } from '../Models/Project/ProjectModel';
 
 const initialState: any = {
     projects: [] as ProjectModel[],
-    streets: [] as Tables<'strazi'>[]
+    streets: [] as Tables<'strazi'>[],
+    focusedProject: null
 
 };
 
@@ -17,11 +18,24 @@ const projectSlice = createSlice({
         },
         setStreetItems: (state, action) => {
             state.streets = action.payload
+        },
+        setStreet: (state, action) => {
+            const project: ProjectModel = state.projects.find((project: ProjectModel) => project.id === action.payload.proiect_id)
+            project.strazi.push(action.payload)
+        },
+        setFocusedProject: (state, action) => {
+            console.log('action', action.payload)
+            state.focusedProject = action.payload
+        },
+        setMarker: (state, action) => {
+            const project: ProjectModel = state.projects.find((project: ProjectModel) => project.id === action.payload.proiect_id)
+            const street = project.strazi.find((street) => street.id === action.payload.street_id)
+            street?.markers.push(action.payload)
         }
 
     },
 });
 
-export const { setProjectItems, setStreetItems } = projectSlice.actions;
+export const { setProjectItems, setStreetItems, setStreet, setFocusedProject, setMarker } = projectSlice.actions;
 
 export default projectSlice.reducer;

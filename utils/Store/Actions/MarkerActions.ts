@@ -1,6 +1,7 @@
 import supabase from "../../supabase/createClient";
 import { TablesInsert, TablesUpdate } from "../Models/Database";
 import { setMarkersItems } from "../Slices/markersSlice";
+import { setMarker } from "../Slices/projectSlice";
 
 export const getMarkersAction = (street_id?: string) => {
     return async (dispatch: any, getState: () => any) => {
@@ -56,6 +57,7 @@ export const addMarkerAction = (marker: TablesInsert<'markers'>) => {
 
             if (!error) {
                 console.log("marker added", data)
+                dispatch(setMarker(data[0]))
             }
 
             if (error) {

@@ -9,3 +9,7 @@ export const selectProjectItems = (state: RootState): ProjectModel[] => {
 export const selectStreetItems = (state: RootState): Tables<'strazi'>[] => {
     return state.project.streets
 }
+
+export const selectFocusedProject = (state: RootState): ProjectModel => {
+    return state.project.focusedProject
+}

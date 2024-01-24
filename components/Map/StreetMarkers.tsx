@@ -1,7 +1,7 @@
 import { Tables } from '@/utils/Store/Models/Database'
 import { ProjectModel } from '@/utils/Store/Models/Project/ProjectModel'
 import { StreetModel } from '@/utils/Store/Models/Project/StreetModel'
-import { selectProjectItems } from '@/utils/Store/Selectors/projectSelectors'
+import { selectFocusedProject, selectProjectItems } from '@/utils/Store/Selectors/projectSelectors'
 import { useAppDispatch, useAppSelector } from '@/utils/Store/hooks'
 import { Box, Dialog, IconButton, Typography } from '@mui/material'
 import React, { useState } from 'react'
@@ -16,17 +16,25 @@ export const StreetMarkers = () => {
     const [open, setOpen] = useState(false)
     const dispatch = useAppDispatch()
     const projectItems = useAppSelector(selectProjectItems)
-    console.log(selectedMarker)
+    const focusedProject = useAppSelector(selectFocusedProject)
+    console.log('focusedProject', focusedProject)
 
     const handleOpenDialog = (marker: Tables<'markers'>) => {
         setOpen(true),
             setSelectedMarker(marker)
     }
 
+    const filteredProjects = () => {
+        if (focusedProject) {
+            return projectItems.filter((project) => project.id === focusedProject.id)
+        } else return projectItems
+    }
+
+    console.log(filteredProjects())
     return (
         <>
             {
-                projectItems?.map((item: ProjectModel) => {
+                filteredProjects()?.map((item: ProjectModel) => {
                     return item.strazi?.map((street: StreetModel) => {
                         return street.markers?.map((marker: Tables<'markers'>) => {
                             return (

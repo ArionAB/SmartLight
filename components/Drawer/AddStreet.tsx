@@ -6,14 +6,16 @@ import { Box, Button, DialogTitle, Divider, FormControl, InputLabel, MenuItem, S
 import React, { FC, useState } from 'react'
 
 export const AddStreet: FC<{
-    project: ProjectModel
-}> = ({ project }) => {
+    project: ProjectModel,
+    setOpenStreet: Function
+}> = ({ project, setOpenStreet }) => {
     const [form, setForm] = useState<TablesInsert<'strazi'>>({
         name: '',
         network_type: 'Torsadat',
         proiect_id: project.id,
         road_type: "M1"
     })
+    const [loading, setLoading] = useState(false)
 
     const dispatch = useAppDispatch();
 
@@ -22,7 +24,11 @@ export const AddStreet: FC<{
     };
 
     const handleSubmitForm = () => {
-        dispatch(addStreetAction(form))
+        setLoading(true)
+        dispatch(addStreetAction(form)).then(() => {
+            setLoading(false),
+                setOpenStreet(false)
+        })
     }
 
 
@@ -67,7 +73,7 @@ export const AddStreet: FC<{
                         <MenuItem value="M6">M6</MenuItem>
                     </Select>
                 </FormControl>
-                <Button variant="contained" color="success" onClick={handleSubmitForm}>Adauga strada</Button>
+                <Button variant="contained" disabled={loading} color="success" onClick={handleSubmitForm}>Adauga strada</Button>
             </Box>
 
         </>

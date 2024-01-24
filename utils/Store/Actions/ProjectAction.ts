@@ -41,6 +41,8 @@ export const addProjectAction = (project: TablesInsert<'proiecte'>) => {
 
             if (!error) {
                 console.log("Project addded", data)
+                dispatch(getProjectAction())
+
             }
 
             if (error) {
