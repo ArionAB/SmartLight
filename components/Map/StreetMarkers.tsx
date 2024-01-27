@@ -10,6 +10,8 @@ import LightIcon from '@mui/icons-material/Light';
 import CellTowerIcon from '@mui/icons-material/CellTower';
 import InfoIcon from '@mui/icons-material/Info';
 import { StreetMarkerDetails } from './StreetMarkerDetails'
+import { renderToStaticMarkup } from 'react-dom/server'
+import { divIcon } from 'leaflet'
 
 export const StreetMarkers = () => {
     const [selectedMarker, setSelectedMarker] = useState<Tables<'markers'>>(null!)
@@ -18,6 +20,30 @@ export const StreetMarkers = () => {
     const projectItems = useAppSelector(selectProjectItems)
     const focusedProject = useAppSelector(selectFocusedProject)
     console.log('focusedProject', focusedProject)
+
+
+
+    const lampHTML = renderToStaticMarkup(
+        <div style={{ color: '#19857b', }}>
+            <LightIcon />
+        </div>
+    );
+    const poleHTML = renderToStaticMarkup(
+        <div style={{ color: '#ff1744' }}>
+            <CellTowerIcon />
+        </div>
+    );
+
+    const customLampIcon = divIcon({
+        html: lampHTML,
+        iconSize: [24, 24],
+        iconAnchor: [24, 24],
+    });
+    const customPoleIcon = divIcon({
+        html: poleHTML,
+        iconSize: [24, 24],
+        iconAnchor: [24, 24],
+    });
 
     const handleOpenDialog = (marker: Tables<'markers'>) => {
         setOpen(true),
@@ -41,6 +67,8 @@ export const StreetMarkers = () => {
                                 <Marker
                                     key={marker.id}
                                     position={[Number(marker.latitude), Number(marker.longitude)]}
+                                    //@ts-ignore
+                                    icon={marker.marker_type === 'Lampa' ? customLampIcon : customPoleIcon}
                                 >
                                     <Popup>
                                         <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -55,9 +83,9 @@ export const StreetMarkers = () => {
                                     {/* @ts-ignore */}
                                     <Tooltip direction="top" offset={[0, -20]} opacity={1} permanent>
                                         {marker.number}
-                                        <IconButton edge="end" aria-label="delete">
-                                            {marker.marker_type === 'Lampa' ? <LightIcon /> : <CellTowerIcon />}
-                                        </IconButton>
+                                        {/* <IconButton edge="end" aria-label="delete"> */}
+                                        {/* {marker.marker_type === 'Lampa' ? <LightIcon /> : <CellTowerIcon />} */}
+                                        {/* </IconButton> */}
 
                                     </Tooltip>
                                 </Marker>

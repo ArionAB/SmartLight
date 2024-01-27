@@ -1,14 +1,20 @@
 import React, { FC } from 'react'
 import { Marker, Popup, useMapEvents } from 'react-leaflet'
-import L from 'leaflet';
+import L, { divIcon } from 'leaflet';
+import { renderToStaticMarkup } from 'react-dom/server';
+import MyLocationIcon from '@mui/icons-material/MyLocation';
 
-const customIcon = new L.Icon({
-    iconUrl: "https://icon-library.com/images/location-pin-icon/location-pin-icon-12.jpg",
-    iconSize: [35, 35], // Size of the icon
-    iconAnchor: [17, 35], // Point of the icon which will correspond to marker's location
-    popupAnchor: [0, -35], // Point from which the popup should open relative to the iconAnchor
+const iconHTML = renderToStaticMarkup(
+    <div style={{ color: '#004aad' }}>
+        <MyLocationIcon />
+    </div>
+);
+
+const customMarkerIcon = divIcon({
+    html: iconHTML,
+    iconSize: [0, 0],
+    iconAnchor: [12, 12],
 });
-
 export const MyLocationMarker: FC<{ position: any }> = ({
     position
 }) => {
@@ -25,7 +31,7 @@ export const MyLocationMarker: FC<{ position: any }> = ({
 
     return position === null ? null : (
         //@ts-ignore
-        <Marker position={position} icon={customIcon}>
+        <Marker position={position} icon={customMarkerIcon}>
             <Popup>You are here</Popup>
         </Marker>
     )

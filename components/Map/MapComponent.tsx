@@ -8,20 +8,23 @@ import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility
 import "leaflet-defaulticon-compatibility";
 import { Box, Button, Fab, Typography } from '@mui/material';
 import MyLocationIcon from '@mui/icons-material/MyLocation';
-import AddLocationIcon from '@mui/icons-material/AddLocation';
 import { DraggableMarker } from './DraggableMarker';
 import { MyLocationMarker } from './MyLocationMarker';
 import { StreetMarkers } from './StreetMarkers';
 import { useAppSelector } from '@/utils/Store/hooks';
 import { selectIsDrawerOpen } from '@/utils/Store/Selectors/miscSelectors';
+import LightIcon from '@mui/icons-material/Light';
+import CellTowerIcon from '@mui/icons-material/CellTower';
+import { Enums } from '@/utils/Store/Models/Database';
+import { Close } from '@mui/icons-material';
 
-interface MarkerData {
-    coordinates: [number, number];
-    title: string;
-}
+
 const MapComponent: FC = () => {
     const [currentLocation, setCurrentLocation] = useState<any>([]);
     const [markers, setMarkers] = useState<any[]>([])
+    const [alpha, setAlpha] = useState(null)
+    const [beta, setBeta] = useState(null)
+    const [gamma, setGamma] = useState(null)
 
     const isDrawerOpen = useAppSelector(selectIsDrawerOpen)
 
@@ -54,14 +57,30 @@ const MapComponent: FC = () => {
         getMyLocation();
     }, [])
 
-    const handleAddDraggableMarkers = () => {
+    const handleAddDraggableMarkers = (marker_type: Enums<'marker_type'>) => {
         let markersArr: any = [...markers]
-        markersArr.push(markersArr.length + 1)
+        markersArr.push(marker_type)
         setMarkers(markersArr)
     }
 
+    useEffect(() => {
+        window.addEventListener('deviceorientation', handleOrientation);
 
-    console.log(isDrawerOpen, 'isDrawerOpen')
+        return () => {
+            window.removeEventListener('deviceorientation', handleOrientation);
+        };
+    }, []);
+
+    const handleOrientation = (event: any) => {
+        setAlpha(event.alpha)
+        setBeta(event.beta)
+        setGamma(event.gamma)
+        console.log(`Alpha: ${event.alpha}`);
+        console.log(`Beta: ${event.beta}`);
+        console.log(`Gamma: ${event.gamma}`);
+    };
+
+
     return (
         <Box sx={{ position: 'relative', display: 'flex', justifyContent: "flex-end" }}>
             <Fab onClick={() => getMyLocation()}
@@ -70,11 +89,27 @@ const MapComponent: FC = () => {
                 }} >
                 <MyLocationIcon />
             </Fab>
-            <Fab onClick={() => handleAddDraggableMarkers()}
+            <Box sx={{
+                position: 'absolute', right: 0, top: 100, zIndex: '999', margin: '1rem', backgroundColor: "#eaeaea", padding: "1rem", borderRadius: "50%"
+            }} >
+                {`Alpha ${alpha}`} :
+                {`Beta ${beta}`} :
+                {`Gamma ${gamma}`}
+
+            </Box>
+
+            <Fab onClick={() => handleAddDraggableMarkers('Stalp')}
                 sx={{
                     position: 'absolute', right: 0, bottom: 0, zIndex: '999', margin: '1rem', backgroundColor: "#eaeaea", padding: "1rem", borderRadius: "50%"
                 }}>
-                <AddLocationIcon
+                <CellTowerIcon color='error'
+                />
+            </Fab>
+            <Fab onClick={() => handleAddDraggableMarkers('Lampa')}
+                sx={{
+                    position: 'absolute', right: 0, bottom: 80, zIndex: '999', margin: '1rem', backgroundColor: "#eaeaea", padding: "1rem", borderRadius: "50%"
+                }}>
+                <LightIcon color='secondary'
                 />
             </Fab>
 
