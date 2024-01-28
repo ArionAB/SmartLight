@@ -34,7 +34,7 @@ export const AddStreet: FC<{
 
     return (
         <>
-            <DialogTitle>Adauga strada la proiectul "{project?.name}"</DialogTitle>
+            <DialogTitle>Adauga strada la proiectul "{project?.city}"</DialogTitle>
             <Divider />
             <Box sx={{
                 display: "flex"

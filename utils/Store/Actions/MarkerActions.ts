@@ -1,5 +1,5 @@
 import supabase from "../../supabase/createClient";
-import { TablesInsert, TablesUpdate } from "../Models/Database";
+import { Tables, TablesInsert, TablesUpdate } from "../Models/Database";
 import { setMarkersItems } from "../Slices/markersSlice";
 import { setMarker } from "../Slices/projectSlice";
 
@@ -95,3 +95,27 @@ export const updateMarkerAction = (marker: TablesUpdate<'markers'>) => {
         }
     };
 };
+
+export const deleteMarkerAction = (marker: Tables<'markers'>) => {
+    return async (dispatch: any, getState: () => any) => {
+        try {
+
+
+            const { error } = await supabase
+                .from('markers')
+                .delete()
+                .eq('id', marker.id)
+
+            if (!error) {
+                console.log("Marker deleted", marker)
+            }
+
+            if (error) {
+                throw error;
+            }
+
+        } catch (error) {
+            console.error('Error deleting item:', error);
+        }
+    };
+}

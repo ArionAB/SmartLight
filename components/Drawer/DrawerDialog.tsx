@@ -3,13 +3,13 @@
 
 import React, { useEffect, useState } from 'react'
 import Drawer from '@mui/material/Drawer';
-import { Accordion, AccordionDetails, AccordionSummary, Avatar, Box, Button, ButtonGroup, Card, Dialog, Divider, IconButton, List, ListItem, ListItemAvatar, ListItemButton, ListItemIcon, ListItemText, Typography } from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, Avatar, Box, Button, ButtonGroup, Card, Dialog, Divider, Fab, IconButton, List, ListItem, ListItemAvatar, ListItemButton, ListItemIcon, ListItemText, Typography } from '@mui/material';
 import CreateNewFolderIcon from '@mui/icons-material/CreateNewFolder';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import { AddProject } from './AddProject';
 import { useAppDispatch, useAppSelector } from '@/utils/Store/hooks';
 import { selectProjectItems, selectStreetItems } from '@/utils/Store/Selectors/projectSelectors';
-import { Add } from '@mui/icons-material';
+import { Add, PlusOne } from '@mui/icons-material';
 import { AddStreet } from './AddStreet';
 import { Enums, Tables } from '@/utils/Store/Models/Database';
 import StackedLineChartIcon from '@mui/icons-material/StackedLineChart';
@@ -26,8 +26,12 @@ import { setDrawer } from '@/utils/Store/Slices/miscSlice';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { StreetMarkerDetails } from '../Map/StreetMarkerDetails';
-import { AddMarker } from './AddMarker';
 import { setFocusedProject } from '@/utils/Store/Slices/projectSlice';
+import useMediaQuery from '@mui/material/useMediaQuery';
+import { useTheme } from '@mui/material/styles';
+import AddIcon from '@mui/icons-material/Add';
+import InfoIcon from '@mui/icons-material/Info';
+import MapIcon from '@mui/icons-material/Map';
 
 
 
@@ -41,11 +45,16 @@ export const DrawerDialog = () => {
     const [selectedStreet, setSelectedStreet] = useState<Tables<'strazi'>>(null!)
     const [selectedMarker, setSelectedMarker] = useState<Enums<'marker_type'>>('Lampa')
     const [street_id, setStreet_id] = useState<string>('')
+    const [expanded, setExpanded] = React.useState<string | false>(false);
+
+
 
     const dispatch = useAppDispatch();
 
     const projectItems = useAppSelector(selectProjectItems)
     const streetItems = useAppSelector(selectStreetItems)
+    const theme = useTheme();
+    const md = useMediaQuery(theme.breakpoints.down('md'));
 
     useEffect(() => {
         dispatch(getProjectAction())
@@ -66,7 +75,10 @@ export const DrawerDialog = () => {
         dispatch(setDrawer(open))
     }, [open])
 
-
+    const handleChange =
+        (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
+            setExpanded(isExpanded ? panel : false);
+        };
 
     return (
         <>
@@ -76,100 +88,97 @@ export const DrawerDialog = () => {
             <Dialog open={openStreet} onClose={() => setOpenStreet(false)}>
                 <AddStreet project={selectedProject} setOpenStreet={setOpenStreet} />
             </Dialog>
-            <Dialog open={openMarker} onClose={() => setOpenMarker(false)}>
-                <AddMarker selectedMarker={selectedMarker}
-                    position={{ lat: '', lng: '' }}
-                    selectedProject={selectedProject}
-                    selectedStreet={selectedStreet}
-                    setOpen={setOpenMarker}
-                />
-            </Dialog>
             <SwipeableDrawer
                 anchor='left'
                 open={open}
-                variant="persistent"
                 onOpen={() => {
                     setOpen(true)
                     dispatch(setDrawer(true))
                 }}
+                disableDiscovery={false}
+                disableSwipeToOpen={false}
                 onClose={() => setOpen(false)}
                 sx={{
                     width: 350,
+                    minWidth: 5,
                     flexShrink: 0,
                     '& .MuiDrawer-paper': {
-                        width: drawerWidth,
                         boxSizing: 'border-box',
-                        transition: '0.5s'
+                        transition: '0.3s',
+                        width: 350
                     },
                 }}
             >
-                <IconButton onClick={() => drawerWidth === 350 ? setDrawerWidth(50) : setDrawerWidth(350)}>
-                    {drawerWidth === 350 ? <ChevronLeftIcon /> : <ChevronRightIcon />}
-                </IconButton>
+
                 <Divider />
                 <List>
-                    <ListItemButton onClick={() => setOpenAddMarker(true)}>
-                        <ListItemIcon>
-                            <CreateNewFolderIcon />
-                        </ListItemIcon>
-                        <ListItemText primary="Adauga proiect" />
-                    </ListItemButton>
+                    <Fab variant="extended" onClick={() => setOpenAddMarker(true)}>
+                        <CreateNewFolderIcon sx={{ mr: 1 }} />
+                        Adauga proiect
+                    </Fab>
                 </List>
                 {
                     projectItems?.map((item: ProjectModel) => {
                         return (
                             <List>
-                                <Accordion sx={selectedProject?.id === item.id ? { border: "2px solid #0052cc" } : {}}>
+                                <Accordion expanded={expanded === item.id} onChange={handleChange(item.id)} sx={selectedProject?.id === item.id ? { border: "2px solid #0052cc" } : {}}>
+
                                     <AccordionSummary
                                         expandIcon={<ArrowDownwardIcon />}
                                         aria-controls="panel1-content"
                                         id="panel1-header"
                                         onClick={() => {
-                                            setSelectedProject(item),
-                                                dispatch(setFocusedProject(item))
+                                            setSelectedProject(item)
                                         }}
                                     >
                                         <Box sx={{
+                                            width: "100%",
                                             display: 'flex',
-                                            alignItems: 'center',
-                                            gap: '5px'
+                                            justifyContent: 'space-between'
                                         }}>
-                                            <FolderIcon sx={{
-                                                color: '#F8D775'
-                                            }} />
-                                            <Typography variant={drawerWidth === 350 ? 'h6' : 'caption'}>{item?.name}</Typography>
+                                            <Box sx={{
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                gap: '5px'
+                                            }}>
+                                                <FolderIcon sx={{
+                                                    color: '#F8D775'
+                                                }} />
+                                                <Typography variant='caption'>{item?.city}</Typography>
+                                            </Box>
+                                            <MapIcon sx={{ mr: 2 }} />
                                         </Box>
+
+
                                     </AccordionSummary>
                                     <AccordionDetails>
-                                        <Button variant="contained" size='small' color='info' startIcon={<Add />} onClick={() => handleAddStreet(item)}>
-                                            Adauga strada
-                                        </Button>
+                                        <Fab size='small' variant='extended' color='info' onClick={() => handleAddStreet(item)}>
+                                            <Add sx={{ mr: 1 }} />
+                                            Strada
+                                        </Fab>
                                         <Box sx={{ display: 'flex' }} flexDirection={'column'} gap={2} marginTop={2}>
                                             {
                                                 item.strazi?.map((street: StreetModel) => {
                                                     return (
                                                         <Accordion >
                                                             <AccordionSummary
-                                                                onClick={() => setStreet_id(item.id)}
+                                                                onClick={() => {
+                                                                    setStreet_id(street.id),
+                                                                        dispatch(setFocusedProject({ item, street }))
+                                                                }}
                                                                 expandIcon={<ArrowDownwardIcon />}
                                                                 aria-controls="panel1-content"
                                                                 id="panel1-header"
                                                             >
-                                                                <Box sx={{ display: 'flex' }} flexDirection={'column'}>
-                                                                    <Box sx={{ display: 'flex' }} gap={1} justifyContent={'space-between'}>
-                                                                        <Typography>{street?.name}</Typography>
-                                                                        {street.network_type === 'Torsadat' && (<StackedLineChartIcon />)}
-                                                                        {street.network_type === 'Subteran' && (<PowerInputIcon />)}
-                                                                        {street.network_type === 'Clasic' && (<LinearScaleIcon />)}
-                                                                        <Typography>{street.road_type}</Typography>
-                                                                    </Box>
-                                                                    <ButtonGroup variant="contained" aria-label="outlined primary button group" sx={{
-                                                                        gap: '1rem',
-                                                                        marginTop: "1rem"
-                                                                    }}>
-                                                                        <Button startIcon={<Add />} variant="contained" size="small" color='secondary' onClick={() => handleOpenMarker(street, 'Lampa')}>lampa</Button>
-                                                                        <Button startIcon={<Add />} variant="contained" size="small" onClick={() => handleOpenMarker(street, 'Stalp')}>stalp</Button>
-                                                                    </ButtonGroup>
+                                                                <Box sx={{
+                                                                    display: 'flex',
+                                                                    borderBottom: (selectedProject?.id === street.proiect_id) && (street.id === street_id) ? '2px solid #0052cc' : ''
+                                                                }} gap={1} justifyContent={'space-between'}>
+                                                                    <Typography variant='caption'>{street?.name}</Typography>
+                                                                    {street.network_type === 'Torsadat' && (<StackedLineChartIcon />)}
+                                                                    {street.network_type === 'Subteran' && (<PowerInputIcon />)}
+                                                                    {street.network_type === 'Clasic' && (<LinearScaleIcon />)}
+                                                                    <Typography>{street.road_type}</Typography>
                                                                 </Box>
                                                             </AccordionSummary>
                                                             <AccordionDetails>
@@ -180,8 +189,8 @@ export const DrawerDialog = () => {
                                                                                 <ListItem key={marker.id}
                                                                                     sx={{ borderBottom: '2px solid #eaeaea' }}
                                                                                     secondaryAction={
-                                                                                        <IconButton edge="end" aria-label="delete">
-                                                                                            {marker.marker_type === 'Lampa' ? <LightIcon /> : <CellTowerIcon />}
+                                                                                        <IconButton edge="end" color='secondary' aria-label="delete" >
+                                                                                            <InfoIcon />
                                                                                         </IconButton>
                                                                                     }
                                                                                 >
@@ -228,31 +237,8 @@ export const DrawerDialog = () => {
                 }
 
 
-                {/* <List>
-          {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-            <ListItem key={text} disablePadding>
-              <ListItemButton>
-                <ListItemIcon>
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List> */}
                 <Divider />
-                {/* <List>
-          {['All mail', 'Trash', 'Spam'].map((text, index) => (
-            <ListItem key={text} disablePadding>
-              <ListItemButton>
-                <ListItemIcon>
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List> */}
+
             </SwipeableDrawer >
         </>
 

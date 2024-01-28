@@ -22,10 +22,6 @@ import { Close } from '@mui/icons-material';
 const MapComponent: FC = () => {
     const [currentLocation, setCurrentLocation] = useState<any>([]);
     const [markers, setMarkers] = useState<any[]>([])
-    const [alpha, setAlpha] = useState(null)
-    const [beta, setBeta] = useState(null)
-    const [gamma, setGamma] = useState(null)
-
     const isDrawerOpen = useAppSelector(selectIsDrawerOpen)
 
 
@@ -63,22 +59,21 @@ const MapComponent: FC = () => {
         setMarkers(markersArr)
     }
 
-    useEffect(() => {
-        window.addEventListener('deviceorientation', handleOrientation);
+    // useEffect(() => {
+    //     window.addEventListener('deviceorientation', handleOrientation);
 
-        return () => {
-            window.removeEventListener('deviceorientation', handleOrientation);
-        };
-    }, []);
+    //     return () => {
+    //         window.removeEventListener('deviceorientation', handleOrientation);
+    //     };
+    // }, []);
 
-    const handleOrientation = (event: any) => {
-        setAlpha(event.alpha)
-        setBeta(event.beta)
-        setGamma(event.gamma)
-        console.log(`Alpha: ${event.alpha}`);
-        console.log(`Beta: ${event.beta}`);
-        console.log(`Gamma: ${event.gamma}`);
-    };
+    // const handleOrientation = (event: any) => {
+    //     console.log(event)
+
+    //     console.log(`Alpha: ${event.alpha}`);
+    //     console.log(`Beta: ${event.beta}`);
+    //     console.log(`Gamma: ${event.gamma}`);
+    // };
 
 
     return (
@@ -89,14 +84,6 @@ const MapComponent: FC = () => {
                 }} >
                 <MyLocationIcon />
             </Fab>
-            <Box sx={{
-                position: 'absolute', right: 0, top: 100, zIndex: '999', margin: '1rem', backgroundColor: "#eaeaea", padding: "1rem", borderRadius: "50%"
-            }} >
-                {`Alpha ${alpha}`} :
-                {`Beta ${beta}`} :
-                {`Gamma ${gamma}`}
-
-            </Box>
 
             <Fab onClick={() => handleAddDraggableMarkers('Stalp')}
                 sx={{

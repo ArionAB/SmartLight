@@ -1,42 +1,33 @@
-import { Enums, Tables, TablesInsert } from '@/utils/Store/Models/Database'
-import { selectProjectItems } from '@/utils/Store/Selectors/projectSelectors'
+import { Enums, TablesInsert } from '@/utils/Store/Models/Database'
+import { selectFocusedProject } from '@/utils/Store/Selectors/projectSelectors'
 import { useAppDispatch, useAppSelector } from '@/utils/Store/hooks'
 import { Button, ButtonGroup, Container, DialogTitle, FormControl, FormGroup, InputLabel, MenuItem, Select, SelectChangeEvent, TextField, Typography } from '@mui/material'
-import React, { FC, useEffect, useState } from 'react'
+import React, { FC, useState } from 'react'
 import FileUploadComponent from '../FileUpload/FileUploadComponent'
 import supabase from '@/utils/supabase/createClient'
-import { PositionModel } from '@/utils/Store/Models/Markers/PositionModel'
-import { getStreetAction } from '@/utils/Store/Actions/StreetActions'
-import { ProjectModel } from '@/utils/Store/Models/Project/ProjectModel'
 import { addMarkerAction } from '@/utils/Store/Actions/MarkerActions'
+import { powerTypeItems } from '@/utils/Store/items/powerTypeItems'
+import { lampItems } from '@/utils/Store/items/lampItems'
 
 export const AddMarker: FC<{
     selectedMarker: Enums<'marker_type'>,
-    position: PositionModel,
-    selectedProject?: ProjectModel,
-    selectedStreet?: Tables<'strazi'>,
+    position: string[],
     setOpen: Function
 }> = ({
     selectedMarker,
     position,
-    selectedProject,
-    selectedStreet,
     setOpen
 }) => {
         const [marker, setMarker] = useState({
-            proiect_id: selectedProject?.id ?? '',
-            street_id: selectedStreet?.id ?? '',
             number: '',
-            images: [],
-            observatii: ''
+            observatii: '',
+            lamp_type: '',
+            power_type: ''
         })
-        const [streets, setStreets] = useState<Tables<'strazi'>[]>([])
         const [uploadedFiles, setUploadedFiles] = useState<File[]>([])
         const [loading, setLoading] = useState(false)
 
         const dispatch = useAppDispatch()
-        const projectItems = useAppSelector(selectProjectItems)
-
 
 
         const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> | SelectChangeEvent) => {
@@ -44,23 +35,12 @@ export const AddMarker: FC<{
 
         }
 
-        useEffect(() => {
-            setStreets([])
-            dispatch(getStreetAction(marker.proiect_id)).then((res) => {
-                if (res?.severity === 'success') {
-                    setStreets(res?.data ?? [])
-                }
-
-                console.log('res', res)
-
-            })
-        }, [marker.proiect_id])
-
 
         const uploadPictures = (newFiles: any) => {
             setUploadedFiles(newFiles)
         };
 
+        const focusedProject = useAppSelector(selectFocusedProject)
         const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
             e.preventDefault();
             setLoading(true)
@@ -72,16 +52,30 @@ export const AddMarker: FC<{
                 imageUrls.push(data!.path);
             }
 
-            //@ts-ignore
-            marker.images = imageUrls
 
             let markerData: TablesInsert<'markers'> = {
-                ...marker,
-                latitude: position.lat,
-                longitude: position.lng,
+                latitude: position[0],
+                longitude: position[1],
                 marker_type: selectedMarker,
                 marker_status: 'Ok',
+                proiect_id: focusedProject.item.id,
+                street_id: focusedProject.street.id,
+                images: imageUrls,
+                observatii: marker.observatii,
+                //@ts-ignore
+                number: focusedProject.street.markers.length + 1
             }
+
+
+
+            if (selectedMarker === 'Lampa') {
+                //@ts-ignore
+                markerData.power_typr = marker.power_type
+            } else {
+                //@ts-ignore
+                markerData.lamp_type = marker.lamp_type
+            }
+
 
 
             dispatch(addMarkerAction(markerData)).then(() => {
@@ -100,50 +94,52 @@ export const AddMarker: FC<{
                     <FormGroup sx={{
                         gap: '10px'
                     }}>
-                        <TextField label="Numar" name='number' value={marker.number} onChange={(e) => handleChange(e)}>
-                        </TextField>
-                        <FormControl fullWidth >
-                            <InputLabel id="demo-simple-select-label">Proiect</InputLabel>
-                            <Select
-                                labelId="demo-simple-select-label"
-                                id="demo-simple-select"
-                                name="proiect_id"
-                                value={marker.proiect_id}
-                                label="Proiect"
-                                onChange={(e) => handleChange(e)}
-                            >
-                                {
-                                    projectItems?.map((item: any) => {
-                                        return (
-                                            <MenuItem key={item.id} value={item.id}>
-                                                {item.name}
-                                            </MenuItem>
-                                        )
-                                    })
-                                }
-                            </Select>
-                        </FormControl>
-                        <FormControl fullWidth>
-                            <InputLabel id="demo-simple-select-label">Strada</InputLabel>
-                            <Select
-                                labelId="demo-simple-select-label"
-                                id="demo-simple-select"
-                                name="street_id"
-                                value={marker.street_id}
-                                label="Strada"
-                                onChange={(e) => handleChange(e)}
-                            >
-                                {
-                                    streets?.map((item: Tables<'strazi'>) => {
-                                        return (
-                                            <MenuItem key={item.id} value={item.id}>
-                                                {item.name}
-                                            </MenuItem>
-                                        )
-                                    })
-                                }
-                            </Select>
-                        </FormControl>
+                        {selectedMarker === 'Lampa' ? (
+                            <FormControl fullWidth >
+                                <InputLabel id="demo-simple-select-label">Tip lampa</InputLabel>
+                                <Select
+                                    labelId="demo-simple-select-label"
+                                    id="demo-simple-select"
+                                    name="power_type"
+                                    value={marker.power_type}
+                                    label="Tip lampa"
+                                    onChange={(e) => handleChange(e)}
+                                >
+                                    {
+                                        powerTypeItems?.map((item: any) => {
+                                            return (
+                                                <MenuItem key={item} value={item}>
+                                                    {item}
+                                                </MenuItem>
+                                            )
+                                        })
+                                    }
+                                </Select>
+                            </FormControl>
+                        ) : (
+                            <FormControl fullWidth >
+                                <InputLabel id="demo-simple-select-label">Tip lampa</InputLabel>
+                                <Select
+                                    labelId="demo-simple-select-label"
+                                    id="demo-simple-select"
+                                    name="lamp_type"
+                                    value={marker.lamp_type}
+                                    label="Tip lampa"
+                                    onChange={(e) => handleChange(e)}
+                                >
+                                    {
+                                        lampItems?.map((item: any) => {
+                                            return (
+                                                <MenuItem key={item} value={item}>
+                                                    {item}
+                                                </MenuItem>
+                                            )
+                                        })
+                                    }
+                                </Select>
+                            </FormControl>
+                        )}
+
                         <TextField
                             id="outlined-multiline-flexible"
                             label="Observații"

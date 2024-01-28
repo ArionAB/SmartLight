@@ -5,7 +5,7 @@ import { ProjectModel } from '../Models/Project/ProjectModel';
 const initialState: any = {
     projects: [] as ProjectModel[],
     streets: [] as Tables<'strazi'>[],
-    focusedProject: null
+    focusedProject: null,
 
 };
 

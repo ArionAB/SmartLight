@@ -2,7 +2,7 @@
 
 import { Add } from "@mui/icons-material"
 import { Box, Button, ButtonGroup, Dialog, Typography } from "@mui/material"
-import { FC, useCallback, useMemo, useRef, useState } from "react"
+import { FC, useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { Marker, Popup, Tooltip } from "react-leaflet"
 import { AddMarker } from "../Drawer/AddMarker"
 import { Enums } from "@/utils/Store/Models/Database"
@@ -53,9 +53,15 @@ export const DraggableMarker: FC<{
         setSelectedMarker(type)
         setOpen(true)
     }
+
+    useEffect(() => {
+        setOpen(true)
+        setSelectedMarker(item)
+    }, [])
+
     return (
         <>
-            <Dialog open={open} onClose={() => setOpen(false)}>
+            <Dialog open={open} onClose={() => setOpen(false)} fullWidth>
                 <AddMarker position={position} selectedMarker={selectedMarker} setOpen={setOpen} />
             </Dialog>
             <Marker
@@ -65,12 +71,8 @@ export const DraggableMarker: FC<{
                 position={position}
                 icon={customMarkerIcon}
                 ref={markerRef}>
-                <Popup >
+                <Popup>
                     <Typography>{`${position}`}</Typography>
-                    <ButtonGroup fullWidth sx={{ gap: '10px' }}>
-                        <Button onClick={() => handleOpenDialog('Stalp')} variant="contained" size='small' startIcon={<Add />}>Stalp</Button>
-                        <Button onClick={() => handleOpenDialog('Lampa')} variant="contained" color="success" size='small' startIcon={<Add />}>Lampa</Button>
-                    </ButtonGroup>
                 </Popup>
                 {/* @ts-ignore */}
                 {/* <Tooltip direction="top" offset={[0, -20]} opacity={1} permanent>
