@@ -2,7 +2,7 @@ import supabase from "../../supabase/createClient";
 import { Tables, TablesInsert, TablesUpdate } from "../Models/Database";
 import { addAppNotification } from "../Slices/appNotificationSlice";
 import { setMarkersItems } from "../Slices/markersSlice";
-import { setMarker, updateMarker } from "../Slices/projectSlice";
+import { deleteMarker, setMarker, updateMarker } from "../Slices/projectSlice";
 
 export const getMarkersAction = (street_id?: string) => {
     return async (dispatch: any, getState: () => any) => {
@@ -103,14 +103,13 @@ export const updateMarkerAction = (marker: TablesUpdate<'markers'>) => {
 export const deleteMarkerAction = (marker: Tables<'markers'>) => {
     return async (dispatch: any, getState: () => any) => {
         try {
-
-
             const { error } = await supabase
                 .from('markers')
                 .delete()
                 .eq('id', marker.id)
 
             if (!error) {
+                dispatch(deleteMarker(marker))
                 dispatch(addAppNotification({ message: `${marker?.number} a fost sters!`, severity: 'success' }))
             }
 
