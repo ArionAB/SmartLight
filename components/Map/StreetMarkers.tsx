@@ -188,7 +188,19 @@ export const StreetMarkers = () => {
 
                                     {/* @ts-ignore */}
                                     <Tooltip direction="top" offset={[0, -20]} opacity={1} permanent>
-                                        {marker?.number} - {marker?.pole_type}
+                                        <Box sx={{
+                                            display: 'flex',
+                                            flexDirection: 'column'
+                                        }}>
+                                            <Typography variant='caption' sx={{ fontWeight: 600, fontSize: 10 }} textAlign={'center'}>
+                                                {marker?.number}
+                                            </Typography>
+                                            <Typography variant='caption' sx={{ fontSize: 10 }}>
+                                                {
+                                                    marker?.pole_type === 'Lampadar Metalic' ? 'L.M.' : marker?.pole_type
+                                                }
+                                            </Typography>
+                                        </Box>
                                     </Tooltip>
                                 </Marker>
                             );

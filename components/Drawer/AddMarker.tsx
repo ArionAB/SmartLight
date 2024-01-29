@@ -23,7 +23,7 @@ export const AddMarker: FC<{
         const [marker, setMarker] = useState({
             number: '',
             observatii: '',
-            lamp_type: '',
+            lamp_type: 'Cu lampa',
             pole_type: '',
             power_type: ''
         })
