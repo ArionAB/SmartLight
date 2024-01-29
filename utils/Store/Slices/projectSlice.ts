@@ -24,7 +24,6 @@ const projectSlice = createSlice({
             project.strazi.push(action.payload)
         },
         setFocusedProject: (state, action) => {
-            console.log('action', action.payload)
             state.focusedProject = action.payload
         },
         setMarker: (state, action) => {

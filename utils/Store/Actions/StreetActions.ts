@@ -7,7 +7,6 @@ export const addStreetAction = (street: TablesInsert<'strazi'>) => {
     return async (dispatch: any, getState: () => any) => {
         try {
 
-            console.log(street)
             const { data, error } = await supabase
                 .from('strazi')
                 .insert([
@@ -42,7 +41,6 @@ export const getStreetAction = (proiect_id?: string) => {
                     .eq('proiect_id', proiect_id)
 
                 if (!error) {
-                    console.log("Lista strazi", strazi)
                     return {
                         severity: 'success',
                         data: strazi
@@ -60,7 +58,6 @@ export const getStreetAction = (proiect_id?: string) => {
 
 
                 if (!error) {
-                    console.log("Lista strazi", strazi)
                     dispatch(setStreetItems(strazi))
 
                 }

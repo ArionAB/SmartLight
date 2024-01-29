@@ -18,15 +18,14 @@ const customMarkerIcon = divIcon({
 export const MyLocationMarker: FC<{ position: any }> = ({
     position
 }) => {
-    // const map = useMapEvents({
-    //     click() {
-    //         map.locate()
-    //     },
-    //     locationfound(e: any) {
-    //         setPosition(e.latlng)
-    //         map.flyTo(e.latlng, map.getZoom())
-    //     },
-    // })
+    const map = useMapEvents({
+        click() {
+            map.locate()
+        },
+        locationfound(e: any) {
+            map.flyTo(e.latlng, map.getZoom())
+        },
+    })
 
 
     return position === null ? null : (

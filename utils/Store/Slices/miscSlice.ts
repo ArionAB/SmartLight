@@ -10,7 +10,6 @@ const miscSlice = createSlice({
     reducers: {
         setDrawer: (state, action) => {
             state.drawer = action.payload
-            console.log(state.drawer)
         },
     },
 });

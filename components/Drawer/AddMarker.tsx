@@ -8,6 +8,8 @@ import supabase from '@/utils/supabase/createClient'
 import { addMarkerAction } from '@/utils/Store/Actions/MarkerActions'
 import { powerTypeItems } from '@/utils/Store/items/powerTypeItems'
 import { lampItems } from '@/utils/Store/items/lampItems'
+import { poleTypeItems } from '@/utils/Store/items/poleTypeItems'
+import { addAppNotification } from '@/utils/Store/Slices/appNotificationSlice'
 
 export const AddMarker: FC<{
     selectedMarker: Enums<'marker_type'>,
@@ -22,6 +24,7 @@ export const AddMarker: FC<{
             number: '',
             observatii: '',
             lamp_type: '',
+            pole_type: '',
             power_type: ''
         })
         const [uploadedFiles, setUploadedFiles] = useState<File[]>([])
@@ -52,6 +55,12 @@ export const AddMarker: FC<{
                 imageUrls.push(data!.path);
             }
 
+            if (!focusedProject) {
+                dispatch(addAppNotification({
+                    severity: 'error',
+                    message: "Trebuie sa selectati un proiect si o strada!"
+                }))
+            }
 
             let markerData: TablesInsert<'markers'> = {
                 latitude: position[0],
@@ -117,27 +126,51 @@ export const AddMarker: FC<{
                                 </Select>
                             </FormControl>
                         ) : (
-                            <FormControl fullWidth >
-                                <InputLabel id="demo-simple-select-label">Tip lampa</InputLabel>
-                                <Select
-                                    labelId="demo-simple-select-label"
-                                    id="demo-simple-select"
-                                    name="lamp_type"
-                                    value={marker.lamp_type}
-                                    label="Tip lampa"
-                                    onChange={(e) => handleChange(e)}
-                                >
-                                    {
-                                        lampItems?.map((item: any) => {
-                                            return (
-                                                <MenuItem key={item} value={item}>
-                                                    {item}
-                                                </MenuItem>
-                                            )
-                                        })
-                                    }
-                                </Select>
-                            </FormControl>
+                            <>
+                                <FormControl fullWidth >
+                                    <InputLabel id="demo-simple-select-label">Tip lampa</InputLabel>
+                                    <Select
+                                        labelId="demo-simple-select-label"
+                                        id="demo-simple-select"
+                                        name="lamp_type"
+                                        value={marker.lamp_type}
+                                        label="Tip lampa"
+                                        onChange={(e) => handleChange(e)}
+                                    >
+                                        {
+                                            lampItems?.map((item: any) => {
+                                                return (
+                                                    <MenuItem key={item} value={item}>
+                                                        {item}
+                                                    </MenuItem>
+                                                )
+                                            })
+                                        }
+                                    </Select>
+                                </FormControl>
+                                <FormControl fullWidth >
+                                    <InputLabel id="demo-simple-select-label">Tip stalp</InputLabel>
+                                    <Select
+                                        labelId="demo-simple-select-label"
+                                        id="demo-simple-select"
+                                        name="pole_type"
+                                        value={marker.pole_type}
+                                        label="Tip stalp"
+                                        onChange={(e) => handleChange(e)}
+                                    >
+                                        {
+                                            poleTypeItems?.map((item: any) => {
+                                                return (
+                                                    <MenuItem key={item} value={item}>
+                                                        {item}
+                                                    </MenuItem>
+                                                )
+                                            })
+                                        }
+                                    </Select>
+                                </FormControl>
+                            </>
+
                         )}
 
                         <TextField
@@ -156,7 +189,7 @@ export const AddMarker: FC<{
                             justifyContent: 'space-around',
                             margin: "1rem"
                         }}>
-                            <Button variant='outlined'>Anuleaza</Button>
+                            <Button variant='outlined' onClick={() => setOpen(false)}>Anuleaza</Button>
                             <Button disabled={loading} type="submit" variant='contained' color="success">Adauga</Button>
                         </ButtonGroup>
                     </FormGroup>

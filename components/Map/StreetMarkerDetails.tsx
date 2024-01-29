@@ -1,8 +1,7 @@
-import { Tables, TablesInsert, TablesUpdate } from '@/utils/Store/Models/Database'
+import { Tables, TablesUpdate } from '@/utils/Store/Models/Database'
 import { lampItems } from '@/utils/Store/items/lampItems'
 import { poleTypeItems } from '@/utils/Store/items/poleTypeItems'
 import { getImage } from '@/utils/supabase/getImage'
-import { useTheme } from '@emotion/react'
 import styled from '@emotion/styled'
 import { Box, Container, DialogTitle, FormControl, Grid, InputLabel, Select, SelectChangeEvent, Typography, MenuItem, Switch, SwitchProps, FormControlLabel, TextField, Button, Toolbar, AppBar, IconButton, ButtonGroup } from '@mui/material'
 import Image from 'next/image'
@@ -13,7 +12,6 @@ import supabase from '@/utils/supabase/createClient'
 import { updateMarkerAction } from '@/utils/Store/Actions/MarkerActions'
 import { useAppDispatch } from '@/utils/Store/hooks'
 import { powerTypeItems } from '@/utils/Store/items/powerTypeItems'
-import { addAppNotification, setAppNotifications } from '@/utils/Store/Slices/appNotificationSlice'
 
 export const StreetMarkerDetails: FC<{
     marker: Tables<'markers'>,

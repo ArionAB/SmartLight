@@ -14,7 +14,6 @@ export const getProjectAction = () => {
 
 
             if (!error) {
-                console.log("Lista proiecte", proiecte)
                 dispatch(setProjectItems(proiecte))
             }
 

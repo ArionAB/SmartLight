@@ -32,7 +32,6 @@ export const StreetMarkers = () => {
     const dispatch = useAppDispatch()
     const projectItems = useAppSelector(selectProjectItems)
     const focusedProject = useAppSelector(selectFocusedProject)
-    console.log('focusedProject', focusedProject)
 
     const lampColor = (power_type: Enums<'power_type'>) => {
         switch (power_type) {

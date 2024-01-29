@@ -1,29 +1,26 @@
 'use client'
 
 import React, { FC, useEffect, useState } from 'react'
-import { MapContainer, TileLayer, Marker, Popup, useMapEvents, useMap, SVGOverlay } from 'react-leaflet';
+import { MapContainer, TileLayer } from 'react-leaflet';
 
 import "leaflet/dist/leaflet.css"
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.webpack.css";
 import "leaflet-defaulticon-compatibility";
-import { Box, Button, Fab, Typography } from '@mui/material';
+import { Box, Fab } from '@mui/material';
 import MyLocationIcon from '@mui/icons-material/MyLocation';
 import { DraggableMarker } from './DraggableMarker';
 import { MyLocationMarker } from './MyLocationMarker';
 import { StreetMarkers } from './StreetMarkers';
-import { useAppSelector } from '@/utils/Store/hooks';
-import { selectIsDrawerOpen } from '@/utils/Store/Selectors/miscSelectors';
 import LightIcon from '@mui/icons-material/Light';
 import CellTowerIcon from '@mui/icons-material/CellTower';
 import { Enums } from '@/utils/Store/Models/Database';
-import { Close } from '@mui/icons-material';
+import { DrawerDialog } from '../Drawer/DrawerDialog';
+import { flyToLocation } from './FlyToLocation';
 
 
 const MapComponent: FC = () => {
     const [currentLocation, setCurrentLocation] = useState<any>([]);
     const [markers, setMarkers] = useState<any[]>([])
-    const isDrawerOpen = useAppSelector(selectIsDrawerOpen)
-
 
     const getMyLocation = () => {
         if (navigator.geolocation) {
@@ -34,7 +31,6 @@ const MapComponent: FC = () => {
             };
 
             const success = (position: any) => {
-                console.log(position)
                 const { latitude, longitude } = position.coords;
                 setCurrentLocation([latitude, longitude]);
             };
@@ -75,30 +71,15 @@ const MapComponent: FC = () => {
     //     console.log(`Gamma: ${event.gamma}`);
     // };
 
+    // useEffect(() => {
+    //     setCurrentLocation([coordinates.lat, coordinates.lng])
+    // }, [coordinates])
 
     return (
         <Box sx={{ position: 'relative', display: 'flex', justifyContent: "flex-end" }}>
-            <Fab onClick={() => getMyLocation()}
-                sx={{
-                    position: 'absolute', right: 0, zIndex: '999', margin: '1rem', backgroundColor: "#eaeaea", padding: "1rem", borderRadius: "50%"
-                }} >
-                <MyLocationIcon />
-            </Fab>
 
-            <Fab onClick={() => handleAddDraggableMarkers('Stalp')}
-                sx={{
-                    position: 'absolute', right: 0, bottom: 0, zIndex: '999', margin: '1rem', backgroundColor: "#eaeaea", padding: "1rem", borderRadius: "50%"
-                }}>
-                <CellTowerIcon color='error'
-                />
-            </Fab>
-            <Fab onClick={() => handleAddDraggableMarkers('Lampa')}
-                sx={{
-                    position: 'absolute', right: 0, bottom: 80, zIndex: '999', margin: '1rem', backgroundColor: "#eaeaea", padding: "1rem", borderRadius: "50%"
-                }}>
-                <LightIcon color='secondary'
-                />
-            </Fab>
+
+
 
             {
                 currentLocation.length > 0 && (
@@ -109,6 +90,27 @@ const MapComponent: FC = () => {
                             width: "100%",
                         }}>
                         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+                        <Fab onClick={() => getMyLocation()}
+                            sx={{
+                                position: 'absolute', right: 0, zIndex: '999', margin: '1rem', backgroundColor: "#eaeaea", padding: "1rem", borderRadius: "50%"
+                            }} >
+                            <MyLocationIcon />
+                        </Fab>
+                        <Fab onClick={() => handleAddDraggableMarkers('Stalp')}
+                            sx={{
+                                position: 'absolute', right: 0, bottom: 0, zIndex: '999', margin: '1rem', backgroundColor: "#eaeaea", padding: "1rem", borderRadius: "50%"
+                            }}>
+                            <CellTowerIcon color='error'
+                            />
+                        </Fab>
+                        <Fab onClick={() => handleAddDraggableMarkers('Lampa')}
+                            sx={{
+                                position: 'absolute', right: 0, bottom: 80, zIndex: '999', margin: '1rem', backgroundColor: "#eaeaea", padding: "1rem", borderRadius: "50%"
+                            }}>
+                            <LightIcon color='secondary'
+                            />
+                        </Fab>
+
                         <MyLocationMarker position={currentLocation} />
                         {
                             markers.length > 0 && markers?.map((item) => {
@@ -120,7 +122,7 @@ const MapComponent: FC = () => {
                             })
                         }
                         <StreetMarkers />
-
+                        <DrawerDialog />
                     </MapContainer>
                 )
             }

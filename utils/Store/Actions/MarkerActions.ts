@@ -15,7 +15,6 @@ export const getMarkersAction = (street_id?: string) => {
                     .eq('street_id', street_id)
 
                 if (!error) {
-                    console.log("1 marker", markers)
                     // dispatch(setMarkersItems(markers))
                 }
 
@@ -28,7 +27,6 @@ export const getMarkersAction = (street_id?: string) => {
                     .select('*')
 
                 if (!error) {
-                    console.log("Lista markers", markers)
                     dispatch(setMarkersItems(markers))
                 }
 
@@ -113,7 +111,6 @@ export const deleteMarkerAction = (marker: Tables<'markers'>) => {
 
             if (!error) {
                 dispatch(addAppNotification({ message: `${marker?.number} a fost sters!`, severity: 'success' }))
-                console.log("Marker deleted", marker)
             }
 
             if (error) {

@@ -3,6 +3,7 @@ import projectSlice from './Slices/projectSlice'
 import markersSlice from './Slices/markersSlice'
 import miscSlice from './Slices/miscSlice'
 import appNotificationSlice from './Slices/appNotificationSlice'
+import mapSlice from './Slices/mapSlice'
 
 export const makeStore = () => {
     return configureStore({
@@ -10,7 +11,8 @@ export const makeStore = () => {
             project: projectSlice,
             marker: markersSlice,
             misc: miscSlice,
-            notification: appNotificationSlice
+            notification: appNotificationSlice,
+            map: mapSlice
         }
     })
 }
