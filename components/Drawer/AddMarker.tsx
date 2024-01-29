@@ -83,6 +83,8 @@ export const AddMarker: FC<{
             } else {
                 //@ts-ignore
                 markerData.lamp_type = marker.lamp_type
+                //@ts-ignore
+                markerData.pole_type = marker.pole_type
             }
 
 
