@@ -113,7 +113,7 @@ export const StreetMarkers = () => {
                                     key={marker.id}
                                     position={[Number(marker.latitude), Number(marker.longitude)]}
                                     //@ts-ignore
-                                    icon={marker.marker_type === 'Lampa' ? lampColor(marker.power_typr) : customPoleIcon}
+                                    icon={marker.marker_type === 'Lampa' ? lampColor(marker.power_type) : customPoleIcon}
                                 >
                                     <Popup >
                                         <Box sx={{ display: 'flex', justifyContent: 'space-between' }} >

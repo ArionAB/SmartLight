@@ -1,5 +1,6 @@
 import supabase from "../../supabase/createClient";
 import { TablesInsert } from "../Models/Database";
+import { addAppNotification } from "../Slices/appNotificationSlice";
 import { setStreet, setStreetItems } from "../Slices/projectSlice";
 
 export const addStreetAction = (street: TablesInsert<'strazi'>) => {
@@ -15,12 +16,13 @@ export const addStreetAction = (street: TablesInsert<'strazi'>) => {
                 .select()
 
             if (!error) {
-                console.log("street added", data)
+                dispatch(addAppNotification({ message: `Strada ${data[0].name} a fost adaugata!`, severity: 'success' }))
                 dispatch(setStreet(data[0]))
             }
 
             if (error) {
-                throw error;
+                dispatch(addAppNotification({ message: `Eroare adaugare strada!`, severity: 'error' }))
+
             }
 
         } catch (error) {

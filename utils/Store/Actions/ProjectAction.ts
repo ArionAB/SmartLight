@@ -1,6 +1,7 @@
 import supabase from "../../supabase/createClient";
 import { setProjectItems } from "../Slices/projectSlice";
 import { TablesInsert } from "../Models/Database";
+import { addAppNotification } from "../Slices/appNotificationSlice";
 
 
 export const getProjectAction = () => {
@@ -40,13 +41,15 @@ export const addProjectAction = (project: TablesInsert<'proiecte'>) => {
                 .select()
 
             if (!error) {
-                console.log("Project addded", data)
+                dispatch(addAppNotification({ message: `Proiectul ${data[0].city} a fost adaugat!`, severity: 'success' }))
+
                 dispatch(getProjectAction())
 
             }
 
             if (error) {
-                throw error;
+                dispatch(addAppNotification({ message: `Proiectul nu a putut fi adaugat!`, severity: 'error' }))
+
             }
 
         } catch (error) {

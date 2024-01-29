@@ -12,6 +12,8 @@ import { Close } from '@mui/icons-material'
 import supabase from '@/utils/supabase/createClient'
 import { updateMarkerAction } from '@/utils/Store/Actions/MarkerActions'
 import { useAppDispatch } from '@/utils/Store/hooks'
+import { powerTypeItems } from '@/utils/Store/items/powerTypeItems'
+import { addAppNotification, setAppNotifications } from '@/utils/Store/Slices/appNotificationSlice'
 
 export const StreetMarkerDetails: FC<{
     marker: Tables<'markers'>,
@@ -25,9 +27,10 @@ export const StreetMarkerDetails: FC<{
         images: marker.images,
         latitude: marker.latitude,
         longitude: marker.longitude,
+        power_type: marker.power_type
     })
     const [uploadedFiles, setUploadedFiles] = useState<File[]>([])
-
+    const [loading, setLoading] = useState(false)
     const dispatch = useAppDispatch();
 
     const handleChange = (event: SelectChangeEvent | React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -40,6 +43,7 @@ export const StreetMarkerDetails: FC<{
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        setLoading(true)
 
         const imageUrls: string[] = [];
         for (let file of uploadedFiles) {
@@ -58,7 +62,10 @@ export const StreetMarkerDetails: FC<{
             id: marker.id
         }
 
-        dispatch(updateMarkerAction(markerData))
+        dispatch(updateMarkerAction(markerData)).then(() => {
+            setOpen(false)
+            setLoading(false)
+        })
     }
 
     const IOSSwitch = styled((props: SwitchProps) => (
@@ -164,28 +171,54 @@ export const StreetMarkerDetails: FC<{
                             onChange={handleChange}
                         />
                     </Grid>
+
                     <Grid item xs={12} sm={6}>
-                        <FormControl fullWidth>
-                            <InputLabel id="demo-simple-select-label">Tip lampa</InputLabel>
-                            <Select
-                                labelId="demo-simple-select-label"
-                                id="demo-simple-select"
-                                value={form.lamp_type}
-                                label="Tip lampa"
-                                name='lamp_type'
-                                onChange={(e) => handleChange(e)}
-                            >
-                                {
-                                    lampItems?.map((item, index) => {
-                                        return (
-                                            <MenuItem key={index} value={item}>
-                                                {item}
-                                            </MenuItem>
-                                        )
-                                    })
-                                }
-                            </Select>
-                        </FormControl>
+                        {
+                            marker.marker_type === 'Stalp' ? (<FormControl fullWidth>
+                                <InputLabel id="demo-simple-select-label">Tip lampa</InputLabel>
+                                <Select
+                                    labelId="demo-simple-select-label"
+                                    id="demo-simple-select"
+                                    value={form.lamp_type}
+                                    label="Tip lampa"
+                                    name='lamp_type'
+                                    onChange={(e) => handleChange(e)}
+                                >
+                                    {
+                                        lampItems?.map((item, index) => {
+                                            return (
+                                                <MenuItem key={index} value={item}>
+                                                    {item}
+                                                </MenuItem>
+                                            )
+                                        })
+                                    }
+                                </Select>
+                            </FormControl>) : (
+                                <FormControl fullWidth>
+                                    <InputLabel id="demo-simple-select-label">Tip lampa</InputLabel>
+                                    <Select
+                                        labelId="demo-simple-select-label"
+                                        id="demo-simple-select"
+                                        value={form.power_type}
+                                        label="Tip lampa"
+                                        name='power_type'
+                                        onChange={(e) => handleChange(e)}
+                                    >
+                                        {
+                                            powerTypeItems?.map((item, index) => {
+                                                return (
+                                                    <MenuItem key={index} value={item}>
+                                                        {item}
+                                                    </MenuItem>
+                                                )
+                                            })
+                                        }
+                                    </Select>
+                                </FormControl>
+                            )
+                        }
+
                     </Grid>
                     <Grid item xs={12} sm={6}>
                         <FormControl fullWidth>
@@ -258,7 +291,7 @@ export const StreetMarkerDetails: FC<{
                         <Button variant='outlined' onClick={() => setOpen(false)}>
                             Anulează
                         </Button>
-                        <Button variant="contained" type="submit" color="secondary">
+                        <Button disabled={loading} variant="contained" type="submit" color="secondary">
                             Salvează
                         </Button>
                     </Grid>

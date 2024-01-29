@@ -70,7 +70,7 @@ export const AddMarker: FC<{
 
             if (selectedMarker === 'Lampa') {
                 //@ts-ignore
-                markerData.power_typr = marker.power_type
+                markerData.power_type = marker.power_type
             } else {
                 //@ts-ignore
                 markerData.lamp_type = marker.lamp_type
@@ -157,7 +157,7 @@ export const AddMarker: FC<{
                             margin: "1rem"
                         }}>
                             <Button variant='outlined'>Anuleaza</Button>
-                            <Button type="submit" variant='contained' color="success">Adauga</Button>
+                            <Button disabled={loading} type="submit" variant='contained' color="success">Adauga</Button>
                         </ButtonGroup>
                     </FormGroup>
                 </form>

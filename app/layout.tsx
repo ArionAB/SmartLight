@@ -8,6 +8,7 @@ import { CacheProvider } from "@emotion/react";
 import createEmotionCache from "@/utils/Material/createEmotionCache"
 import { ThemeProvider } from "@mui/material/styles";
 import theme from "@/utils/Material/theme";
+import AppSnackbar from "@/components/Notifications/Notifications";
 
 
 
@@ -25,6 +26,7 @@ export default function RootLayout({
                     <main className="min-h-screen flex flex-col items-center">
                         <CacheProvider value={emotionCache}>
                             <ThemeProvider theme={theme}>
+                                <AppSnackbar />
                                 <Navbar />
                                 {children}
                             </ThemeProvider>

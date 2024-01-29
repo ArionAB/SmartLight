@@ -1,5 +1,6 @@
 import supabase from "../../supabase/createClient";
 import { Tables, TablesInsert, TablesUpdate } from "../Models/Database";
+import { addAppNotification } from "../Slices/appNotificationSlice";
 import { setMarkersItems } from "../Slices/markersSlice";
 import { setMarker } from "../Slices/projectSlice";
 
@@ -56,12 +57,13 @@ export const addMarkerAction = (marker: TablesInsert<'markers'>) => {
                 .select()
 
             if (!error) {
-                console.log("marker added", data)
+                dispatch(addAppNotification({ message: `${data[0].marker_type} a fost adaugat!`, severity: 'success' }))
                 dispatch(setMarker(data[0]))
             }
 
             if (error) {
-                throw error;
+                dispatch(addAppNotification({ message: `Eroare adaugare marker!`, severity: 'error' }))
+
             }
 
         } catch (error) {
@@ -74,7 +76,6 @@ export const updateMarkerAction = (marker: TablesUpdate<'markers'>) => {
     return async (dispatch: any, getState: () => any) => {
         try {
 
-            console.log(marker)
 
             const { data, error } = await supabase
                 .from('markers')
@@ -83,13 +84,17 @@ export const updateMarkerAction = (marker: TablesUpdate<'markers'>) => {
                 .select()
 
             if (!error) {
-                console.log("marker updatingd", data)
+                dispatch(addAppNotification({ message: `${data[0].marker_type} actualizat cu success`, severity: 'success' }))
+                return {
+                    data: data,
+                    severity: 'success',
+                    message: `{${data[0].marker_type} actualizat cu success}`
+                }
             }
 
             if (error) {
-                throw error;
+                dispatch(addAppNotification({ message: `Eroare update marker!`, severity: 'error' }))
             }
-
         } catch (error) {
             console.error('Error deleting item:', error);
         }
@@ -107,11 +112,12 @@ export const deleteMarkerAction = (marker: Tables<'markers'>) => {
                 .eq('id', marker.id)
 
             if (!error) {
+                dispatch(addAppNotification({ message: `${marker?.number} a fost sters!`, severity: 'success' }))
                 console.log("Marker deleted", marker)
             }
 
             if (error) {
-                throw error;
+                dispatch(addAppNotification({ message: `eroare stergere marker!`, severity: 'error' }))
             }
 
         } catch (error) {
