@@ -2,7 +2,7 @@ import supabase from "../../supabase/createClient";
 import { Tables, TablesInsert, TablesUpdate } from "../Models/Database";
 import { addAppNotification } from "../Slices/appNotificationSlice";
 import { setMarkersItems } from "../Slices/markersSlice";
-import { setMarker } from "../Slices/projectSlice";
+import { setMarker, updateMarker } from "../Slices/projectSlice";
 
 export const getMarkersAction = (street_id?: string) => {
     return async (dispatch: any, getState: () => any) => {
@@ -83,6 +83,7 @@ export const updateMarkerAction = (marker: TablesUpdate<'markers'>) => {
 
             if (!error) {
                 dispatch(addAppNotification({ message: `${data[0].marker_type} actualizat cu success`, severity: 'success' }))
+                dispatch(updateMarker(data[0]))
                 return {
                     data: data,
                     severity: 'success',

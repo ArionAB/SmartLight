@@ -8,18 +8,11 @@ interface FlyToLocationProps {
 }
 
 export const flyToLocation = (map: Map, lat: number, lng: number): void => {
-    const currentMap = useMap();
-    if (!map) {
-        currentMap.flyTo([lat, lng], 15, {
-            animate: true,
-            duration: 1.5,
-        });
-    } else {
-        map.flyTo([lat, lng], 15, {
-            animate: true,
-            duration: 1.5,
-        });
-    }
+
+    map.flyTo([lat, lng], 15, {
+        animate: true,
+        duration: 1.5,
+    });
 
 };
 

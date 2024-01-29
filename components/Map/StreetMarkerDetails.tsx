@@ -164,7 +164,7 @@ export const StreetMarkerDetails: FC<{
                         <TextField
                             fullWidth
                             value={form.longitude}
-                            name="longitudine"
+                            name="longitude"
                             label="Longitudine"
                             onChange={handleChange}
                         />
