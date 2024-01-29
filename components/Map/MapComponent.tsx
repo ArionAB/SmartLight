@@ -115,7 +115,7 @@ const MapComponent: FC = () => {
                         </Fab>
 
                         <MyLocationMarker position={currentLocation} />
-                        {
+                        {/* {
                             markers.length > 0 && markers?.map((item) => {
                                 return (
                                     <Box key={item} >
@@ -123,7 +123,7 @@ const MapComponent: FC = () => {
                                     </Box>
                                 )
                             })
-                        }
+                        } */}
                         <StreetMarkers />
                         <DrawerDialog />
                     </MapContainer>

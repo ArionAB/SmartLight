@@ -158,7 +158,7 @@ export const DrawerDialog = () => {
                                                     <FolderIcon sx={{
                                                         color: '#F8D775'
                                                     }} />
-                                                    <Typography variant='caption'>{item?.city}</Typography>
+                                                    <Typography variant='caption'>[{item?.county}] {item?.city}</Typography>
                                                 </Box>
                                                 <MapIcon sx={{ mr: 2 }} onClick={() => handleGoToLocation(Number(item.lat), Number(item.long))} />
                                             </Box>
