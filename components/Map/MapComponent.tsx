@@ -115,15 +115,15 @@ const MapComponent: FC = () => {
                         </Fab>
 
                         <MyLocationMarker position={currentLocation} />
-                        {/* {
+                        {
                             markers.length > 0 && markers?.map((item) => {
                                 return (
-                                    <Box key={item} >
+                                    <Box key={item} sx={{ display: 'none' }}>
                                         <DraggableMarker item={item} currentLocation={currentLocation} />
                                     </Box>
                                 )
                             })
-                        } */}
+                        }
                         <StreetMarkers />
                         <DrawerDialog />
                     </MapContainer>

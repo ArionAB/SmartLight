@@ -64,8 +64,7 @@ export const DraggableMarker: FC<{
             <Dialog open={open} onClose={() => setOpen(false)} fullWidth>
                 <AddMarker position={position} selectedMarker={selectedMarker} setOpen={setOpen} />
             </Dialog>
-            <Marker
-                //@ts-ignore 
+            {/* <Marker
                 draggable={true}
                 eventHandlers={eventHandlers}
                 position={position}
@@ -74,11 +73,10 @@ export const DraggableMarker: FC<{
                 <Popup>
                     <Typography>{`${position}`}</Typography>
                 </Popup>
-                {/* @ts-ignore */}
-                {/* <Tooltip direction="top" offset={[0, -20]} opacity={1} permanent>
+                 <Tooltip direction="top" offset={[0, -20]} opacity={1} permanent>
                     {`Stalpul ${item}`}
-                </Tooltip> */}
-            </Marker>
+                </Tooltip> 
+            </Marker> */}
         </>
 
     )
