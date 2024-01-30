@@ -30,6 +30,8 @@ const projectSlice = createSlice({
             const project: ProjectModel = state.projects.find((project: ProjectModel) => project.id === action.payload.proiect_id)
             const street = project.strazi.find((street) => street.id === action.payload.street_id)
             street?.markers.push(action.payload)
+            console.log(action.payload)
+            state.focusedProject.street.markers.push(action.payload)
         },
         updateMarker: (state, action) => {
             const project: ProjectModel = state.projects.find((project: ProjectModel) => project.id === action.payload.proiect_id);
@@ -37,6 +39,7 @@ const projectSlice = createSlice({
             const markerIndex = street?.markers.findIndex((marker) => marker.id === action.payload.id);
             if (markerIndex !== -1) {
                 street!.markers[markerIndex!] = action.payload;
+
             }
         },
         deleteMarker: (state, action) => {
@@ -45,6 +48,7 @@ const projectSlice = createSlice({
             const markerIndex = street?.markers.findIndex((marker) => marker.id === action.payload.id);
             if (markerIndex !== -1) {
                 street!.markers.splice(markerIndex!, 1);
+                state.focusedProject.street.markers.splice(markerIndex!, 1)
             }
         },
 

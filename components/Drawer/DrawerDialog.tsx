@@ -11,13 +11,8 @@ import { selectProjectItems } from '@/utils/Store/Selectors/projectSelectors';
 import { Add } from '@mui/icons-material';
 import { AddStreet } from './AddStreet';
 import { Tables } from '@/utils/Store/Models/Database';
-import StackedLineChartIcon from '@mui/icons-material/StackedLineChart';
-import PowerInputIcon from '@mui/icons-material/PowerInput';
-import LinearScaleIcon from '@mui/icons-material/LinearScale';
 import { ProjectModel } from '@/utils/Store/Models/Project/ProjectModel';
 import { StreetModel } from '@/utils/Store/Models/Project/StreetModel';
-import LightIcon from '@mui/icons-material/Light';
-import CellTowerIcon from '@mui/icons-material/CellTower';
 import FolderIcon from '@mui/icons-material/Folder';
 import { getProjectAction } from '@/utils/Store/Actions/ProjectAction';
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
@@ -30,6 +25,7 @@ import MapIcon from '@mui/icons-material/Map';
 import SearchIcon from '@mui/icons-material/Search';
 import { flyToLocation } from '../Map/FlyToLocation';
 import { useMap } from 'react-leaflet';
+import { selectIsDrawerOpen } from '@/utils/Store/Selectors/miscSelectors';
 
 
 
@@ -47,7 +43,7 @@ export const DrawerDialog = () => {
 
 
     const dispatch = useAppDispatch();
-
+    const isDrawerOpen = useAppSelector(selectIsDrawerOpen)
     const projectItems = useAppSelector(selectProjectItems)
     const theme = useTheme();
 
@@ -65,9 +61,7 @@ export const DrawerDialog = () => {
         setSelectedMarker(marker)
     }
 
-    useEffect(() => {
-        dispatch(setDrawer(open))
-    }, [open])
+
 
     const handleChange =
         (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
@@ -78,6 +72,7 @@ export const DrawerDialog = () => {
         setOpen(false)
         flyToLocation(map, lat, lng)
     }
+
 
     return (
         <>
@@ -92,14 +87,17 @@ export const DrawerDialog = () => {
             </Dialog>
             <SwipeableDrawer
                 anchor='left'
-                open={open}
+                open={open || isDrawerOpen}
                 onOpen={() => {
                     setOpen(true)
                     dispatch(setDrawer(true))
                 }}
                 disableDiscovery={false}
                 disableSwipeToOpen={false}
-                onClose={() => setOpen(false)}
+                onClose={() => {
+                    setOpen(false)
+                    dispatch(setDrawer(false))
+                }}
                 sx={{
                     width: 350,
                     minWidth: 5,

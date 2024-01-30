@@ -1,5 +1,5 @@
 import { Enums, TablesInsert } from '@/utils/Store/Models/Database'
-import { selectFocusedProject } from '@/utils/Store/Selectors/projectSelectors'
+import { selectFocusedProject, selectProjectItems } from '@/utils/Store/Selectors/projectSelectors'
 import { useAppDispatch, useAppSelector } from '@/utils/Store/hooks'
 import { Button, ButtonGroup, Container, DialogTitle, FormControl, FormGroup, InputLabel, MenuItem, Select, SelectChangeEvent, TextField, Typography } from '@mui/material'
 import React, { FC, useState } from 'react'
@@ -44,6 +44,8 @@ export const AddMarker: FC<{
         };
 
         const focusedProject = useAppSelector(selectFocusedProject)
+        const projects = useAppSelector(selectProjectItems)
+        console.log('focused', focusedProject)
         const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
             e.preventDefault();
             setLoading(true)
@@ -61,6 +63,7 @@ export const AddMarker: FC<{
                     message: "Trebuie sa selectati un proiect si o strada!"
                 }))
             }
+
 
             let markerData: TablesInsert<'markers'> = {
                 latitude: position[0],

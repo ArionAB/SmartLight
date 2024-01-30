@@ -12,13 +12,17 @@ import { divIcon } from 'leaflet'
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { deleteMarkerAction } from '@/utils/Store/Actions/MarkerActions'
-import CircleIcon from '@mui/icons-material/Circle';
-import ChangeHistoryIcon from '@mui/icons-material/ChangeHistory';
+import { selectIsTooltipOpen } from '@/utils/Store/Selectors/miscSelectors'
 
 export const StreetMarkers = () => {
     const [selectedMarker, setSelectedMarker] = useState<Tables<'markers'>>(null!)
     const [open, setOpen] = useState(false)
     const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
+
+    const dispatch = useAppDispatch()
+    const projectItems = useAppSelector(selectProjectItems)
+    const focusedProject = useAppSelector(selectFocusedProject)
+    const isTooltips = useAppSelector(selectIsTooltipOpen)
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
@@ -29,9 +33,6 @@ export const StreetMarkers = () => {
     };
 
 
-    const dispatch = useAppDispatch()
-    const projectItems = useAppSelector(selectProjectItems)
-    const focusedProject = useAppSelector(selectFocusedProject)
 
     const lampColor = (power_type: Enums<'power_type'>) => {
         switch (power_type) {
@@ -138,6 +139,8 @@ export const StreetMarkers = () => {
     }
 
     const deletePopover = Boolean(anchorEl)
+
+    console.log(isTooltips)
     return (
         <>
             {
@@ -186,22 +189,26 @@ export const StreetMarkers = () => {
 
                                     </Popup>
 
-                                    {/* @ts-ignore */}
-                                    <Tooltip direction="top" offset={[0, -20]} opacity={1} permanent>
-                                        <Box sx={{
-                                            display: 'flex',
-                                            flexDirection: 'column'
-                                        }}>
-                                            <Typography variant='caption' sx={{ fontWeight: 600, fontSize: 10 }} textAlign={'center'}>
-                                                {marker?.number}
-                                            </Typography>
-                                            <Typography variant='caption' sx={{ fontSize: 10 }}>
-                                                {
-                                                    marker?.pole_type === 'Lampadar Metalic' ? 'L.M.' : marker?.pole_type
-                                                }
-                                            </Typography>
-                                        </Box>
-                                    </Tooltip>
+                                    {
+                                        isTooltips && (
+                                            //@ts-ignore
+                                            <Tooltip direction="top" offset={[0, -20]} opacity={1} permanent>
+                                                <Box sx={{
+                                                    display: 'flex',
+                                                    flexDirection: 'column'
+                                                }}>
+                                                    <Typography variant='caption' sx={{ fontWeight: 600, fontSize: 10 }} textAlign={'center'}>
+                                                        {marker?.number}
+                                                    </Typography>
+                                                    <Typography variant='caption' sx={{ fontSize: 10 }}>
+                                                        {
+                                                            marker?.pole_type === 'Lampadar Metalic' ? 'L.M.' : marker?.pole_type
+                                                        }
+                                                    </Typography>
+                                                </Box>
+                                            </Tooltip>)
+                                    }
+
                                 </Marker>
                             );
                         });

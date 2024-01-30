@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState: any = {
     drawer: false,
+    tooltips: true
 };
 
 const miscSlice = createSlice({
@@ -9,11 +10,15 @@ const miscSlice = createSlice({
     initialState,
     reducers: {
         setDrawer: (state, action) => {
+            console.log(action.payload)
             state.drawer = action.payload
         },
+        setTooltips: (state, action) => {
+            state.tooltips = action.payload
+        }
     },
 });
 
-export const { setDrawer } = miscSlice.actions;
+export const { setDrawer, setTooltips } = miscSlice.actions;
 
 export default miscSlice.reducer;
