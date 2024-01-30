@@ -44,8 +44,6 @@ export const AddMarker: FC<{
         };
 
         const focusedProject = useAppSelector(selectFocusedProject)
-        const projects = useAppSelector(selectProjectItems)
-        console.log('focused', focusedProject)
         const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
             e.preventDefault();
             setLoading(true)
@@ -74,9 +72,15 @@ export const AddMarker: FC<{
                 street_id: focusedProject.street.id,
                 images: imageUrls,
                 observatii: marker.observatii,
-                //@ts-ignore
-                number: focusedProject.street.markers.length + 1
+
             }
+            //@ts-ignore
+            if (!focusedProject.street.markers) {
+                markerData.number = '1'
+                //@ts-ignore
+            } else markerData.number = focusedProject.street.markers.length + 1
+
+
 
 
 

@@ -139,8 +139,6 @@ export const StreetMarkers = () => {
     }
 
     const deletePopover = Boolean(anchorEl)
-
-    console.log(isTooltips)
     return (
         <>
             {
