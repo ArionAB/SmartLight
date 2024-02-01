@@ -5,6 +5,7 @@ import { renderToStaticMarkup } from 'react-dom/server';
 import MyLocationIcon from '@mui/icons-material/MyLocation';
 import { Fab } from '@mui/material';
 import { flyToLocation } from './FlyToLocation';
+import { LocationModel } from '@/utils/Store/Models/Location/LocationModel';
 
 const iconHTML = renderToStaticMarkup(
     <div style={{ color: '#004aad' }}>
@@ -17,15 +18,15 @@ const customMarkerIcon = divIcon({
     iconSize: [0, 0],
     iconAnchor: [12, 12],
 });
-export const MyLocationMarker: FC<{ position: number[], getMyLocation: Function }> = ({
+export const MyLocationMarker: FC<{ position: LocationModel, getMyLocation: Function }> = ({
     position,
     getMyLocation
 }) => {
     const map = useMap()
 
-    useEffect(() => {
-        flyToLocation(map, position[0], position[1])
-    }, [position])
+    // useEffect(() => {
+    //     flyToLocation(map, position.lat, position.lng)
+    // }, [position])
 
 
     return position === null ? null : (

@@ -18,10 +18,11 @@ import { DrawerDialog } from '../Drawer/DrawerDialog';
 import { flyToLocation } from './FlyToLocation';
 import { AddLampIcon } from './AddLampIcon';
 import { AddPoleIcon } from './AddPoleIcon';
+import useLocation from '@/utils/Hooks/useLocation';
 
 
 const MapComponent: FC = () => {
-    const [currentLocation, setCurrentLocation] = useState<any>([]);
+    // const [currentLocation, setCurrentLocation] = useState<any>([]);
     const [markers, setMarkers] = useState<any[]>([])
 
     const getMyLocation = () => {
@@ -34,7 +35,7 @@ const MapComponent: FC = () => {
 
             const success = (position: any) => {
                 const { latitude, longitude } = position.coords;
-                setCurrentLocation([latitude, longitude]);
+                // setCurrentLocation([latitude, longitude]);
             };
 
             const error = (err: any) => {
@@ -47,9 +48,9 @@ const MapComponent: FC = () => {
         }
     };
 
-    useEffect(() => {
-        getMyLocation();
-    }, [])
+    // useEffect(() => {
+    //     getMyLocation();
+    // }, [])
 
     const handleAddDraggableMarkers = (marker_type: Enums<'marker_type'>) => {
         let markersArr: any = [...markers]
@@ -77,26 +78,48 @@ const MapComponent: FC = () => {
     //     setCurrentLocation([coordinates.lat, coordinates.lng])
     // }, [coordinates])
 
+    // const [location, accuracy, error] = useLocation(true, 10, 50, { enableHighAccuracy: true, maximumAge: 2000, timeout: 5000 });
+    // const [location, accuracy, error] = useLocation(true);
+    // console.log('location', location)
+    // console.log('accuracy', accuracy)
+    // console.log('error', error)
+    const [location, accuracy, error] = useLocation(true); // Enable, Accuracy Threshold, Threshold Wait Time
 
+    useEffect(() => {
+        console.log("LOCATION", location)
+        console.log('Component mounted or updated.');
+        if (error) {
+            // Handle error, e.g., show an error message to the user
+            console.error(error);
+        } else if (location) {
+            // Handle location update, e.g., update the UI with the new location
+            console.log('New Location:', location);
+            console.log('Accuracy:', accuracy);
+        }
+    })
     return (
         <Box sx={{ position: 'relative', display: 'flex', justifyContent: "flex-end" }}>
+            <Box sx={{ position: 'absolute', top: 0, right: 400, zIndex: 999, background: 'red' }}>Accuracy: {accuracy}</Box>
+            <Box sx={{ position: 'absolute', top: 30, right: 400, zIndex: 999, background: 'blue' }}>lat: {location?.lat}</Box>
+            <Box sx={{ position: 'absolute', top: 50, right: 400, zIndex: 999, background: 'green' }}>long: {location?.lng}</Box>
             {
-                currentLocation.length > 0 && (
+                true && (
+
                     //@ts-ignore
-                    <MapContainer center={currentLocation} zoom={13}
+                    <MapContainer center={[46.0783616, 23.5667456]} zoom={13}
                         style={{
                             height: "calc(100dvh - 64px)",
                             width: "100%",
                         }}>
                         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-                        <AddPoleIcon getMyLocation={getMyLocation} position={currentLocation} handleAddDraggableMarkers={handleAddDraggableMarkers} />
-                        <AddLampIcon getMyLocation={getMyLocation} position={currentLocation} handleAddDraggableMarkers={handleAddDraggableMarkers} />
-                        <MyLocationMarker position={currentLocation} getMyLocation={getMyLocation} />
+                        {/* <AddPoleIcon getMyLocation={getMyLocation} position={location} handleAddDraggableMarkers={handleAddDraggableMarkers} /> */}
+                        {/* <AddLampIcon getMyLocation={getMyLocation} position={location} handleAddDraggableMarkers={handleAddDraggableMarkers} /> */}
+                        {location && (<MyLocationMarker position={location} getMyLocation={getMyLocation} />)}
                         {
                             markers.length > 0 && markers?.map((item, index) => {
                                 return (
                                     <Box key={index} sx={{ display: 'none' }}>
-                                        <DraggableMarker item={item} currentLocation={currentLocation} />
+                                        <DraggableMarker item={item} currentLocation={location} />
                                     </Box>
                                 )
                             })
