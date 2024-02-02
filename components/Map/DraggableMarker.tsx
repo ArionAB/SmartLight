@@ -58,7 +58,7 @@ export const DraggableMarker: FC<{
         setOpen(true)
         setSelectedMarker(item)
     }, [])
-
+    console.log('addMarker', position)
     return (
         <>
             <Dialog open={open} onClose={() => setOpen(false)} fullWidth>

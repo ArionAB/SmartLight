@@ -83,7 +83,7 @@ const MapComponent: FC = () => {
     // console.log('location', location)
     // console.log('accuracy', accuracy)
     // console.log('error', error)
-    const [location, accuracy, error] = useLocation(true); // Enable, Accuracy Threshold, Threshold Wait Time
+    const [location, accuracy, error] = useLocation(true, 50, 1, { enableHighAccuracy: true, maximumAge: 2000, timeout: 5000 }); // Enable, Accuracy Threshold, Threshold Wait Time
 
     useEffect(() => {
         console.log("LOCATION", location)
@@ -112,8 +112,8 @@ const MapComponent: FC = () => {
                             width: "100%",
                         }}>
                         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-                        {/* <AddPoleIcon getMyLocation={getMyLocation} position={location} handleAddDraggableMarkers={handleAddDraggableMarkers} /> */}
-                        {/* <AddLampIcon getMyLocation={getMyLocation} position={location} handleAddDraggableMarkers={handleAddDraggableMarkers} /> */}
+                        <AddPoleIcon getMyLocation={getMyLocation} position={location!} handleAddDraggableMarkers={handleAddDraggableMarkers} />
+                        <AddLampIcon getMyLocation={getMyLocation} position={location!} handleAddDraggableMarkers={handleAddDraggableMarkers} />
                         {location && (<MyLocationMarker position={location} getMyLocation={getMyLocation} />)}
                         {
                             markers.length > 0 && markers?.map((item, index) => {
