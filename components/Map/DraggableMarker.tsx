@@ -12,14 +12,16 @@ import MyLocationIcon from '@mui/icons-material/MyLocation';
 import { renderToStaticMarkup } from 'react-dom/server';
 import LightIcon from '@mui/icons-material/Light';
 import CellTowerIcon from '@mui/icons-material/CellTower';
+import { LocationModel } from "@/utils/Store/Models/Location/LocationModel"
 
 
 
 
 export const DraggableMarker: FC<{
     item: Enums<'marker_type'>,
-    currentLocation: any
-}> = ({ item, currentLocation }) => {
+    currentLocation: LocationModel,
+    accuracy: string
+}> = ({ item, currentLocation, accuracy }) => {
     const [position, setPosition] = useState(currentLocation)
     const [open, setOpen] = useState(false)
     const [selectedMarker, setSelectedMarker] = useState<Enums<'marker_type'>>('Lampa')
@@ -62,7 +64,7 @@ export const DraggableMarker: FC<{
     return (
         <>
             <Dialog open={open} onClose={() => setOpen(false)} fullWidth>
-                <AddMarker position={position} selectedMarker={selectedMarker} setOpen={setOpen} />
+                <AddMarker position={position} selectedMarker={selectedMarker} setOpen={setOpen} accuracy={accuracy} />
             </Dialog>
             {/* <Marker
                 draggable={true}

@@ -11,11 +11,11 @@ export const AddLampIcon: FC<{
 }> = ({ handleAddDraggableMarkers, position, getMyLocation }) => {
     const map = useMap()
 
-    useEffect(() => {
-        if (position !== undefined) {
-            flyToLocation(map, position.lat, position.lng)
-        }
-    }, [position])
+    // useEffect(() => {
+    //     if (position !== undefined) {
+    //         flyToLocation(map, position.lat, position.lng)
+    //     }
+    // }, [position])
 
 
     return (

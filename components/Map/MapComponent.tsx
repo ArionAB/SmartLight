@@ -83,7 +83,7 @@ const MapComponent: FC = () => {
     // console.log('location', location)
     // console.log('accuracy', accuracy)
     // console.log('error', error)
-    const [location, accuracy, error] = useLocation(true, 50, 1, { enableHighAccuracy: true, maximumAge: 2000, timeout: 5000 }); // Enable, Accuracy Threshold, Threshold Wait Time
+    const [location, accuracy, error] = useLocation(true); // Enable, Accuracy Threshold, Threshold Wait Time
 
     useEffect(() => {
         console.log("LOCATION", location)
@@ -97,29 +97,31 @@ const MapComponent: FC = () => {
             console.log('Accuracy:', accuracy);
         }
     })
+
+
     return (
         <Box sx={{ position: 'relative', display: 'flex', justifyContent: "flex-end" }}>
             <Box sx={{ position: 'absolute', top: 0, right: 100, zIndex: 999, background: 'red' }}>Accuracy: {accuracy}</Box>
             <Box sx={{ position: 'absolute', top: 30, right: 100, zIndex: 999, background: 'blue' }}>lat: {location?.lat}</Box>
             <Box sx={{ position: 'absolute', top: 50, right: 100, zIndex: 999, background: 'green' }}>long: {location?.lng}</Box>
             {
-                true && (
+                location && (
 
                     //@ts-ignore
-                    <MapContainer center={[46.0783616, 23.5667456]} zoom={13}
+                    <MapContainer center={[location?.lat, location?.lng]} zoom={13}
                         style={{
                             height: "calc(100dvh - 64px)",
                             width: "100%",
                         }}>
                         <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-                        <AddPoleIcon getMyLocation={getMyLocation} position={location!} handleAddDraggableMarkers={handleAddDraggableMarkers} />
-                        <AddLampIcon getMyLocation={getMyLocation} position={location!} handleAddDraggableMarkers={handleAddDraggableMarkers} />
+                        {location && <AddPoleIcon getMyLocation={getMyLocation} position={location!} handleAddDraggableMarkers={handleAddDraggableMarkers} />}
+                        {location && <AddLampIcon getMyLocation={getMyLocation} position={location!} handleAddDraggableMarkers={handleAddDraggableMarkers} />}
                         {location && (<MyLocationMarker position={location} getMyLocation={getMyLocation} />)}
                         {
                             markers.length > 0 && markers?.map((item, index) => {
                                 return (
                                     <Box key={index} sx={{ display: 'none' }}>
-                                        <DraggableMarker item={item} currentLocation={location} />
+                                        <DraggableMarker item={item} currentLocation={location} accuracy={accuracy!?.toString()} />
                                     </Box>
                                 )
                             })

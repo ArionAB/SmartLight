@@ -10,11 +10,11 @@ export const AddPoleIcon: FC<{
     getMyLocation: Function
 }> = ({ handleAddDraggableMarkers, position, getMyLocation }) => {
     const map = useMap()
-    useEffect(() => {
-        if (position !== undefined) {
-            flyToLocation(map, position.lat, position.lng)
-        }
-    }, [position])
+    // useEffect(() => {
+    //     if (position !== undefined) {
+    //         flyToLocation(map, position.lat, position.lng)
+    //     }
+    // }, [position])
     return (
         <Fab onClick={() => {
             getMyLocation()

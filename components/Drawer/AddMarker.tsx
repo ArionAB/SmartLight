@@ -10,15 +10,18 @@ import { powerTypeItems } from '@/utils/Store/items/powerTypeItems'
 import { lampItems } from '@/utils/Store/items/lampItems'
 import { poleTypeItems } from '@/utils/Store/items/poleTypeItems'
 import { addAppNotification } from '@/utils/Store/Slices/appNotificationSlice'
+import { LocationModel } from '@/utils/Store/Models/Location/LocationModel'
 
 export const AddMarker: FC<{
     selectedMarker: Enums<'marker_type'>,
-    position: string[],
-    setOpen: Function
+    position: LocationModel,
+    setOpen: Function,
+    accuracy: string
 }> = ({
     selectedMarker,
     position,
-    setOpen
+    setOpen,
+    accuracy
 }) => {
         const [marker, setMarker] = useState({
             number: '',
@@ -64,14 +67,15 @@ export const AddMarker: FC<{
 
 
             let markerData: TablesInsert<'markers'> = {
-                latitude: position[0],
-                longitude: position[1],
+                latitude: position.lat.toString(),
+                longitude: position.lng.toString(),
                 marker_type: selectedMarker,
                 marker_status: 'Ok',
                 proiect_id: focusedProject.item.id,
                 street_id: focusedProject.street.id,
                 images: imageUrls,
                 observatii: marker.observatii,
+                accuracy: accuracy
 
             }
             //@ts-ignore
