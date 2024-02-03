@@ -12,6 +12,7 @@ const useLocation = (
     const [accuracy, setAccuracy] = React.useState<number>();
     const [location, setLocation] = React.useState<LocationModel>();
     const [error, setError] = React.useState<string>();
+
     React.useEffect(() => {
         if (!enabled) {
             setAccuracy(undefined);

@@ -1,24 +1,20 @@
 'use client'
 
-import React, { FC, useEffect, useState } from 'react'
-import { MapContainer, TileLayer, useMap } from 'react-leaflet';
-
+import React, { FC, useState } from 'react'
+import { MapContainer, TileLayer } from 'react-leaflet';
 import "leaflet/dist/leaflet.css"
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.webpack.css";
 import "leaflet-defaulticon-compatibility";
-import { Box, Fab } from '@mui/material';
-import MyLocationIcon from '@mui/icons-material/MyLocation';
+import { Box } from '@mui/material';
 import { DraggableMarker } from './DraggableMarker';
 import { MyLocationMarker } from './MyLocationMarker';
 import { StreetMarkers } from './StreetMarkers';
-import LightIcon from '@mui/icons-material/Light';
-import CellTowerIcon from '@mui/icons-material/CellTower';
 import { Enums } from '@/utils/Store/Models/Database';
 import { DrawerDialog } from '../Drawer/DrawerDialog';
-import { flyToLocation } from './FlyToLocation';
 import { AddLampIcon } from './AddLampIcon';
 import { AddPoleIcon } from './AddPoleIcon';
 import useLocation from '@/utils/Hooks/useLocation';
+import ZoomControl from './ZoomControl';
 
 
 const MapComponent: FC = () => {
@@ -43,7 +39,9 @@ const MapComponent: FC = () => {
                 location && (
 
                     //@ts-ignore
-                    <MapContainer center={[location?.lat, location?.lng]} zoom={13}
+                    <MapContainer center={[location?.lat, location?.lng]}
+                        zoom={13}
+                        zoomControl={false}
                         style={{
                             height: "calc(100dvh - 64px)",
                             width: "100%",
@@ -61,6 +59,7 @@ const MapComponent: FC = () => {
                                 )
                             })
                         }
+                        <ZoomControl />
                         <StreetMarkers />
                         <DrawerDialog />
                     </MapContainer>

@@ -72,6 +72,7 @@ export const DrawerDialog = () => {
         setOpen(false)
         flyToLocation(map, lat, lng)
     }
+    console.log(map.getZoom())
 
 
     return (
