@@ -1,7 +1,7 @@
 import { Fab } from '@mui/material'
 import React, { FC, useEffect } from 'react'
 import { useMap } from 'react-leaflet'
-import { flyToLocation } from './FlyToLocation'
+import { flyToLocation } from '../Map/FlyToLocation'
 import { LocationModel } from '@/utils/Store/Models/Location/LocationModel'
 
 export const AddLampIcon: FC<{

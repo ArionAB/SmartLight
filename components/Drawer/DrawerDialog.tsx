@@ -17,7 +17,7 @@ import FolderIcon from '@mui/icons-material/Folder';
 import { getProjectAction } from '@/utils/Store/Actions/ProjectAction';
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 import { setDrawer } from '@/utils/Store/Slices/miscSlice';
-import { StreetMarkerDetails } from '../Map/StreetMarkerDetails';
+import { StreetMarkerDetails } from '../Marker/StreetMarkerDetails';
 import { setFocusedProject } from '@/utils/Store/Slices/projectSlice';
 import { useTheme } from '@mui/material/styles';
 import InfoIcon from '@mui/icons-material/Info';
@@ -26,7 +26,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import { flyToLocation } from '../Map/FlyToLocation';
 import { useMap } from 'react-leaflet';
 import { selectIsDrawerOpen } from '@/utils/Store/Selectors/miscSelectors';
-import StreetMenu from './StreetMenu';
+import StreetMenu from '../Street/StreetMenu';
 
 
 

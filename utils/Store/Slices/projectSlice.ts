@@ -66,10 +66,17 @@ const projectSlice = createSlice({
                 state.focusedProject.street.markers.splice(markerIndex!, 1)
             }
         },
+        updateStreet: (state, action) => {
+            const project: ProjectModel = state.projects.find((project: ProjectModel) => project.id === action.payload.proiect_id);
+            const streetIndex = project.strazi.findIndex((street) => street.id === action.payload.id)
+            if (streetIndex !== -1) {
+                project.strazi[streetIndex] = action.payload
+            }
+        }
 
     },
 });
 
-export const { setProjectItems, setStreetItems, setStreet, setFocusedProject, setMarker, updateMarker, deleteMarker } = projectSlice.actions;
+export const { setProjectItems, setStreetItems, setStreet, setFocusedProject, setMarker, updateMarker, deleteMarker, updateStreet } = projectSlice.actions;
 
 export default projectSlice.reducer;

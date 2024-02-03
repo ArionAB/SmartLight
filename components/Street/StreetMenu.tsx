@@ -5,11 +5,14 @@ import InfoIcon from '@mui/icons-material/Info';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { StreetModel } from '@/utils/Store/Models/Project/StreetModel';
 import styled from '@emotion/styled';
+import { Tables } from '@/utils/Store/Models/Database';
+import { StreetEdit } from './StreetEdit';
 
 
 const StreetMenu: FC<{ street: StreetModel }> = ({ street }) => {
     const [anchor, setAnchor] = useState<null | HTMLElement>(null);
     const [openTable, setOpenTable] = useState(false)
+    const [openEditDialog, setOpenEditDialog] = useState(false)
 
 
     const handleOpenStreetMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -26,31 +29,37 @@ const StreetMenu: FC<{ street: StreetModel }> = ({ street }) => {
     }
 
 
-    let counter = street?.markers?.reduce((acc: any, obj) => {
-        // Initialize the counts if they don't exist yet
-        if (obj.pole_type) {
-            if (!acc[obj.pole_type]) {
-                acc[obj.pole_type] = { total: 0, 'Cu lampa': 0, 'Fara lampa': 0 };
+    let counter = useMemo(() => {
+        return street?.markers?.reduce((acc: any, obj) => {
+            // Initialize the counts if they don't exist yet
+            if (obj.pole_type) {
+                if (!acc[obj.pole_type]) {
+                    acc[obj.pole_type] = { total: 0, 'Cu lampa': 0, 'Fara lampa': 0 };
+                }
+                // Increment the total count for this pole_type
+                acc[obj.pole_type].total++;
             }
-            // Increment the total count for this pole_type
-            acc[obj.pole_type].total++;
-        }
 
 
 
 
-        // Increment the count for the lamp_type if it matches
-        if (obj.lamp_type === 'Cu lampa') {
-            //@ts-ignore
-            acc[obj.pole_type]['Cu lampa']++;
-        } else if (obj.lamp_type === 'Fara lampa') {
-            //@ts-ignore
-            acc[obj.pole_type]['Fara lampa']++;
-        }
+            // Increment the count for the lamp_type if it matches
+            if (obj.lamp_type === 'Cu lampa') {
+                if (obj.pole_type) {
+                    acc[obj.pole_type]['Cu lampa']++;
+                }
+            } else if (obj.lamp_type === 'Fara lampa') {
+                //@ts-ignore
+                if (obj.pole_type) {
+                    acc[obj.pole_type]['Fara lampa']++;
 
-        return acc;
-    }, {});
-    console.log(counter)
+                }
+            }
+
+            return acc;
+        }, {});
+    }, [street?.markers])
+
     const rows = useMemo(() => {
         if (counter) {
             return Object.entries(counter).map(([key, value]: any) => {
@@ -81,6 +90,7 @@ const StreetMenu: FC<{ street: StreetModel }> = ({ street }) => {
         return total
     }
 
+
     const StyledTableCell = styled(TableCell)(({ theme }) => ({
         [`&.${tableCellClasses.head}`]: {
             //@ts-ignore
@@ -110,6 +120,9 @@ const StreetMenu: FC<{ street: StreetModel }> = ({ street }) => {
             <IconButton color='info' onClick={handleOpenStreetMenu}>
                 <MoreVertIcon />
             </IconButton>
+            <Dialog open={openEditDialog} onClose={() => setOpenEditDialog(false)} >
+                <StreetEdit street={street} onClose={setOpenEditDialog} />
+            </Dialog>
             <Menu
                 elevation={1}
                 anchorEl={anchor}
@@ -122,7 +135,7 @@ const StreetMenu: FC<{ street: StreetModel }> = ({ street }) => {
                     width: '150px'
 
                 }}>
-                    <IconButton color='warning'>
+                    <IconButton color='warning' onClick={() => setOpenEditDialog(true)}>
                         <Edit />
                     </IconButton>
                     <IconButton color='error'>

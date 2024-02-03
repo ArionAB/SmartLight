@@ -6,13 +6,13 @@ import "leaflet/dist/leaflet.css"
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.webpack.css";
 import "leaflet-defaulticon-compatibility";
 import { Box } from '@mui/material';
-import { DraggableMarker } from './DraggableMarker';
+import { DraggableMarker } from '../Marker/DraggableMarker';
 import { MyLocationMarker } from './MyLocationMarker';
-import { StreetMarkers } from './StreetMarkers';
+import { StreetMarkers } from '../Marker/StreetMarkers';
 import { Enums } from '@/utils/Store/Models/Database';
 import { DrawerDialog } from '../Drawer/DrawerDialog';
-import { AddLampIcon } from './AddLampIcon';
-import { AddPoleIcon } from './AddPoleIcon';
+import { AddLampIcon } from '../Marker/AddLampIcon';
+import { AddPoleIcon } from '../Marker/AddPoleIcon';
 import useLocation from '@/utils/Hooks/useLocation';
 import ZoomControl from './ZoomControl';
 
