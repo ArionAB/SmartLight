@@ -9,7 +9,7 @@ interface FlyToLocationProps {
 
 export const flyToLocation = (map: Map, lat: number, lng: number): void => {
 
-    map.flyTo([lat, lng], 15, {
+    map.flyTo([lat, lng], map.getZoom(), {
         animate: true,
         duration: 1.5,
     });
