@@ -45,7 +45,7 @@ export const MyLocationMarker: FC<{ position: LocationModel, accuracy: number }>
                 <Popup>You are here</Popup>
             </Marker>
             <Fab
-                onClick={mapEvents}
+                onClick={() => console.log('asd')}
                 sx={{
                     position: 'absolute', right: 0, zIndex: '999', margin: '1rem', backgroundColor: "#eaeaea", padding: "1rem", borderRadius: "50%"
                 }} >
