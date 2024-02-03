@@ -50,17 +50,20 @@ const StreetMenu: FC<{ street: StreetModel }> = ({ street }) => {
 
         return acc;
     }, {});
-
+    console.log(counter)
     const rows = useMemo(() => {
-        return Object.entries(counter).map(([key, value]: any) => {
-            const item = {
-                name: key,
-                total: value['total'],
-                lamp: value['Cu lampa'],
-                noLamp: value['Fara lampa']
-            };
-            return createData(item.name, Number(item.total), Number(item.lamp), Number(item.noLamp));
-        });
+        if (counter) {
+            return Object.entries(counter).map(([key, value]: any) => {
+                const item = {
+                    name: key,
+                    total: value['total'],
+                    lamp: value['Cu lampa'],
+                    noLamp: value['Fara lampa']
+                };
+                return createData(item.name, Number(item.total), Number(item.lamp), Number(item.noLamp));
+            });
+        }
+
     }, [counter]);
 
     const countTotal = () => {
@@ -69,7 +72,7 @@ const StreetMenu: FC<{ street: StreetModel }> = ({ street }) => {
             lamp: 0,
             noLamp: 0
         }
-        rows.forEach((row) => {
+        rows?.forEach((row) => {
             total.poles += row.total,
                 total.lamp += row.lamp,
                 total.noLamp += row.noLamp
@@ -131,7 +134,7 @@ const StreetMenu: FC<{ street: StreetModel }> = ({ street }) => {
                 </Box>
             </Menu>
             <Dialog fullScreen maxWidth="md" open={openTable} onClose={() => setOpenTable(false)}>
-                <TableContainer component={Paper}>
+                <TableContainer component={Paper} >
                     <Table sx={{ minWidth: 350 }} aria-label="simple table">
                         <TableHead>
                             <TableRow>
@@ -151,13 +154,13 @@ const StreetMenu: FC<{ street: StreetModel }> = ({ street }) => {
                                     <StyledTableCell component="th" scope="row">
                                         {row.name}
                                     </StyledTableCell>
-                                    <StyledTableCell component="th" scope="row" align='right'>
+                                    <StyledTableCell component="th" scope="row" align='center'>
                                         {row.total}
                                     </StyledTableCell>
-                                    <StyledTableCell component="th" scope="row" align='right'>
+                                    <StyledTableCell component="th" scope="row" align='center'>
                                         {row.lamp}
                                     </StyledTableCell>
-                                    <StyledTableCell component="th" scope="row" align='right'>
+                                    <StyledTableCell component="th" scope="row" align='center'>
                                         {row.noLamp}
                                     </StyledTableCell>
 
@@ -165,9 +168,9 @@ const StreetMenu: FC<{ street: StreetModel }> = ({ street }) => {
                             ))}
                             <TableRow>
                                 <StyledTableCell component="th" scope="row">Total:</StyledTableCell>
-                                <StyledTableCell component="th" scope="row" align='right'>{countTotal().poles}</StyledTableCell>
-                                <StyledTableCell component="th" scope="row" align='right'>{countTotal().lamp}</StyledTableCell>
-                                <StyledTableCell component="th" scope="row" align='right'>{countTotal().noLamp}</StyledTableCell>
+                                <StyledTableCell component="th" scope="row" align='center'>{countTotal().poles}</StyledTableCell>
+                                <StyledTableCell component="th" scope="row" align='center'>{countTotal().lamp}</StyledTableCell>
+                                <StyledTableCell component="th" scope="row" align='center'>{countTotal().noLamp}</StyledTableCell>
                             </TableRow>
                         </TableBody>
                     </Table>
