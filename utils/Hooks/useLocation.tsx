@@ -12,7 +12,6 @@ const useLocation = (
     const [accuracy, setAccuracy] = React.useState<number>();
     const [location, setLocation] = React.useState<LocationModel>();
     const [error, setError] = React.useState<string>();
-    console.log('trigger')
     React.useEffect(() => {
         if (!enabled) {
             setAccuracy(undefined);
@@ -31,12 +30,11 @@ const useLocation = (
                     const lat = position.coords.latitude;
                     const lng = position.coords.longitude;
                     setAccuracy(position.coords.accuracy);
-                    console.log('position', position)
                     if (accuracyThreshold == null || position.coords.accuracy < accuracyThreshold) {
                         setLocation({ lat, lng });
                     }
                     if (position.coords.accuracy > 10) {
-                        console.log("The GPS accuracy isn't good enough");
+                        // console.log("The GPS accuracy isn't good enough");
                     }
                 },
                 (e) => {
@@ -66,7 +64,6 @@ const useLocation = (
     if (!enabled) {
         return [undefined, undefined, undefined];
     }
-    console.log(location, accuracy, error)
     return [location, accuracy, error];
 };
 

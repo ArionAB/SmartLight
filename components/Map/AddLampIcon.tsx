@@ -5,22 +5,14 @@ import { flyToLocation } from './FlyToLocation'
 import { LocationModel } from '@/utils/Store/Models/Location/LocationModel'
 
 export const AddLampIcon: FC<{
-    handleAddDraggableMarkers: Function,
-    position: LocationModel,
-    getMyLocation: Function
-}> = ({ handleAddDraggableMarkers, position, getMyLocation }) => {
-    const map = useMap()
+    handleAddDraggableMarkers: Function
+}> = ({ handleAddDraggableMarkers }) => {
 
-    // useEffect(() => {
-    //     if (position !== undefined) {
-    //         flyToLocation(map, position.lat, position.lng)
-    //     }
-    // }, [position])
+
 
 
     return (
         <Fab onClick={() => {
-            getMyLocation()
             handleAddDraggableMarkers('Lampa')
         }}
             sx={{

@@ -1,23 +1,13 @@
 import { Fab } from '@mui/material'
-import React, { FC, useEffect } from 'react'
-import { useMap } from 'react-leaflet'
-import { flyToLocation } from './FlyToLocation'
-import { LocationModel } from '@/utils/Store/Models/Location/LocationModel'
+import React, { FC } from 'react'
+
 
 export const AddPoleIcon: FC<{
     handleAddDraggableMarkers: Function,
-    position: LocationModel
-    getMyLocation: Function
-}> = ({ handleAddDraggableMarkers, position, getMyLocation }) => {
-    const map = useMap()
-    // useEffect(() => {
-    //     if (position !== undefined) {
-    //         flyToLocation(map, position.lat, position.lng)
-    //     }
-    // }, [position])
+}> = ({ handleAddDraggableMarkers }) => {
+
     return (
         <Fab onClick={() => {
-            getMyLocation()
             handleAddDraggableMarkers('Stalp')
         }}
             sx={{
