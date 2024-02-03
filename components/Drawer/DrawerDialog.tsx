@@ -2,7 +2,7 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
-import { Accordion, AccordionDetails, AccordionSummary, Avatar, Box, Dialog, Divider, Fab, IconButton, InputAdornment, List, ListItem, ListItemAvatar, ListItemText, TextField, Typography } from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, Avatar, Box, Dialog, Divider, Fab, IconButton, InputAdornment, List, ListItem, ListItemAvatar, ListItemText, Menu, MenuItem, Paper, TextField, Typography } from '@mui/material';
 import CreateNewFolderIcon from '@mui/icons-material/CreateNewFolder';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import { AddProject } from './AddProject';
@@ -18,7 +18,7 @@ import { getProjectAction } from '@/utils/Store/Actions/ProjectAction';
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 import { setDrawer } from '@/utils/Store/Slices/miscSlice';
 import { StreetMarkerDetails } from '../Map/StreetMarkerDetails';
-import { setFocusedProject, setMarker } from '@/utils/Store/Slices/projectSlice';
+import { setFocusedProject } from '@/utils/Store/Slices/projectSlice';
 import { useTheme } from '@mui/material/styles';
 import InfoIcon from '@mui/icons-material/Info';
 import MapIcon from '@mui/icons-material/Map';
@@ -26,6 +26,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import { flyToLocation } from '../Map/FlyToLocation';
 import { useMap } from 'react-leaflet';
 import { selectIsDrawerOpen } from '@/utils/Store/Selectors/miscSelectors';
+import StreetMenu from './StreetMenu';
 
 
 
@@ -34,9 +35,9 @@ export const DrawerDialog = () => {
     const [openAddMarker, setOpenAddMarker] = useState(false)
     const [openStreet, setOpenStreet] = useState(false)
     const [openMarker, setOpenMarker] = useState(false)
-    const [selectedProject, setSelectedProject] = useState<ProjectModel>(null!)
-    const [selectedMarker, setSelectedMarker] = useState<Tables<'markers'>>(null!)
-    const [street_id, setStreet_id] = useState<string>('')
+    const [selectedProject, setSelectedProject] = useState<ProjectModel | null>(null)
+    const [selectedMarker, setSelectedMarker] = useState<Tables<'markers'> | null>(null)
+    const [street, setStreet] = useState<StreetModel | null>(null)
     const [expanded, setExpanded] = React.useState<string | false>(false);
     const [search, setSearch] = useState<string>('')
     const map = useMap();
@@ -72,7 +73,9 @@ export const DrawerDialog = () => {
         setOpen(false)
         flyToLocation(map, lat, lng)
     }
-    console.log(map.getZoom())
+
+
+
 
 
     return (
@@ -81,10 +84,10 @@ export const DrawerDialog = () => {
                 <AddProject setOpenAddMarker={setOpenAddMarker} />
             </Dialog>
             <Dialog open={openStreet} onClose={() => setOpenStreet(false)}>
-                <AddStreet project={selectedProject} setOpenStreet={setOpenStreet} />
+                <AddStreet project={selectedProject!} setOpenStreet={setOpenStreet} />
             </Dialog>
             <Dialog open={openMarker} onClose={() => setOpenMarker(false)}>
-                <StreetMarkerDetails marker={selectedMarker} setOpen={setOpenMarker} />
+                <StreetMarkerDetails marker={selectedMarker!} setOpen={setOpenMarker} />
             </Dialog>
             <SwipeableDrawer
                 anchor='left'
@@ -171,13 +174,13 @@ export const DrawerDialog = () => {
                                             </Fab>
                                             <Box sx={{ display: 'flex' }} flexDirection={'column'} gap={2} marginTop={2}>
                                                 {
-                                                    item.strazi?.map((street: StreetModel) => {
+                                                    item.strazi?.map((streetItem: StreetModel) => {
                                                         return (
-                                                            <Accordion key={street.id}>
+                                                            <Accordion key={streetItem.id}>
                                                                 <AccordionSummary
                                                                     onClick={() => {
-                                                                        setStreet_id(street.id),
-                                                                            dispatch(setFocusedProject({ item, street }))
+                                                                        setStreet(streetItem),
+                                                                            dispatch(setFocusedProject({ item, streetItem }))
                                                                     }}
                                                                     expandIcon={<ArrowDownwardIcon />}
                                                                     aria-controls="panel1-content"
@@ -185,16 +188,26 @@ export const DrawerDialog = () => {
                                                                 >
                                                                     <Box sx={{
                                                                         display: 'flex',
-                                                                        borderBottom: (selectedProject?.id === street.proiect_id) && (street.id === street_id) ? '2px solid #0052cc' : ''
+                                                                        justifyContent: 'space-between',
+                                                                        width: "100%",
+                                                                        borderBottom: (selectedProject?.id === streetItem.proiect_id) && (streetItem.id === street?.id) ? '2px solid #0052cc' : ''
                                                                     }} gap={1} justifyContent={'space-between'} alignItems={'center'}>
-                                                                        <Typography variant='caption' fontWeight={600}>{street?.name}</Typography>
-                                                                        <Typography variant='caption'>{street.network_type}</Typography>
-                                                                        <Typography variant='caption'>{street.road_type}</Typography>
+                                                                        <Box sx={{
+                                                                            display: "flex"
+                                                                        }} gap={1}>
+                                                                            <Typography variant='caption' fontWeight={600}>{streetItem?.name}</Typography>
+                                                                            <Typography variant='caption'>{streetItem.network_type}</Typography>
+                                                                            <Typography variant='caption'>{streetItem.road_type}</Typography>
+                                                                        </Box>
+
+                                                                        <StreetMenu street={street!} />
+
                                                                     </Box>
+
                                                                 </AccordionSummary>
                                                                 <AccordionDetails>
                                                                     <List>
-                                                                        {street.markers?.map((marker: Tables<'markers'>) => {
+                                                                        {streetItem.markers?.map((marker: Tables<'markers'>) => {
                                                                             return (
                                                                                 <ListItem key={marker.id}
                                                                                     sx={{ borderBottom: '2px solid #eaeaea' }}

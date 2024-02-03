@@ -15,7 +15,6 @@ export const MyLocationMarker: FC<{ position: LocationModel, accuracy: number }>
 }) => {
     const [isTracking, setIsTracking] = useState(false)
     const map = useMap()
-    console.log(map.getZoom())
 
     useEffect(() => {
         if (isTracking) {
