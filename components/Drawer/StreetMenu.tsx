@@ -26,17 +26,18 @@ const StreetMenu: FC<{ street: StreetModel }> = ({ street }) => {
     }
 
 
-    let counter = street?.markers?.reduce((acc, obj) => {
+    let counter = street?.markers?.reduce((acc: any, obj) => {
         // Initialize the counts if they don't exist yet
-        //@ts-ignore
-        if (!acc[obj.pole_type]) {
-            //@ts-ignore
-            acc[obj.pole_type] = { total: 0, 'Cu lampa': 0, 'Fara lampa': 0 };
+        if (obj.pole_type) {
+            if (!acc[obj.pole_type]) {
+                acc[obj.pole_type] = { total: 0, 'Cu lampa': 0, 'Fara lampa': 0 };
+            }
+            // Increment the total count for this pole_type
+            acc[obj.pole_type].total++;
         }
 
-        // Increment the total count for this pole_type
-        //@ts-ignore
-        acc[obj.pole_type].total++;
+
+
 
         // Increment the count for the lamp_type if it matches
         if (obj.lamp_type === 'Cu lampa') {
