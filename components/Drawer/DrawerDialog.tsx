@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react'
 import { Accordion, AccordionDetails, AccordionSummary, Avatar, Box, Dialog, Divider, Fab, IconButton, InputAdornment, List, ListItem, ListItemAvatar, ListItemText, Menu, MenuItem, Paper, TextField, Typography } from '@mui/material';
 import CreateNewFolderIcon from '@mui/icons-material/CreateNewFolder';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
-import { AddProject } from './AddProject';
+import { AddOrEditProject } from '../Project/AddOrEditProject';
 import { useAppDispatch, useAppSelector } from '@/utils/Store/hooks';
 import { selectProjectItems } from '@/utils/Store/Selectors/projectSelectors';
 import { Add } from '@mui/icons-material';
@@ -27,6 +27,7 @@ import { flyToLocation } from '../Map/FlyToLocation';
 import { useMap } from 'react-leaflet';
 import { selectIsDrawerOpen } from '@/utils/Store/Selectors/miscSelectors';
 import StreetMenu from '../Street/StreetMenu';
+import ProjectMenu from '../Project/ProjectMenu';
 
 
 
@@ -81,7 +82,7 @@ export const DrawerDialog = () => {
     return (
         <>
             <Dialog open={openAddMarker} onClose={() => setOpenAddMarker(false)}>
-                <AddProject setOpenAddMarker={setOpenAddMarker} />
+                <AddOrEditProject setOpenAddMarker={setOpenAddMarker} />
             </Dialog>
             <Dialog open={openStreet} onClose={() => setOpenStreet(false)}>
                 <AddStreet project={selectedProject!} setOpenStreet={setOpenStreet} />
@@ -116,13 +117,10 @@ export const DrawerDialog = () => {
 
                 <Divider />
                 <List>
-                    <ListItem>
-                        <Fab variant="extended" onClick={() => setOpenAddMarker(true)}>
-                            <CreateNewFolderIcon sx={{ mr: 1 }} />
-                            Adauga proiect
-                        </Fab>
-                    </ListItem>
-                    <ListItem>
+                    <ListItem sx={{
+                        display: 'flex',
+                        justifyContent: 'space-between'
+                    }}>
                         <TextField type='search' variant='standard' label="Cauta proiect" onChange={(e) => setSearch(e.target.value)} InputProps={{
                             startAdornment: (
                                 <InputAdornment position="start">
@@ -130,6 +128,9 @@ export const DrawerDialog = () => {
                                 </InputAdornment>
                             ),
                         }}></TextField>
+                        <Fab onClick={() => setOpenAddMarker(true)} color='primary'>
+                            <CreateNewFolderIcon />
+                        </Fab>
                     </ListItem>
                 </List>
 
@@ -162,6 +163,7 @@ export const DrawerDialog = () => {
                                                     }} />
                                                     <Typography variant='caption'>[{item?.county}] {item?.city}</Typography>
                                                 </Box>
+                                                <ProjectMenu project={item} />
                                                 <MapIcon sx={{ mr: 2 }} onClick={() => handleGoToLocation(Number(item.lat), Number(item.long))} />
                                             </Box>
 
@@ -190,6 +192,7 @@ export const DrawerDialog = () => {
                                                                         display: 'flex',
                                                                         justifyContent: 'space-between',
                                                                         width: "100%",
+                                                                        marginRight: "1.5rem",
                                                                         borderBottom: (selectedProject?.id === streetItem.proiect_id) && (streetItem.id === street?.id) ? '2px solid #0052cc' : ''
                                                                     }} gap={1} justifyContent={'space-between'} alignItems={'center'}>
                                                                         <Box sx={{

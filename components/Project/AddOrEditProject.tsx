@@ -1,6 +1,6 @@
 'use client'
 
-import { addProjectAction } from '@/utils/Store/Actions/ProjectAction';
+import { addProjectAction, updateProjectAction } from '@/utils/Store/Actions/ProjectAction';
 import { LocalityModel } from '@/utils/Store/Models/LocalityModel';
 import { CountyModel } from '@/utils/Store/Models/CountyModel';
 import { useAppDispatch } from '@/utils/Store/hooks';
@@ -9,41 +9,68 @@ import Button from '@mui/material/Button';
 import React, { FC, useEffect, useState } from 'react'
 import { localities } from "@/utils/localities"
 import { Enums } from '@/utils/Store/Models/Database';
+import { ProjectModel } from '@/utils/Store/Models/Project/ProjectModel';
 
-export const AddProject: FC<{ setOpenAddMarker: Function }> = ({ setOpenAddMarker }) => {
-    const [name, setName] = useState<string>('')
+export const AddOrEditProject: FC<{
+    setOpenAddMarker: Function,
+    project?: ProjectModel
+}> = ({ setOpenAddMarker, project }) => {
+    const [name, setName] = useState<string>(project?.name ?? '')
     const [loading, setLoading] = useState(false)
     const [counties, setCounties] = useState<CountyModel[]>([])
     const [cities, setCities] = useState<LocalityModel[]>([])
     const [selectedCounty, setSelectedCounty] = useState<CountyModel | null>(null)
     const [selectedCity, setSelectedCity] = useState<LocalityModel | null>(null)
-    const [projectType, setProjectType] = useState<Enums<'project_type'>>('Proiectare')
+    const [projectType, setProjectType] = useState<Enums<'project_type'>>(project?.project_type ?? 'Proiectare')
     const dispatch = useAppDispatch();
 
     const handleSubmit = () => {
         setLoading(true)
-        dispatch(addProjectAction({
-            name: name,
-            long: selectedCity?.lng,
-            lat: selectedCity?.lat,
-            project_type: projectType,
-            county: selectedCounty?.auto,
-            city: selectedCity?.nume
-        })).then(() => {
-            setLoading(false)
-            setOpenAddMarker(false)
-        })
+        if (!project) {
+            dispatch(addProjectAction({
+                name: name,
+                long: selectedCity?.lng,
+                lat: selectedCity?.lat,
+                project_type: projectType,
+                county: selectedCounty?.auto,
+                city: selectedCity?.nume
+            })).then(() => {
+                setLoading(false)
+                setOpenAddMarker(false)
+            })
+        } else {
+            dispatch(updateProjectAction({
+                id: project.id,
+                name: name,
+                long: selectedCity?.lng,
+                lat: selectedCity?.lat,
+                project_type: projectType,
+                county: selectedCounty?.auto,
+                city: selectedCity?.nume
+            })).then((res) => {
+                if (res?.severity === 'success') {
+                    setLoading(false)
+                    setOpenAddMarker(false)
+                } else {
+                    setLoading(false)
+                }
+            })
+        }
+
     }
     const getCounties = async () => {
         await fetch(`https://roloca.coldfuse.io/judete`, { cache: 'force-cache' }).then((res) => {
             res.json().then((data) => {
                 setCounties(data)
+                if (project) {
+                    const county: CountyModel = data.find((item: CountyModel) => item.auto === project?.county)
+                    setSelectedCounty({ nume: county.nume, auto: county.auto })
+                    setSelectedCity({ auto: project.city, lat: project.lat!, lng: project?.long!, nume: project.city, id: 0 })
+                }
             })
         })
 
     }
-
-
     useEffect(() => {
         let locality = localities.filter((item) => item.auto === selectedCounty?.auto)
         locality.sort((a, b) => a.nume.localeCompare(b.nume))
@@ -63,7 +90,7 @@ export const AddProject: FC<{ setOpenAddMarker: Function }> = ({ setOpenAddMarke
             marginBottom: '1rem',
             minWidth: 300
         }}>
-            <DialogTitle>Adauga proiect</DialogTitle>
+            <DialogTitle>{project ? `Editează proiectul ${project.city}` : "Adaugă proiect"}</DialogTitle>
             <FormControl fullWidth>
                 <InputLabel id="demo-simple-select-label">Tip proiect</InputLabel>
                 <Select
@@ -77,8 +104,8 @@ export const AddProject: FC<{ setOpenAddMarker: Function }> = ({ setOpenAddMarke
                     <MenuItem value='Proiectare'>
                         Proiectare
                     </MenuItem>
-                    <MenuItem value='Executie'>
-                        Executie
+                    <MenuItem value='Executare'>
+                        Executare
                     </MenuItem>
                 </Select>
             </FormControl>
@@ -91,6 +118,7 @@ export const AddProject: FC<{ setOpenAddMarker: Function }> = ({ setOpenAddMarke
                 onChange={(event: any, newValue: CountyModel | null) => {
                     setSelectedCounty(newValue);
                 }}
+                value={selectedCounty}
                 getOptionLabel={(option) => option.nume}
                 getOptionKey={(option) => option.auto}
                 renderInput={(params) => <TextField {...params} label="Județ" />}
@@ -104,12 +132,13 @@ export const AddProject: FC<{ setOpenAddMarker: Function }> = ({ setOpenAddMarke
                 onChange={(event: any, newValue: LocalityModel | null) => {
                     setSelectedCity(newValue);
                 }}
+                value={selectedCity}
                 getOptionLabel={(option) => option.nume}
                 getOptionKey={(option) => option.id}
                 renderInput={(params) => <TextField {...params} label="Oraș" />}
             />
 
-            <Button disabled={loading} onClick={() => handleSubmit()} variant="contained" color='secondary'>Adauga proiect</Button>
+            <Button disabled={loading} onClick={() => handleSubmit()} variant="contained" color='secondary'>{project ? `Modifică proiect` : "Adaugă proiect"}</Button>
         </Container>
     )
 }

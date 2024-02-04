@@ -79,11 +79,23 @@ const projectSlice = createSlice({
             if (streetIndex !== -1) {
                 project.strazi.splice(streetIndex, 1)
             }
+        },
+        updateProject: (state, action) => {
+            const projectIndex = state.projects.findIndex((project: ProjectModel) => project.id === action.payload.id);
+            if (projectIndex !== -1) {
+                state.projects[projectIndex] = action.payload
+            }
+        },
+        deleteProject: (state, action) => {
+            const projectIndex = state.projects.findIndex((project: ProjectModel) => project.id === action.payload.id);
+            if (projectIndex !== -1) {
+                state.projects.splice(projectIndex, 1)
+            }
         }
 
     },
 });
 
-export const { setProjectItems, setStreetItems, setStreet, setFocusedProject, setMarker, updateMarker, deleteMarker, updateStreet, deleteStreet } = projectSlice.actions;
+export const { setProjectItems, setStreetItems, setStreet, setFocusedProject, setMarker, updateMarker, deleteMarker, updateStreet, deleteStreet, updateProject, deleteProject } = projectSlice.actions;
 
 export default projectSlice.reducer;
