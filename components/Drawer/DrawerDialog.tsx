@@ -163,8 +163,14 @@ export const DrawerDialog = () => {
                                                     }} />
                                                     <Typography variant='caption'>[{item?.county}] {item?.city}</Typography>
                                                 </Box>
-                                                <ProjectMenu project={item} />
-                                                <MapIcon sx={{ mr: 2 }} onClick={() => handleGoToLocation(Number(item.lat), Number(item.long))} />
+                                                <Box sx={{
+                                                    display: 'flex',
+                                                    alignItems: 'center'
+                                                }}>
+                                                    <ProjectMenu project={item} />
+                                                    <MapIcon sx={{ mr: 2 }} onClick={() => handleGoToLocation(Number(item.lat), Number(item.long))} />
+                                                </Box>
+
                                             </Box>
 
 
@@ -212,7 +218,6 @@ export const DrawerDialog = () => {
                                                                             return (
                                                                                 <ListItem key={marker.id}
                                                                                     sx={{ borderBottom: '2px solid #eaeaea' }}
-
                                                                                     secondaryAction={
                                                                                         <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                                                                                             <IconButton edge="end" color='secondary' aria-label="delete" sx={{ mr: 1 }} onClick={() => handleOpenMarkerDetails(marker)}>
@@ -231,7 +236,8 @@ export const DrawerDialog = () => {
                                                                                             height: '10px',
                                                                                             borderRadius: '50%',
                                                                                             display: 'inline-block',
-                                                                                            backgroundColor: marker.marker_status === 'Ok' ? '#4caf50' : '#f44336'
+                                                                                            backgroundColor: marker?.accuracy === null ? 'transparent' : Number(marker.accuracy) <= 5 ? '#4caf50' : Number(marker.accuracy) > 5 && Number(marker.accuracy) < 10 ? '#ff9100' : Number(marker.accuracy) > 10 ? '#f44336' : ''
+                                                                                            // backgroundColor: marker.marker_status === 'Ok' ? '#4caf50' : '#f44336'
                                                                                         }}></Box>
                                                                                         <Avatar>
                                                                                             {marker.marker_type === 'Lampa' ? <svg width="20px" height="20px" viewBox="0 0 512 512" version="1.1" >

@@ -41,7 +41,7 @@ export const MyLocationMarker: FC<{ position: LocationModel, accuracy: number }>
             {/* @ts-ignore */}
             <Marker position={position} icon={customMarkerIcon}>
                 {/* @ts-ignore */}
-                <Circle center={position} radius={accuracy} ></Circle>
+                <Circle center={position} radius={accuracy < 10 ? 10 : accuracy} ></Circle>
                 <Popup>You are here</Popup>
             </Marker>
             <Fab

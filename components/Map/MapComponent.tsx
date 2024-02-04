@@ -32,9 +32,9 @@ const MapComponent: FC = () => {
 
     return (
         <Box sx={{ position: 'relative', display: 'flex', justifyContent: "flex-end" }}>
-            <Box sx={{ position: 'absolute', top: 0, right: 100, zIndex: 999, background: 'red' }}>Accuracy: {accuracy}</Box>
+            {/* <Box sx={{ position: 'absolute', top: 0, right: 100, zIndex: 999, background: 'red' }}>Accuracy: {accuracy}</Box>
             <Box sx={{ position: 'absolute', top: 30, right: 100, zIndex: 999, background: 'blue' }}>lat: {location?.lat}</Box>
-            <Box sx={{ position: 'absolute', top: 50, right: 100, zIndex: 999, background: 'green' }}>long: {location?.lng}</Box>
+            <Box sx={{ position: 'absolute', top: 50, right: 100, zIndex: 999, background: 'green' }}>long: {location?.lng}</Box> */}
             {
                 location && (
 

@@ -83,7 +83,6 @@ const ProjectMenu: FC<{ project: ProjectModel }> = ({ project }) => {
             </Dialog>
             <Dialog open={deleteDialog} onClose={() => setDeleteDialog(false)}>
                 <DeleteProject project={project} onClose={setDeleteDialog} />
-                {/* <DeleteStreet street={street} onClose={setDeleteDialog} /> */}
             </Dialog>
             <StyledMenu
                 id="demo-customized-menu"
@@ -101,14 +100,14 @@ const ProjectMenu: FC<{ project: ProjectModel }> = ({ project }) => {
                     <EditIcon color='warning' />
                     Edit
                 </MenuItem>
-                <Divider sx={{ my: 0.5 }} />
-                <MenuItem onClick={() => {
+                {/* <Divider sx={{ my: 0.5 }} /> */}
+                {/* <MenuItem onClick={() => {
                     setOpenTable(true),
                         handleClose()
                 }} disableRipple>
                     <InfoIcon style={{ color: 'success' }} />
                     Info
-                </MenuItem>
+                </MenuItem> */}
                 <Divider sx={{ my: 0.5 }} />
                 <MenuItem onClick={() => {
                     setDeleteDialog(true),
