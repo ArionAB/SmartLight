@@ -72,19 +72,18 @@ export const AddMarker: FC<{
                 marker_type: selectedMarker,
                 marker_status: 'Ok',
                 proiect_id: focusedProject.item.id,
-                street_id: focusedProject.street.id,
+                street_id: focusedProject.streetItem.id,
                 images: imageUrls,
                 observatii: marker.observatii,
                 accuracy: accuracy
 
             }
-            //@ts-ignore
-            if (!focusedProject.street.markers) {
+            if (!focusedProject.streetItem?.markers) {
                 markerData.number = '1'
-                //@ts-ignore
-            } else markerData.number = focusedProject.street.markers.length + 1
-
-
+            } else {
+                let increment = focusedProject.streetItem.markers.length + 1
+                markerData.number = increment.toString()
+            }
 
 
 

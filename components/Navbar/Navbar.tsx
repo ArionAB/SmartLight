@@ -48,7 +48,7 @@ const Navbar = () => {
                     color: '#F8D775'
                 }} />
                 <Typography variant='caption'>{focusedProject?.item?.city}</Typography>
-                <Typography variant='caption'>{focusedProject?.street?.name}</Typography>
+                <Typography variant='caption'>{focusedProject?.streetItem?.name}</Typography>
             </Box>
 
             <Box sx={{
