@@ -199,9 +199,7 @@ export const DrawerDialog = () => {
                                                                             <Typography variant='caption'>{streetItem.network_type}</Typography>
                                                                             <Typography variant='caption'>{streetItem.road_type}</Typography>
                                                                         </Box>
-
                                                                         <StreetMenu street={street!} />
-
                                                                     </Box>
 
                                                                 </AccordionSummary>

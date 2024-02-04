@@ -1,7 +1,7 @@
 import supabase from "../../supabase/createClient";
-import { TablesInsert, TablesUpdate } from "../Models/Database";
+import { Tables, TablesInsert, TablesUpdate } from "../Models/Database";
 import { addAppNotification } from "../Slices/appNotificationSlice";
-import { setStreet, setStreetItems, updateStreet } from "../Slices/projectSlice";
+import { deleteStreet, setStreet, setStreetItems, updateStreet } from "../Slices/projectSlice";
 
 export const addStreetAction = (street: TablesInsert<'strazi'>) => {
     return async (dispatch: any, getState: () => any) => {
@@ -106,3 +106,32 @@ export const updateStreetAction = (street: TablesUpdate<'strazi'>) => {
         }
     };
 };
+
+export const deleteStreetAction = (street: Tables<'strazi'>) => {
+    return async (dispatch: any, getState: () => any) => {
+        try {
+            const { error } = await supabase
+                .from('strazi')
+                .delete()
+                .eq('id', street.id)
+
+            if (!error) {
+                dispatch(deleteStreet(street))
+                dispatch(addAppNotification({ message: ` Strada ${street?.name} a fost stersă!`, severity: 'success' }))
+                return {
+                    severity: 'success'
+                }
+            }
+
+            if (error) {
+                dispatch(addAppNotification({ message: `eroare stergere strada!`, severity: 'error' }))
+                return {
+                    severity: 'error'
+                }
+            }
+
+        } catch (error) {
+            console.error('Error deleting item:', error);
+        }
+    };
+}

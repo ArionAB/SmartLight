@@ -76,7 +76,7 @@ export const StreetEdit: FC<{
                     </Select>
                 </FormControl>
                 <Button variant="contained" disabled={loading} color="success" onClick={handleSubmitForm}>Editează strada</Button>
-                <Button variant='outlined'>
+                <Button variant='outlined' onClick={() => onClose(false)}>
                     Anulează
                 </Button>
             </Box>

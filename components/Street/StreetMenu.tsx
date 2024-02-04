@@ -1,16 +1,67 @@
-import { Box, IconButton, Menu, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Dialog, tableCellClasses, Button } from '@mui/material'
-import React, { FC, useMemo, useState } from 'react'
-import { Delete, Edit } from '@mui/icons-material'
+import { Box, IconButton, Menu, Dialog, Button, Stack, Paper, MenuList, MenuItem, Popper, Grow, ClickAwayListener, MenuProps, alpha, Divider } from '@mui/material'
+import React, { FC, useState } from 'react'
 import InfoIcon from '@mui/icons-material/Info';
+import EditIcon from '@mui/icons-material/Edit';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { StreetModel } from '@/utils/Store/Models/Project/StreetModel';
-import styled from '@emotion/styled';
-import { Tables } from '@/utils/Store/Models/Database';
 import { StreetEdit } from './StreetEdit';
+import DeleteStreet from './DeleteStreet';
+import StreetTable from './StreetTable';
+import styled from '@emotion/styled';
+import { Delete } from '@mui/icons-material';
+
+const StyledMenu = styled((props: MenuProps) => (
+    <Menu
+        elevation={10}
+        anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'right',
+        }}
+        transformOrigin={{
+            vertical: 'top',
+            horizontal: 'right',
+        }}
+        {...props}
+    />
+))(({ theme }) => ({
+    '& .MuiPaper-root': {
+        borderRadius: 6,
+        //@ts-ignore
+        marginTop: theme.spacing(1),
+        minWidth: 180,
+        color:
+            //@ts-ignore
+            theme.palette.mode === 'light' ? 'rgb(55, 65, 81)' : theme.palette.grey[300],
+        boxShadow:
+            'rgb(255, 255, 255) 0px 0px 0px 0px, rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgba(0, 0, 0, 0.1) 0px 10px 15px -3px, rgba(0, 0, 0, 0.05) 0px 4px 6px -2px',
+        '& .MuiMenu-list': {
+            padding: '4px 0',
+        },
+        '& .MuiMenuItem-root': {
+            '& .MuiSvgIcon-root': {
+                fontSize: 18,
+                //@ts-ignore
+                color: theme.palette.text.secondary,
+                //@ts-ignore
+                marginRight: theme.spacing(1.5),
+            },
+            '&:active': {
+                backgroundColor: alpha(
+                    //@ts-ignore
+                    theme.palette.primary.main,
+                    //@ts-ignore
+                    theme.palette.action.selectedOpacity,
+                ),
+            },
+        },
+    },
+}));
+
 
 
 const StreetMenu: FC<{ street: StreetModel }> = ({ street }) => {
     const [anchor, setAnchor] = useState<null | HTMLElement>(null);
+    const [deleteDialog, setDeleteDialog] = useState<boolean>(false)
     const [openTable, setOpenTable] = useState(false)
     const [openEditDialog, setOpenEditDialog] = useState(false)
 
@@ -19,101 +70,9 @@ const StreetMenu: FC<{ street: StreetModel }> = ({ street }) => {
         setAnchor(event.currentTarget);
     }
 
-    function createData(
-        name: string,
-        total: number,
-        lamp: number,
-        noLamp: number
-    ) {
-        return { name, total, lamp, noLamp };
+    const handleClose = () => {
+        setAnchor(null)
     }
-
-
-    let counter = useMemo(() => {
-        return street?.markers?.reduce((acc: any, obj) => {
-            // Initialize the counts if they don't exist yet
-            if (obj.pole_type) {
-                if (!acc[obj.pole_type]) {
-                    acc[obj.pole_type] = { total: 0, 'Cu lampa': 0, 'Fara lampa': 0 };
-                }
-                // Increment the total count for this pole_type
-                acc[obj.pole_type].total++;
-            }
-
-
-
-
-            // Increment the count for the lamp_type if it matches
-            if (obj.lamp_type === 'Cu lampa') {
-                if (obj.pole_type) {
-                    acc[obj.pole_type]['Cu lampa']++;
-                }
-            } else if (obj.lamp_type === 'Fara lampa') {
-                //@ts-ignore
-                if (obj.pole_type) {
-                    acc[obj.pole_type]['Fara lampa']++;
-
-                }
-            }
-
-            return acc;
-        }, {});
-    }, [street?.markers])
-
-    const rows = useMemo(() => {
-        if (counter) {
-            return Object.entries(counter).map(([key, value]: any) => {
-                const item = {
-                    name: key,
-                    total: value['total'],
-                    lamp: value['Cu lampa'],
-                    noLamp: value['Fara lampa']
-                };
-                return createData(item.name, Number(item.total), Number(item.lamp), Number(item.noLamp));
-            });
-        }
-
-    }, [counter]);
-
-    const countTotal = () => {
-        let total = {
-            poles: 0,
-            lamp: 0,
-            noLamp: 0
-        }
-        rows?.forEach((row) => {
-            total.poles += row.total,
-                total.lamp += row.lamp,
-                total.noLamp += row.noLamp
-        })
-
-        return total
-    }
-
-
-    const StyledTableCell = styled(TableCell)(({ theme }) => ({
-        [`&.${tableCellClasses.head}`]: {
-            //@ts-ignore
-            backgroundColor: theme.palette.common.black,
-            //@ts-ignore
-            color: theme.palette.common.white,
-        },
-        [`&.${tableCellClasses.body}`]: {
-            fontSize: 14,
-        },
-    }));
-
-    const StyledTableRow = styled(TableRow)(({ theme }) => ({
-        '&:nth-of-type(odd)': {
-            //@ts-ignore
-            backgroundColor: theme.palette.action.hover,
-        },
-        // hide last border
-        '&:last-child td, &:last-child th': {
-            border: 0,
-        },
-    }));
-
 
     return (
         <>
@@ -123,71 +82,44 @@ const StreetMenu: FC<{ street: StreetModel }> = ({ street }) => {
             <Dialog open={openEditDialog} onClose={() => setOpenEditDialog(false)} >
                 <StreetEdit street={street} onClose={setOpenEditDialog} />
             </Dialog>
-            <Menu
-                elevation={1}
+            <Dialog open={deleteDialog} onClose={() => setDeleteDialog(false)}>
+                <DeleteStreet street={street} onClose={setDeleteDialog} />
+            </Dialog>
+            <StyledMenu
+                id="demo-customized-menu"
+                MenuListProps={{
+                    'aria-labelledby': 'demo-customized-button',
+                }}
                 anchorEl={anchor}
                 open={anchor ? true : false}
-                onClose={() => setAnchor(null)}
+                onClose={handleClose}
             >
-                <Box sx={{
-                    display: 'flex',
-                    justifyContent: 'space-around',
-                    width: '150px'
-
-                }}>
-                    <IconButton color='warning' onClick={() => setOpenEditDialog(true)}>
-                        <Edit />
-                    </IconButton>
-                    <IconButton color='error'>
-                        <Delete />
-                    </IconButton>
-                    <IconButton edge="end" color='secondary' onClick={() => setOpenTable(true)}>
-                        <InfoIcon />
-                    </IconButton>
-                </Box>
-            </Menu>
+                <MenuItem onClick={() => {
+                    setOpenEditDialog(true)
+                    handleClose()
+                }} disableRipple>
+                    <EditIcon color='warning' />
+                    Edit
+                </MenuItem>
+                <Divider sx={{ my: 0.5 }} />
+                <MenuItem onClick={() => {
+                    setOpenTable(true),
+                        handleClose()
+                }} disableRipple>
+                    <InfoIcon style={{ color: 'success' }} />
+                    Info
+                </MenuItem>
+                <Divider sx={{ my: 0.5 }} />
+                <MenuItem onClick={() => {
+                    setDeleteDialog(true),
+                        handleClose()
+                }} disableRipple>
+                    <Delete />
+                    Șterge
+                </MenuItem>
+            </StyledMenu>
             <Dialog fullScreen maxWidth="md" open={openTable} onClose={() => setOpenTable(false)}>
-                <TableContainer component={Paper} >
-                    <Table sx={{ minWidth: 350 }} aria-label="simple table">
-                        <TableHead>
-                            <TableRow>
-                                <StyledTableCell>Tip stâlpi</StyledTableCell>
-                                <StyledTableCell>Nr. stâlpi</StyledTableCell>
-                                <StyledTableCell>Cu lampă</StyledTableCell>
-                                <StyledTableCell>Fără lampă</StyledTableCell>
-
-                            </TableRow>
-                        </TableHead>
-                        <TableBody>
-                            {rows?.map((row) => (
-                                <StyledTableRow
-                                    key={row.name}
-                                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                                >
-                                    <StyledTableCell component="th" scope="row">
-                                        {row.name}
-                                    </StyledTableCell>
-                                    <StyledTableCell component="th" scope="row" align='center'>
-                                        {row.total}
-                                    </StyledTableCell>
-                                    <StyledTableCell component="th" scope="row" align='center'>
-                                        {row.lamp}
-                                    </StyledTableCell>
-                                    <StyledTableCell component="th" scope="row" align='center'>
-                                        {row.noLamp}
-                                    </StyledTableCell>
-
-                                </StyledTableRow>
-                            ))}
-                            <TableRow>
-                                <StyledTableCell component="th" scope="row">Total:</StyledTableCell>
-                                <StyledTableCell component="th" scope="row" align='center'>{countTotal().poles}</StyledTableCell>
-                                <StyledTableCell component="th" scope="row" align='center'>{countTotal().lamp}</StyledTableCell>
-                                <StyledTableCell component="th" scope="row" align='center'>{countTotal().noLamp}</StyledTableCell>
-                            </TableRow>
-                        </TableBody>
-                    </Table>
-                </TableContainer>
+                <StreetTable street={street} />
                 <Box sx={{
                     margin: "1rem",
                     display: 'flex',
