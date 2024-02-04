@@ -12,10 +12,18 @@ export const getProjectAction = () => {
                 .from('proiecte')
                 .select(`*,strazi(*,markers(*))`)
 
-
             if (!error) {
+                for (let project of proiecte!) {
+                    let count = await supabase
+                        .from('markers')
+                        .select('id', { count: 'exact' })
+                        .eq('proiect_id', project.id);
+                    //@ts-ignore
+                    project.count = count.count
+                }
                 dispatch(setProjectItems(proiecte))
             }
+
 
             if (error) {
                 throw error;

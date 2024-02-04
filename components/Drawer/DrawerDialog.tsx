@@ -2,7 +2,7 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
-import { Accordion, AccordionDetails, AccordionSummary, Avatar, Box, Dialog, Divider, Fab, IconButton, InputAdornment, List, ListItem, ListItemAvatar, ListItemText, Menu, MenuItem, Paper, TextField, Typography } from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, Avatar, Badge, Box, Dialog, Divider, Fab, IconButton, InputAdornment, List, ListItem, ListItemAvatar, ListItemText, Menu, MenuItem, Paper, TextField, Typography } from '@mui/material';
 import CreateNewFolderIcon from '@mui/icons-material/CreateNewFolder';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import { AddOrEditProject } from '../Project/AddOrEditProject';
@@ -158,9 +158,14 @@ export const DrawerDialog = () => {
                                                     alignItems: 'center',
                                                     gap: '5px'
                                                 }}>
-                                                    <FolderIcon sx={{
-                                                        color: '#F8D775'
-                                                    }} />
+                                                    <Badge badgeContent={item.count} color="info" anchorOrigin={{
+                                                        vertical: 'top',
+                                                        horizontal: 'left',
+                                                    }}>
+                                                        <FolderIcon sx={{
+                                                            color: '#F8D775'
+                                                        }} />
+                                                    </Badge>
                                                     <Typography variant='caption'>[{item?.county}] {item?.city}</Typography>
                                                 </Box>
                                                 <Box sx={{
@@ -185,33 +190,47 @@ export const DrawerDialog = () => {
                                                     item.strazi?.map((streetItem: StreetModel) => {
                                                         return (
                                                             <Accordion key={streetItem.id}>
-                                                                <AccordionSummary
-                                                                    onClick={() => {
-                                                                        setStreet(streetItem),
-                                                                            dispatch(setFocusedProject({ item, streetItem }))
+                                                                <Badge color="secondary" badgeContent={streetItem?.markers?.length}
+                                                                    sx={{
+                                                                        width: '100%'
                                                                     }}
-                                                                    expandIcon={<ArrowDownwardIcon />}
-                                                                    aria-controls="panel1-content"
-                                                                    id="panel1-header"
-                                                                >
-                                                                    <Box sx={{
-                                                                        display: 'flex',
-                                                                        justifyContent: 'space-between',
-                                                                        width: "100%",
-                                                                        marginRight: "1.5rem",
-                                                                        borderBottom: (selectedProject?.id === streetItem.proiect_id) && (streetItem.id === street?.id) ? '2px solid #0052cc' : ''
-                                                                    }} gap={1} justifyContent={'space-between'} alignItems={'center'}>
-                                                                        <Box sx={{
-                                                                            display: "flex"
-                                                                        }} gap={1}>
-                                                                            <Typography variant='caption' fontWeight={600}>{streetItem?.name}</Typography>
-                                                                            <Typography variant='caption'>{streetItem.network_type}</Typography>
-                                                                            <Typography variant='caption'>{streetItem.road_type}</Typography>
-                                                                        </Box>
-                                                                        <StreetMenu street={street!} />
-                                                                    </Box>
+                                                                    anchorOrigin={{
+                                                                        vertical: 'top',
+                                                                        horizontal: 'left',
+                                                                    }}>
+                                                                    <AccordionSummary
+                                                                        onClick={() => {
+                                                                            setStreet(streetItem),
+                                                                                dispatch(setFocusedProject({ item, streetItem }))
+                                                                        }}
+                                                                        expandIcon={<ArrowDownwardIcon />}
+                                                                        aria-controls="panel1-content"
+                                                                        id="panel1-header"
+                                                                        sx={{ width: "100%" }}
+                                                                    >
 
-                                                                </AccordionSummary>
+                                                                        <Box sx={{
+                                                                            display: 'flex',
+                                                                            justifyContent: 'space-between',
+                                                                            width: "100%",
+                                                                            marginRight: "1.5rem",
+                                                                            borderBottom: (selectedProject?.id === streetItem.proiect_id) && (streetItem.id === street?.id) ? '2px solid #0052cc' : ''
+                                                                        }} gap={1} justifyContent={'space-between'} alignItems={'center'}>
+
+                                                                            <Box sx={{
+                                                                                display: "flex"
+                                                                            }} gap={1}
+
+                                                                            >
+
+                                                                                <Typography variant='caption' fontWeight={600} color={'#2196f3'}>{streetItem?.name}</Typography>
+                                                                                <Typography variant='caption'>{streetItem.network_type}</Typography>
+                                                                                <Typography variant='caption'>{streetItem.road_type}</Typography>
+                                                                            </Box>
+                                                                            <StreetMenu street={street!} />
+                                                                        </Box>
+                                                                    </AccordionSummary>
+                                                                </Badge>
                                                                 <AccordionDetails>
                                                                     <List>
                                                                         {streetItem.markers?.map((marker: Tables<'markers'>) => {
@@ -247,7 +266,7 @@ export const DrawerDialog = () => {
                                                                                                         </path>
                                                                                                     </g>
                                                                                                 </g>
-                                                                                            </svg> : <svg fill="#fff" width="15px" height="15px" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+                                                                                            </svg> : <svg fill={marker.lamp_type === 'Cu lampa' ? '#4caf50' : '#b22a00'} width="15px" height="15px" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
                                                                                                 <circle cx="16" cy="16" r="16" />
                                                                                             </svg>}
                                                                                         </Avatar>

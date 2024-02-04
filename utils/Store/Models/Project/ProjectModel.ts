@@ -9,6 +9,7 @@ export interface ProjectModel {
     name: string,
     city: string,
     county: string,
+    count: number,
     project_type: Enums<'project_type'>,
     strazi: {
         created_at: string
