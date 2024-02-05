@@ -1,11 +1,12 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { Tables } from '../Models/Database';
 import { ProjectModel } from '../Models/Project/ProjectModel';
+import { ProjectState } from './ProjectState';
 
 const initialState: any = {
-    projects: [] as ProjectModel[],
-    streets: [] as Tables<'strazi'>[],
-    focusedProject: null,
+    projects: [],
+    streets: [],
+    focusedProject: null!,
 
 };
 
@@ -36,6 +37,14 @@ const projectSlice = createSlice({
                 }
 
                 street.markers.push(action.payload);
+
+                // if (!state.focusedProject.streeItem) {
+                //     state.focusedProject.streetItem = {};
+                // }
+
+                // if (!state.focusedProject.streetItem.markers) {
+                //     state.focusedProject.streetItem.markers = [];
+                // }
 
                 if (!state.focusedProject.street) {
                     state.focusedProject.street = {};

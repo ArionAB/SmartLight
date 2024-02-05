@@ -158,7 +158,7 @@ export const DrawerDialog = () => {
                                                     alignItems: 'center',
                                                     gap: '5px'
                                                 }}>
-                                                    <Badge badgeContent={item.count} color="info" anchorOrigin={{
+                                                    <Badge badgeContent={item.count} max={1000} color="info" anchorOrigin={{
                                                         vertical: 'top',
                                                         horizontal: 'left',
                                                     }}>
@@ -194,6 +194,7 @@ export const DrawerDialog = () => {
                                                                     sx={{
                                                                         width: '100%'
                                                                     }}
+                                                                    max={1000}
                                                                     anchorOrigin={{
                                                                         vertical: 'top',
                                                                         horizontal: 'left',
@@ -272,7 +273,7 @@ export const DrawerDialog = () => {
                                                                                         </Avatar>
                                                                                     </ListItemAvatar>
                                                                                     <ListItemText
-                                                                                        primary={index + 1}
+                                                                                        primary={marker.number}
                                                                                     />
 
 

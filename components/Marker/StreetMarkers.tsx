@@ -178,7 +178,9 @@ export const StreetMarkers = () => {
                                                     marginBottom: 2
                                                 }}>
                                                     <Button variant='outlined' onClick={() => setAnchorEl(null)}>Anuleaza</Button>
-                                                    <Button variant='contained' color='error' onClick={() => dispatch(deleteMarkerAction(marker))}>Da</Button>
+                                                    <Button variant='contained' color='error' onClick={() => {
+                                                        dispatch(deleteMarkerAction(marker))
+                                                    }}>Da</Button>
                                                 </Box>
 
                                             </Popover>
