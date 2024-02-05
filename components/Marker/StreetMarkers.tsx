@@ -179,7 +179,9 @@ export const StreetMarkers = () => {
                                                 }}>
                                                     <Button variant='outlined' onClick={() => setAnchorEl(null)}>Anuleaza</Button>
                                                     <Button variant='contained' color='error' onClick={() => {
-                                                        dispatch(deleteMarkerAction(marker))
+                                                        dispatch(deleteMarkerAction(marker)).then(() => {
+                                                            setAnchorEl(null)
+                                                        })
                                                     }}>Da</Button>
                                                 </Box>
 
