@@ -47,6 +47,10 @@ const useLocation = (
                     }
                 },
                 (e) => {
+                    dispatch(addAppNotification({
+                        severity: "error",
+                        message: e.message
+                    }))
                     setError(e.message);
                 },
                 options ?? { enableHighAccuracy: true, maximumAge: 2000, timeout: 5000 }
