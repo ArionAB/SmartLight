@@ -72,7 +72,7 @@ export const AddMarker: FC<{
                 marker_type: selectedMarker,
                 marker_status: 'Ok',
                 proiect_id: focusedProject.item.id,
-                street_id: focusedProject.streetItem.id,
+                street_id: focusedProject.street.id,
                 images: imageUrls,
                 observatii: marker.observatii,
                 accuracy: accuracy
@@ -85,8 +85,6 @@ export const AddMarker: FC<{
                 const increment = Number(lastMarker.number!) + 1
                 markerData.number = increment.toString()
             }
-
-
 
 
             if (selectedMarker === 'Lampa') {

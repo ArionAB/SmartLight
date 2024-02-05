@@ -14,7 +14,6 @@ import { setDrawer, setTooltips } from '@/utils/Store/Slices/miscSlice';
 const Navbar = () => {
     const dispatch = useAppDispatch()
     const focusedProject = useAppSelector(selectFocusedProject)
-    console.log('focusedProject', focusedProject)
     const handleTooltipChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         dispatch(setTooltips(event.target.checked));
     };
@@ -48,7 +47,7 @@ const Navbar = () => {
                     color: '#F8D775'
                 }} />
                 <Typography variant='caption'>{focusedProject?.item?.city}</Typography>
-                <Typography variant='caption'>{focusedProject?.streetItem?.name}</Typography>
+                <Typography variant='caption'>{focusedProject?.street?.name}</Typography>
             </Box>
 
             <Box sx={{

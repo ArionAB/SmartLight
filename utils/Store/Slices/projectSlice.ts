@@ -38,14 +38,6 @@ const projectSlice = createSlice({
 
                 street.markers.push(action.payload);
 
-                // if (!state.focusedProject.streeItem) {
-                //     state.focusedProject.streetItem = {};
-                // }
-
-                // if (!state.focusedProject.streetItem.markers) {
-                //     state.focusedProject.streetItem.markers = [];
-                // }
-
                 if (!state.focusedProject.street) {
                     state.focusedProject.street = {};
                 }
@@ -72,7 +64,7 @@ const projectSlice = createSlice({
             const markerIndex = street?.markers.findIndex((marker) => marker.id === action.payload.id);
             if (markerIndex !== -1) {
                 street!.markers.splice(markerIndex!, 1);
-                state.focusedProject.streetItem.markers.splice(markerIndex!, 1)
+                state.focusedProject.street.markers.splice(markerIndex!, 1)
             }
         },
         updateStreet: (state, action) => {

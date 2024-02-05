@@ -202,7 +202,7 @@ export const DrawerDialog = () => {
                                                                     <AccordionSummary
                                                                         onClick={() => {
                                                                             setStreet(streetItem),
-                                                                                dispatch(setFocusedProject({ item, streetItem }))
+                                                                                dispatch(setFocusedProject({ item, street: streetItem }))
                                                                         }}
                                                                         expandIcon={<ArrowDownwardIcon />}
                                                                         aria-controls="panel1-content"

@@ -4,5 +4,4 @@ import { StreetModel } from "./StreetModel";
 export interface FocusedProjectModel {
     item: Tables<'proiecte'>,
     street: StreetModel,
-    streetItem: Tables<'strazi'>
 }

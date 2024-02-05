@@ -101,7 +101,6 @@ export const updateMarkerAction = (marker: TablesUpdate<'markers'>) => {
 };
 
 export const deleteMarkerAction = (marker: Tables<'markers'>) => {
-    console.log('marker', marker)
     return async (dispatch: any, getState: () => any) => {
         try {
             const { error } = await supabase
