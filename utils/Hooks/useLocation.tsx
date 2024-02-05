@@ -1,5 +1,7 @@
 import React from "react";
 import { LocationModel } from "../Store/Models/Location/LocationModel";
+import { useAppDispatch } from "../Store/hooks";
+import { addAppNotification } from "../Store/Slices/appNotificationSlice";
 
 
 
@@ -13,6 +15,8 @@ const useLocation = (
     const [location, setLocation] = React.useState<LocationModel>();
     const [error, setError] = React.useState<string>();
 
+    const dispatch = useAppDispatch()
+
     React.useEffect(() => {
         if (!enabled) {
             setAccuracy(undefined);
@@ -23,6 +27,10 @@ const useLocation = (
         if (navigator.geolocation) {
             let timeout: NodeJS.Timeout | undefined;
             if (!navigator.geolocation) {
+                dispatch(addAppNotification({
+                    severity: "error",
+                    message: 'Geolocation is not supported by your browser or device.'
+                }))
                 console.error('Geolocation is not supported by your browser or device.');
                 return;
             }
