@@ -63,7 +63,7 @@ const projectSlice = createSlice({
             const markerIndex = street?.markers.findIndex((marker) => marker.id === action.payload.id);
             if (markerIndex !== -1) {
                 street!.markers.splice(markerIndex!, 1);
-                state.focusedProject.street.markers.splice(markerIndex!, 1)
+                state.focusedProject.streetItem.markers.splice(markerIndex!, 1)
             }
         },
         updateStreet: (state, action) => {
