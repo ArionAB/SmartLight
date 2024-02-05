@@ -135,7 +135,7 @@ export const StreetMarkers = () => {
     const filteredProjects = () => {
         if (focusedProject) {
             return projectItems.filter((project) => project.id === focusedProject.item.id)
-        } else return projectItems
+        } else return []
     }
 
     const deletePopover = Boolean(anchorEl)
@@ -202,7 +202,7 @@ export const StreetMarkers = () => {
                                                     </Typography>
                                                     <Typography variant='caption' sx={{ fontSize: 10 }}>
                                                         {
-                                                            marker?.pole_type === 'Lampadar Metalic' ? 'L.M.' : marker?.pole_type
+                                                            marker?.pole_type === 'Lampadar Metalic' ? 'L.M.' : marker?.pole_type === 'Lampadar beton' ? "L.B." : marker?.pole_type
                                                         }
                                                     </Typography>
                                                 </Box>
