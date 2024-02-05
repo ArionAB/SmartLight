@@ -233,7 +233,7 @@ export const DrawerDialog = () => {
                                                                 </Badge>
                                                                 <AccordionDetails>
                                                                     <List>
-                                                                        {streetItem.markers?.map((marker: Tables<'markers'>) => {
+                                                                        {streetItem.markers?.map((marker: Tables<'markers'>, index: number) => {
                                                                             return (
                                                                                 <ListItem key={marker.id}
                                                                                     sx={{ borderBottom: '2px solid #eaeaea' }}
@@ -272,7 +272,7 @@ export const DrawerDialog = () => {
                                                                                         </Avatar>
                                                                                     </ListItemAvatar>
                                                                                     <ListItemText
-                                                                                        primary={marker.number}
+                                                                                        primary={index + 1}
                                                                                     />
 
 
