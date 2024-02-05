@@ -46,7 +46,11 @@ const MapComponent: FC = () => {
                             height: "calc(100dvh - 64px)",
                             width: "100%",
                         }}>
-                        <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+                        <TileLayer
+                            //@ts-ignore
+                            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                        />
                         {location && <AddPoleIcon handleAddDraggableMarkers={handleAddDraggableMarkers} />}
                         {location && <AddLampIcon handleAddDraggableMarkers={handleAddDraggableMarkers} />}
                         {location && (<MyLocationMarker position={location} accuracy={accuracy!} />)}
