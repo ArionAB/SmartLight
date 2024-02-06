@@ -1,3 +1,5 @@
+'use client'
+
 import { createSlice } from '@reduxjs/toolkit';
 import { Tables } from '../Models/Database';
 import { ProjectModel } from '../Models/Project/ProjectModel';
@@ -18,7 +20,20 @@ const projectSlice = createSlice({
             state.projects = action.payload;
         },
         setStreetItems: (state, action) => {
-            state.streets = action.payload
+            const project: ProjectModel = state.projects.find((project: ProjectModel) => project.id === action.payload.proiect_id)
+            project.strazi = action.payload.streets
+        },
+        setMarkersItems: (state, action) => {
+            const project: ProjectModel = state.projects.find((project: ProjectModel) => project.id === action.payload.proiect_id)
+            const street = project.strazi.find((street) => street.id === action.payload.street_id)
+            if (street) {
+                if (!street.markers) {
+                    street.markers = action.payload.markers
+                } else {
+                    street?.markers.push(action.payload.markers)
+                }
+            }
+
         },
         setStreet: (state, action) => {
             const project: ProjectModel = state.projects.find((project: ProjectModel) => project.id === action.payload.proiect_id)
@@ -97,6 +112,6 @@ const projectSlice = createSlice({
     },
 });
 
-export const { setProjectItems, setStreetItems, setStreet, setFocusedProject, setMarker, updateMarker, deleteMarker, updateStreet, deleteStreet, updateProject, deleteProject } = projectSlice.actions;
+export const { setProjectItems, setStreetItems, setStreet, setFocusedProject, setMarker, updateMarker, deleteMarker, updateStreet, deleteStreet, updateProject, deleteProject, setMarkersItems } = projectSlice.actions;
 
 export default projectSlice.reducer;

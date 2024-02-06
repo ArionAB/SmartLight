@@ -1,7 +1,7 @@
 
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { Accordion, AccordionDetails, AccordionSummary, Avatar, Badge, Box, Dialog, Divider, Fab, IconButton, InputAdornment, List, ListItem, ListItemAvatar, ListItemText, Menu, MenuItem, Paper, TextField, Typography } from '@mui/material';
 import CreateNewFolderIcon from '@mui/icons-material/CreateNewFolder';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
@@ -19,7 +19,6 @@ import SwipeableDrawer from '@mui/material/SwipeableDrawer';
 import { setDrawer } from '@/utils/Store/Slices/miscSlice';
 import { StreetMarkerDetails } from '../Marker/StreetMarkerDetails';
 import { setFocusedProject } from '@/utils/Store/Slices/projectSlice';
-import { useTheme } from '@mui/material/styles';
 import InfoIcon from '@mui/icons-material/Info';
 import MapIcon from '@mui/icons-material/Map';
 import SearchIcon from '@mui/icons-material/Search';
@@ -28,6 +27,8 @@ import { useMap } from 'react-leaflet';
 import { selectIsDrawerOpen } from '@/utils/Store/Selectors/miscSelectors';
 import StreetMenu from '../Street/StreetMenu';
 import ProjectMenu from '../Project/ProjectMenu';
+import { getStreetAction } from '@/utils/Store/Actions/StreetActions';
+import { getMarkersAction } from '@/utils/Store/Actions/MarkerActions';
 
 
 
@@ -47,7 +48,6 @@ export const DrawerDialog = () => {
     const dispatch = useAppDispatch();
     const isDrawerOpen = useAppSelector(selectIsDrawerOpen)
     const projectItems = useAppSelector(selectProjectItems)
-    const theme = useTheme();
 
     useEffect(() => {
         dispatch(getProjectAction())
@@ -57,6 +57,18 @@ export const DrawerDialog = () => {
         setSelectedProject(project)
         setOpenStreet(true)
     }
+
+    useEffect(() => {
+        if (selectedProject) {
+            dispatch(getStreetAction(selectedProject.id))
+        }
+    }, [selectedProject])
+
+    useEffect(() => {
+        if (street) {
+            dispatch(getMarkersAction(street.id))
+        }
+    }, [street])
 
     const handleOpenMarkerDetails = (marker: Tables<'markers'>) => {
         setOpenMarker(true)
@@ -190,6 +202,7 @@ export const DrawerDialog = () => {
                                                     item.strazi?.map((streetItem: StreetModel) => {
                                                         return (
                                                             <Accordion key={streetItem.id}>
+
                                                                 <Badge color="secondary" badgeContent={streetItem?.markers?.length}
                                                                     sx={{
                                                                         width: '100%'
@@ -234,7 +247,7 @@ export const DrawerDialog = () => {
                                                                 </Badge>
                                                                 <AccordionDetails>
                                                                     <List>
-                                                                        {streetItem.markers?.map((marker: Tables<'markers'>, index: number) => {
+                                                                        {streetItem?.markers?.map((marker: Tables<'markers'>, index: number) => {
                                                                             return (
                                                                                 <ListItem key={marker.id}
                                                                                     sx={{ borderBottom: '2px solid #eaeaea' }}

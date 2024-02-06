@@ -30,17 +30,32 @@ export const addStreetAction = (street: TablesInsert<'strazi'>) => {
     };
 };
 
+let alreadyFetched: string[] = []
 export const getStreetAction = (proiect_id?: string) => {
     return async (dispatch: any, getState: () => any) => {
         try {
 
             if (proiect_id) {
+                if (alreadyFetched.includes(proiect_id)) {
+                    return
+                }
                 let { data: strazi, error } = await supabase
                     .from('strazi')
                     .select('*')
                     .eq('proiect_id', proiect_id)
 
                 if (!error) {
+                    alreadyFetched.push(proiect_id)
+                    // for (let street of strazi!) {
+                    //     let count = await supabase
+                    //         .from('markers')
+                    //         .select('*', { count: 'exact', head: true })
+                    //         .eq('street_id', street.id);
+                    //     //@ts-ignore
+                    //     street.count = count.count
+                    // }
+
+                    dispatch(setStreetItems({ streets: strazi, proiect_id: proiect_id }))
                     return {
                         severity: 'success',
                         data: strazi

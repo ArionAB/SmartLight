@@ -1,21 +1,30 @@
 import supabase from "../../supabase/createClient";
 import { Tables, TablesInsert, TablesUpdate } from "../Models/Database";
 import { addAppNotification } from "../Slices/appNotificationSlice";
-import { setMarkersItems } from "../Slices/markersSlice";
-import { deleteMarker, setMarker, updateMarker } from "../Slices/projectSlice";
+import { deleteMarker, setMarker, setMarkersItems, updateMarker } from "../Slices/projectSlice";
 
+let fetchedStreets: string[] = []
 export const getMarkersAction = (street_id?: string) => {
     return async (dispatch: any, getState: () => any) => {
         try {
 
             if (street_id) {
+                if (fetchedStreets.includes(street_id)) {
+                    return
+                }
+
+
                 let { data: markers, error } = await supabase
                     .from('markers')
                     .select('*')
                     .eq('street_id', street_id)
 
                 if (!error) {
-                    // dispatch(setMarkersItems(markers))
+                    fetchedStreets.push(street_id)
+                    if (markers && markers.length > 0) {
+                        dispatch(setMarkersItems({ markers: markers, proiect_id: markers[0].proiect_id, street_id: markers[0].street_id }))
+                    }
+
                 }
 
                 if (error) {
