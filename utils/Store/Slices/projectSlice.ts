@@ -1,9 +1,7 @@
 'use client'
 
 import { createSlice } from '@reduxjs/toolkit';
-import { Tables } from '../Models/Database';
 import { ProjectModel } from '../Models/Project/ProjectModel';
-import { ProjectState } from './ProjectState';
 
 const initialState: any = {
     projects: [],

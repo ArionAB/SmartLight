@@ -1,6 +1,4 @@
 import { Enums, Tables } from '@/utils/Store/Models/Database'
-import { ProjectModel } from '@/utils/Store/Models/Project/ProjectModel'
-import { StreetModel } from '@/utils/Store/Models/Project/StreetModel'
 import { selectFocusedProject, selectProjectItems } from '@/utils/Store/Selectors/projectSelectors'
 import { useAppDispatch, useAppSelector } from '@/utils/Store/hooks'
 import { Box, Button, Dialog, IconButton, Popover, Typography } from '@mui/material'
@@ -132,6 +130,7 @@ export const StreetMarkers = () => {
             setSelectedMarker(marker)
     }
 
+    const anchor = Boolean(anchorEl)
 
     return (
         <>
@@ -155,7 +154,7 @@ export const StreetMarkers = () => {
                                     </IconButton>
                                     <Popover
                                         id='delete'
-                                        open={anchorEl ? true : false}
+                                        open={anchor}
                                         anchorEl={anchorEl}
                                         onClose={handleClose}
                                         anchorOrigin={{
