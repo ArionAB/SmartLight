@@ -131,7 +131,6 @@ export const StreetMarkers = () => {
     }
 
     const anchor = Boolean(anchorEl)
-
     return (
         <>
             {

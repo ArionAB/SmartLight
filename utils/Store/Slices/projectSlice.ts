@@ -30,6 +30,16 @@ const projectSlice = createSlice({
                 } else {
                     street?.markers.push(action.payload.markers)
                 }
+
+                state.focusedProject = state.focusedProject || {};
+                state.focusedProject.street = state.focusedProject.street || {};
+
+                if (!state.focusedProject.street.markers) {
+                    state.focusedProject.street.markers = action.payload.markers;
+                } else {
+                    state.focusedProject.street.markers.push(action.payload.markers);
+                }
+
             }
 
         },
