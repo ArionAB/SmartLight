@@ -1,4 +1,4 @@
-import { StreetModel } from '@/utils/Store/Models/Project/StreetModel';
+import { StreetModel } from '@/utils/Store/Models/Street/StreetModel';
 import styled from '@emotion/styled';
 import { Table, TableBody, TableContainer, TableHead, TableRow, Paper, TableCell, tableCellClasses } from '@mui/material';
 import React, { useMemo, FC } from 'react'
@@ -17,7 +17,7 @@ const StreetTable: FC<{
     }
 
     let counter = useMemo(() => {
-        return street?.markers?.reduce((acc: any, obj) => {
+        return street?.markersArray?.reduce((acc: any, obj) => {
             // Initialize the counts if they don't exist yet
             if (obj.pole_type) {
                 if (!acc[obj.pole_type]) {
@@ -45,7 +45,7 @@ const StreetTable: FC<{
 
             return acc;
         }, {});
-    }, [street?.markers])
+    }, [street?.markersArray])
 
     const rows = useMemo(() => {
         if (counter) {

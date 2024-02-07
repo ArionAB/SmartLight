@@ -3,7 +3,7 @@ import React, { FC, useState } from 'react'
 import InfoIcon from '@mui/icons-material/Info';
 import EditIcon from '@mui/icons-material/Edit';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { StreetModel } from '@/utils/Store/Models/Project/StreetModel';
+import { StreetModel } from '@/utils/Store/Models/Street/StreetModel';
 import { StreetEdit } from './StreetEdit';
 import DeleteStreet from './DeleteStreet';
 import StreetTable from './StreetTable';

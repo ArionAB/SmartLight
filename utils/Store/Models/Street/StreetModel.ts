@@ -7,5 +7,8 @@ export interface StreetModel {
     network_type: Enums<'network_type'>,
     proiect_id: string,
     road_type: Enums<'road_type'>,
-    markers: Tables<'markers'>[]
+    markersArray: Tables<'markers'>[],
+    markers: [{
+        count: number
+    }]
 }

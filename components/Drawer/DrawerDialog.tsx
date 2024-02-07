@@ -1,18 +1,18 @@
 
 'use client'
 
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Accordion, AccordionDetails, AccordionSummary, Avatar, Badge, Box, Dialog, Divider, Fab, IconButton, InputAdornment, List, ListItem, ListItemAvatar, ListItemText, Menu, MenuItem, Paper, TextField, Typography } from '@mui/material';
 import CreateNewFolderIcon from '@mui/icons-material/CreateNewFolder';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import { AddOrEditProject } from '../Project/AddOrEditProject';
 import { useAppDispatch, useAppSelector } from '@/utils/Store/hooks';
 import { selectProjectItems } from '@/utils/Store/Selectors/projectSelectors';
-import { Add } from '@mui/icons-material';
+import { Add, AddRoad } from '@mui/icons-material';
 import { AddStreet } from './AddStreet';
 import { Tables } from '@/utils/Store/Models/Database';
 import { ProjectModel } from '@/utils/Store/Models/Project/ProjectModel';
-import { StreetModel } from '@/utils/Store/Models/Project/StreetModel';
+import { StreetModel } from '@/utils/Store/Models/Street/StreetModel';
 import FolderIcon from '@mui/icons-material/Folder';
 import { getProjectAction } from '@/utils/Store/Actions/ProjectAction';
 import SwipeableDrawer from '@mui/material/SwipeableDrawer';
@@ -167,7 +167,7 @@ export const DrawerDialog = () => {
                                                     alignItems: 'center',
                                                     gap: '5px'
                                                 }}>
-                                                    <Badge badgeContent={item.count} max={1000} color="info" anchorOrigin={{
+                                                    <Badge badgeContent={item.markers[0].count} max={10000} color="info" anchorOrigin={{
                                                         vertical: 'top',
                                                         horizontal: 'left',
                                                     }}>
@@ -184,27 +184,35 @@ export const DrawerDialog = () => {
                                                     <ProjectMenu project={item} />
                                                     <MapIcon sx={{ mr: 2 }} onClick={() => handleGoToLocation(Number(item.lat), Number(item.long))} />
                                                 </Box>
-
                                             </Box>
-
-
                                         </AccordionSummary>
                                         <AccordionDetails>
-                                            <Fab size='small' variant='extended' color='info' onClick={() => handleAddStreet(item)}>
-                                                <Add sx={{ mr: 1 }} />
-                                                Strada
-                                            </Fab>
+                                            <ListItem sx={{
+                                                display: 'flex',
+                                                justifyContent: 'space-between'
+                                            }}>
+                                                <TextField type='search' variant='standard' label="Cauta strada" onChange={(e) => dispatch(getStreetAction(item.id, { name: e.target.value }))} InputProps={{
+                                                    startAdornment: (
+                                                        <InputAdornment position="start">
+                                                            <SearchIcon />
+                                                        </InputAdornment>
+                                                    ),
+                                                }}></TextField>
+                                                <Fab size='small' color='info' onClick={() => handleAddStreet(item)}>
+                                                    <AddRoad />
+                                                </Fab>
+                                            </ListItem>
+
                                             <Box sx={{ display: 'flex' }} flexDirection={'column'} gap={2} marginTop={2}>
                                                 {
                                                     item.strazi?.map((streetItem: StreetModel) => {
                                                         return (
                                                             <Accordion key={streetItem.id}>
-
-                                                                <Badge color="secondary" badgeContent={streetItem?.markers?.length}
+                                                                <Badge color="secondary" badgeContent={streetItem?.markers[0].count}
                                                                     sx={{
                                                                         width: '100%'
                                                                     }}
-                                                                    max={1000}
+                                                                    max={10000}
                                                                     anchorOrigin={{
                                                                         vertical: 'top',
                                                                         horizontal: 'left',
@@ -244,7 +252,7 @@ export const DrawerDialog = () => {
                                                                 </Badge>
                                                                 <AccordionDetails>
                                                                     <List>
-                                                                        {streetItem?.markers?.map((marker: Tables<'markers'>, index: number) => {
+                                                                        {streetItem?.markersArray?.map((marker: Tables<'markers'>, index: number) => {
                                                                             return (
                                                                                 <ListItem key={marker.id}
                                                                                     sx={{ borderBottom: '2px solid #eaeaea' }}

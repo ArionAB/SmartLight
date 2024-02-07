@@ -134,7 +134,7 @@ export const StreetMarkers = () => {
     return (
         <>
             {
-                focusedProject?.street?.markers?.map((marker: Tables<'markers'>) => {
+                focusedProject?.street?.markersArray?.map((marker: Tables<'markers'>) => {
                     return (
                         <Marker
                             key={marker.id}

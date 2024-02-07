@@ -1,5 +1,5 @@
 import { Tables } from "../Database";
-import { StreetModel } from "./StreetModel";
+import { StreetModel } from "../Street/StreetModel";
 
 export interface FocusedProjectModel {
     item: Tables<'proiecte'>,

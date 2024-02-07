@@ -10,18 +10,9 @@ export const getProjectAction = () => {
 
             let { data: proiecte, error } = await supabase
                 .from('proiecte')
-                .select("*")
-            // .select(`*,strazi(*,markers(*))`)
+                .select("*, markers(count)")
 
             if (!error) {
-                for (let project of proiecte!) {
-                    let count = await supabase
-                        .from('markers')
-                        .select('*', { count: 'estimated', head: true })
-                        .eq('proiect_id', project.id);
-                    //@ts-ignore
-                    project.count = count.count
-                }
                 dispatch(setProjectItems(proiecte))
             }
 

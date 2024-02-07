@@ -78,10 +78,10 @@ export const AddMarker: FC<{
                 accuracy: accuracy
 
             }
-            if (!focusedProject.street?.markers?.length) {
+            if (!focusedProject.street?.markersArray?.length) {
                 markerData.number = '1'
             } else {
-                let lastMarker = { ...focusedProject.street.markers[focusedProject.street.markers.length - 1] }
+                let lastMarker = { ...focusedProject.street.markersArray[focusedProject.street.markersArray.length - 1] }
                 const increment = Number(lastMarker.number!) + 1
                 markerData.number = increment.toString()
             }

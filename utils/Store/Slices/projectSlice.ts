@@ -7,7 +7,6 @@ const initialState: any = {
     projects: [],
     streets: [],
     focusedProject: null!,
-
 };
 
 const projectSlice = createSlice({
@@ -25,19 +24,19 @@ const projectSlice = createSlice({
             const project: ProjectModel = state.projects.find((project: ProjectModel) => project.id === action.payload.proiect_id)
             const street = project.strazi.find((street) => street.id === action.payload.street_id)
             if (street) {
-                if (!street.markers) {
-                    street.markers = action.payload.markers
+                if (!street.markersArray) {
+                    street.markersArray = action.payload.markers
                 } else {
-                    street?.markers.push(action.payload.markers)
+                    street?.markersArray.push(action.payload.markers)
                 }
 
                 state.focusedProject = state.focusedProject || {};
                 state.focusedProject.street = state.focusedProject.street || {};
 
-                if (!state.focusedProject.street.markers) {
-                    state.focusedProject.street.markers = action.payload.markers;
+                if (!state.focusedProject.street.markersArray) {
+                    state.focusedProject.street.markersArray = action.payload.markers;
                 } else {
-                    state.focusedProject.street.markers.push(action.payload.markers);
+                    state.focusedProject.street.markersArray.push(action.payload.markers);
                 }
 
             }
@@ -55,39 +54,39 @@ const projectSlice = createSlice({
             const street = project.strazi.find((street) => street.id === action.payload.street_id)
 
             if (street) {
-                if (!street.markers) {
-                    street.markers = [];
+                if (!street.markersArray) {
+                    street.markersArray = [];
                 }
 
-                street.markers.push(action.payload);
+                street.markersArray.push(action.payload);
 
                 if (!state.focusedProject.street) {
                     state.focusedProject.street = {};
                 }
 
-                if (!state.focusedProject.street.markers) {
-                    state.focusedProject.street.markers = [];
+                if (!state.focusedProject.street.markersArray) {
+                    state.focusedProject.street.markersArray = [];
                 }
 
-                state.focusedProject.street.markers.push(action.payload);
+                state.focusedProject.street.markersArray.push(action.payload);
             }
         },
         updateMarker: (state, action) => {
             const project: ProjectModel = state.projects.find((project: ProjectModel) => project.id === action.payload.proiect_id);
             const street = project.strazi.find((street) => street.id === action.payload.street_id);
-            const markerIndex = street?.markers.findIndex((marker) => marker.id === action.payload.id);
+            const markerIndex = street?.markersArray.findIndex((marker) => marker.id === action.payload.id);
             if (markerIndex !== -1) {
-                street!.markers[markerIndex!] = action.payload;
+                street!.markersArray[markerIndex!] = action.payload;
 
             }
         },
         deleteMarker: (state, action) => {
             const project: ProjectModel = state.projects.find((project: ProjectModel) => project.id === action.payload.proiect_id);
             const street = project.strazi.find((street) => street.id === action.payload.street_id);
-            const markerIndex = street?.markers.findIndex((marker) => marker.id === action.payload.id);
+            const markerIndex = street?.markersArray.findIndex((marker) => marker.id === action.payload.id);
             if (markerIndex !== -1) {
-                street!.markers.splice(markerIndex!, 1);
-                state.focusedProject.street.markers.splice(markerIndex!, 1)
+                street!.markersArray.splice(markerIndex!, 1);
+                state.focusedProject.street.markersArray.splice(markerIndex!, 1)
             }
         },
         updateStreet: (state, action) => {

@@ -1,5 +1,7 @@
 import supabase from "../../supabase/createClient";
 import { Tables, TablesInsert, TablesUpdate } from "../Models/Database";
+import { StreetFiltersModel } from "../Models/Street/StreetFiltersModel";
+import { StreetModel } from "../Models/Street/StreetModel";
 import { addAppNotification } from "../Slices/appNotificationSlice";
 import { deleteStreet, setStreet, setStreetItems, updateStreet } from "../Slices/projectSlice";
 
@@ -31,64 +33,45 @@ export const addStreetAction = (street: TablesInsert<'strazi'>) => {
 };
 
 let alreadyFetched: string[] = []
-export const getStreetAction = (proiect_id?: string) => {
+export const getStreetAction = (proiect_id: string, filters?: StreetFiltersModel) => {
     return async (dispatch: any, getState: () => any) => {
         try {
+            if (alreadyFetched.includes(proiect_id) && !filters) {
+                return
+            }
 
-            if (proiect_id) {
-                if (alreadyFetched.includes(proiect_id)) {
-                    return
-                }
-                let { data: strazi, error } = await supabase
-                    .from('strazi')
-                    .select('*')
-                    .eq('proiect_id', proiect_id)
+            let query = supabase
+                .from('strazi')
+                .select('*, markers(count)')
+                .eq('proiect_id', proiect_id);
 
-                if (!error) {
-                    alreadyFetched.push(proiect_id)
-                    // for (let street of strazi!) {
-                    //     let count = await supabase
-                    //         .from('markers')
-                    //         .select('*', { count: 'exact', head: true })
-                    //         .eq('street_id', street.id);
-                    //     //@ts-ignore
-                    //     street.count = count.count
-                    // }
-
-                    dispatch(setStreetItems({ streets: strazi, proiect_id: proiect_id }))
-                    return {
-                        severity: 'success',
-                        data: strazi
-                    }
-                }
-
-                if (error) {
-                    throw error;
-                }
-
-            } else {
-                let { data: strazi, error } = await supabase
-                    .from('strazi')
-                    .select('*')
-
-
-                if (!error) {
-                    dispatch(setStreetItems(strazi))
-
-                }
-
-                if (error) {
-                    throw error;
+            if (filters) {
+                if (filters.name) {
+                    query = query.ilike('name', `%${filters.name}%`);
                 }
             }
 
+            const { data: strazi, error } = await query;
 
+            if (!error) {
+                alreadyFetched.push(proiect_id)
+
+                dispatch(setStreetItems({ streets: strazi, proiect_id: proiect_id }))
+                return {
+                    severity: 'success',
+                    data: strazi
+                }
+            }
+
+            if (error) {
+                throw error;
+            }
 
         } catch (error) {
-            console.error('Error deleting item:', error);
+            console.error('Error fetching streets', error);
         }
-    };
-};
+    }
+}
 
 export const updateStreetAction = (street: TablesUpdate<'strazi'>) => {
     return async (dispatch: any, getState: () => any) => {
