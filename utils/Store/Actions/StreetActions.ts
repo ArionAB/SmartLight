@@ -43,6 +43,7 @@ export const getStreetAction = (proiect_id: string, filters?: StreetFiltersModel
             let query = supabase
                 .from('strazi')
                 .select('*, markers(count)')
+                .order('name')
                 .eq('proiect_id', proiect_id);
 
             if (filters) {
