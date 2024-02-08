@@ -41,8 +41,6 @@ const StyledMenu = styled((props: MenuProps) => (
             '& .MuiSvgIcon-root': {
                 fontSize: 18,
                 //@ts-ignore
-                color: theme.palette.text.secondary,
-                //@ts-ignore
                 marginRight: theme.spacing(1.5),
             },
             '&:active': {
@@ -94,6 +92,15 @@ const StreetMenu: FC<{ street: StreetModel }> = ({ street }) => {
                 open={anchor ? true : false}
                 onClose={handleClose}
             >
+
+                <MenuItem onClick={() => {
+                    setOpenTable(true),
+                        handleClose()
+                }} disableRipple>
+                    <InfoIcon color='success' />
+                    Info
+                </MenuItem>
+                <Divider sx={{ my: 0.5 }} />
                 <MenuItem onClick={() => {
                     setOpenEditDialog(true)
                     handleClose()
@@ -103,18 +110,10 @@ const StreetMenu: FC<{ street: StreetModel }> = ({ street }) => {
                 </MenuItem>
                 <Divider sx={{ my: 0.5 }} />
                 <MenuItem onClick={() => {
-                    setOpenTable(true),
-                        handleClose()
-                }} disableRipple>
-                    <InfoIcon style={{ color: 'success' }} />
-                    Info
-                </MenuItem>
-                <Divider sx={{ my: 0.5 }} />
-                <MenuItem onClick={() => {
                     setDeleteDialog(true),
                         handleClose()
                 }} disableRipple>
-                    <Delete />
+                    <Delete color='error' />
                     Șterge
                 </MenuItem>
             </StyledMenu>

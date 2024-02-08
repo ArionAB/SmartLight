@@ -1,6 +1,5 @@
 import { Box, IconButton, Menu, Dialog, Button, Stack, Paper, MenuList, MenuItem, Popper, Grow, ClickAwayListener, MenuProps, alpha, Divider } from '@mui/material'
 import React, { FC, useState } from 'react'
-import InfoIcon from '@mui/icons-material/Info';
 import EditIcon from '@mui/icons-material/Edit';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import styled from '@emotion/styled';
@@ -8,6 +7,13 @@ import { Delete } from '@mui/icons-material';
 import { ProjectModel } from '@/utils/Store/Models/Project/ProjectModel';
 import { AddOrEditProject } from './AddOrEditProject';
 import DeleteProject from './DeleteProject';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import { useAppDispatch } from '@/utils/Store/hooks';
+import { getMarkersAction } from '@/utils/Store/Actions/MarkerActions';
+import MapIcon from '@mui/icons-material/Map';
+import { useMap } from 'react-leaflet';
+import { flyToLocation } from '../Map/FlyToLocation';
+
 
 const StyledMenu = styled((props: MenuProps) => (
     <Menu
@@ -40,8 +46,6 @@ const StyledMenu = styled((props: MenuProps) => (
             '& .MuiSvgIcon-root': {
                 fontSize: 18,
                 //@ts-ignore
-                color: theme.palette.text.secondary,
-                //@ts-ignore
                 marginRight: theme.spacing(1.5),
             },
             '&:active': {
@@ -64,6 +68,8 @@ const ProjectMenu: FC<{ project: ProjectModel }> = ({ project }) => {
     const [openTable, setOpenTable] = useState(false)
     const [openEditDialog, setOpenEditDialog] = useState(false)
 
+    const map = useMap();
+    const dispatch = useAppDispatch()
 
     const handleOpenProjectMenu = (event: React.MouseEvent<HTMLElement>) => {
         setAnchor(event.currentTarget);
@@ -71,6 +77,10 @@ const ProjectMenu: FC<{ project: ProjectModel }> = ({ project }) => {
 
     const handleClose = () => {
         setAnchor(null)
+    }
+
+    const handleGoToLocation = (lat: number, lng: number) => {
+        flyToLocation(map, lat, lng)
     }
 
     return (
@@ -94,6 +104,22 @@ const ProjectMenu: FC<{ project: ProjectModel }> = ({ project }) => {
                 onClose={handleClose}
             >
                 <MenuItem onClick={() => {
+                    handleGoToLocation(Number(project.lat), Number(project.long))
+                    handleClose()
+                }} disableRipple>
+                    <MapIcon />
+                    Locație
+                </MenuItem>
+                <Divider sx={{ my: 0.5 }} />
+                <MenuItem onClick={() => {
+                    dispatch(getMarkersAction(undefined, project))
+                    handleClose()
+                }} disableRipple>
+                    <VisibilityIcon color='info' />
+                    Afișează proiect
+                </MenuItem>
+                <Divider sx={{ my: 0.5 }} />
+                <MenuItem onClick={() => {
                     setOpenEditDialog(true)
                     handleClose()
                 }} disableRipple>
@@ -113,7 +139,7 @@ const ProjectMenu: FC<{ project: ProjectModel }> = ({ project }) => {
                     setDeleteDialog(true),
                         handleClose()
                 }} disableRipple>
-                    <Delete />
+                    <Delete color="error" />
                     Șterge
                 </MenuItem>
             </StyledMenu>

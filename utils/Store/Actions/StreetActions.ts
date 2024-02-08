@@ -56,7 +56,6 @@ export const getStreetAction = (proiect_id: string, filters?: StreetFiltersModel
 
             if (!error) {
                 alreadyFetched.push(proiect_id)
-
                 dispatch(setStreetItems({ streets: strazi, proiect_id: proiect_id }))
                 return {
                     severity: 'success',

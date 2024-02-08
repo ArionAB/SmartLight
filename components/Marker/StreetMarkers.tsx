@@ -130,9 +130,6 @@ export const StreetMarkers = () => {
             setSelectedMarker(marker)
     }
 
-    useMemo(() => {
-        console.log('FP', focusedProject)
-    }, [focusedProject])
 
     const anchor = Boolean(anchorEl)
     return (

@@ -1,10 +1,12 @@
 import supabase from "../../supabase/createClient";
 import { Tables, TablesInsert, TablesUpdate } from "../Models/Database";
+import { ProjectModel } from "../Models/Project/ProjectModel";
 import { addAppNotification } from "../Slices/appNotificationSlice";
-import { deleteMarker, setMarker, setMarkersItems, updateMarker } from "../Slices/projectSlice";
+import { setTooltips } from "../Slices/miscSlice";
+import { deleteMarker, setFocusedProject, setMarker, setMarkersItems, updateMarker } from "../Slices/projectSlice";
 
 let fetchedStreets: string[] = []
-export const getMarkersAction = (street_id?: string) => {
+export const getMarkersAction = (street_id?: string, project?: ProjectModel) => {
     return async (dispatch: any, getState: () => any) => {
         try {
 
@@ -30,23 +32,53 @@ export const getMarkersAction = (street_id?: string) => {
                 if (error) {
                     throw error;
                 }
-            } else {
-                let { data: markers, error } = await supabase
-                    .from('markers')
-                    .select('*')
+            }
 
-                if (!error) {
-                    dispatch(setMarkersItems(markers))
+            if (project) {
+
+                let numberOfPages = 1
+                if (project.markers[0].count > 1000) {
+                    numberOfPages = Math.ceil(project.markers[0].count / 1000)
                 }
 
-                if (error) {
-                    throw error;
+                let totalMarkers: Tables<'markers'>[] = []
+                for (let i = 1; i <= numberOfPages; i++) {
+                    let offset = (i - 1) * 1000;
+
+                    let { data: markers, error } = await supabase
+                        .from('markers')
+                        .select('*')
+                        .eq('proiect_id', project.id)
+                        .range(offset, offset + 999);
+
+                    if (!error) {
+                        if (markers && markers.length > 0) {
+                            totalMarkers.push(...markers)
+                        }
+
+                        dispatch(addAppNotification({
+                            severity: 'success',
+                            message: "Markerii sunt afișati pe hartă!"
+                        }))
+                    }
+
+                    if (error) {
+                        dispatch(addAppNotification({ message: `Eroare markeri: ${error}`, severity: 'error' }))
+                        throw error;
+                    }
                 }
+                //in StreetMarkers facem map pe focusedProject.street.markersArray
+                dispatch(setTooltips(false))
+                dispatch(setFocusedProject({
+                    street: {
+                        markersArray: totalMarkers
+                    }
+                }))
             }
 
 
         } catch (error) {
-            console.error('Error deleting item:', error);
+            console.error('Error fetch markers:', error);
         }
     };
 };

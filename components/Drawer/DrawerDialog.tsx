@@ -182,7 +182,7 @@ export const DrawerDialog = () => {
                                                     alignItems: 'center'
                                                 }}>
                                                     <ProjectMenu project={item} />
-                                                    <MapIcon sx={{ mr: 2 }} onClick={() => handleGoToLocation(Number(item.lat), Number(item.long))} />
+
                                                 </Box>
                                             </Box>
                                         </AccordionSummary>
@@ -191,7 +191,11 @@ export const DrawerDialog = () => {
                                                 display: 'flex',
                                                 justifyContent: 'space-between'
                                             }}>
-                                                <TextField type='search' variant='standard' label="Cauta strada" onChange={(e) => dispatch(getStreetAction(item.id, { name: e.target.value }))} InputProps={{
+                                                <TextField type='search' variant='standard' label="Cauta strada" onChange={(e) => {
+                                                    if (e.target.value.length > 2 || e.target.value.length === 0) {
+                                                        dispatch(getStreetAction(item.id, { name: e.target.value }))
+                                                    }
+                                                }} InputProps={{
                                                     startAdornment: (
                                                         <InputAdornment position="start">
                                                             <SearchIcon />

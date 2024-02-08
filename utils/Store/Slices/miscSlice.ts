@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState: any = {
     drawer: false,
-    tooltips: true
+    tooltips: false
 };
 
 const miscSlice = createSlice({
