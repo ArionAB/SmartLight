@@ -7,6 +7,9 @@ const initialState: any = {
     projects: [],
     streets: [],
     focusedProject: null!,
+    loadingProjects: false,
+    loadingStreets: false,
+    loadingMarkers: false,
 };
 
 const projectSlice = createSlice({
@@ -15,10 +18,18 @@ const projectSlice = createSlice({
     reducers: {
         setProjectItems: (state, action) => {
             state.projects = action.payload;
+            state.loadingProjects = false
+        },
+        setProjectsLoading: (state, action) => {
+            state.loadingProjects = action.payload
         },
         setStreetItems: (state, action) => {
             const project: ProjectModel = state.projects.find((project: ProjectModel) => project.id === action.payload.proiect_id)
             project.strazi = action.payload.streets
+            state.loadingStreets = false
+        },
+        setStreetsLoading: (state, action) => {
+            state.loadingStreets = action.payload
         },
         setMarkersItems: (state, action) => {
             const project: ProjectModel = state.projects.find((project: ProjectModel) => project.id === action.payload.proiect_id)
@@ -40,7 +51,11 @@ const projectSlice = createSlice({
                 }
 
             }
+            state.loadingMarkers = false
 
+        },
+        setMarkersLoading: (state, action) => {
+            state.loadingMarkers = action.payload
         },
         setStreet: (state, action) => {
             const project: ProjectModel = state.projects.find((project: ProjectModel) => project.id === action.payload.proiect_id)
@@ -119,6 +134,6 @@ const projectSlice = createSlice({
     },
 });
 
-export const { setProjectItems, setStreetItems, setStreet, setFocusedProject, setMarker, updateMarker, deleteMarker, updateStreet, deleteStreet, updateProject, deleteProject, setMarkersItems } = projectSlice.actions;
+export const { setProjectItems, setStreetItems, setStreet, setFocusedProject, setMarker, updateMarker, deleteMarker, updateStreet, deleteStreet, updateProject, deleteProject, setMarkersItems, setProjectsLoading, setStreetsLoading, setMarkersLoading } = projectSlice.actions;
 
 export default projectSlice.reducer;

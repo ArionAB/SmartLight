@@ -1,5 +1,5 @@
 import supabase from "../../supabase/createClient";
-import { deleteProject, setProjectItems, updateProject } from "../Slices/projectSlice";
+import { deleteProject, setProjectItems, setProjectsLoading, updateProject } from "../Slices/projectSlice";
 import { Tables, TablesInsert, TablesUpdate } from "../Models/Database";
 import { addAppNotification } from "../Slices/appNotificationSlice";
 
@@ -7,7 +7,7 @@ import { addAppNotification } from "../Slices/appNotificationSlice";
 export const getProjectAction = () => {
     return async (dispatch: any, getState: () => any) => {
         try {
-
+            dispatch(setProjectsLoading(true))
             let { data: proiecte, error } = await supabase
                 .from('proiecte')
                 .select("*, markers(count)")
@@ -18,6 +18,7 @@ export const getProjectAction = () => {
 
 
             if (error) {
+                dispatch(setProjectsLoading(false))
                 throw error;
             }
 

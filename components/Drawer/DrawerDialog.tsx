@@ -2,12 +2,12 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
-import { Accordion, AccordionDetails, AccordionSummary, Avatar, Badge, Box, Dialog, Divider, Fab, IconButton, InputAdornment, List, ListItem, ListItemAvatar, ListItemText, Menu, MenuItem, Paper, TextField, Typography } from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, Avatar, Badge, Box, Dialog, Divider, Fab, IconButton, InputAdornment, List, ListItem, ListItemAvatar, ListItemText, Menu, MenuItem, Paper, Skeleton, TextField, Typography } from '@mui/material';
 import CreateNewFolderIcon from '@mui/icons-material/CreateNewFolder';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import { AddOrEditProject } from '../Project/AddOrEditProject';
 import { useAppDispatch, useAppSelector } from '@/utils/Store/hooks';
-import { selectProjectItems } from '@/utils/Store/Selectors/projectSelectors';
+import { selectMarkersLoading, selectProjectItems, selectProjectLoading, selectStreetsLoading } from '@/utils/Store/Selectors/projectSelectors';
 import { Add, AddRoad } from '@mui/icons-material';
 import { AddStreet } from './AddStreet';
 import { Tables } from '@/utils/Store/Models/Database';
@@ -48,6 +48,9 @@ export const DrawerDialog = () => {
     const dispatch = useAppDispatch();
     const isDrawerOpen = useAppSelector(selectIsDrawerOpen)
     const projectItems = useAppSelector(selectProjectItems)
+    const loadingProjects = useAppSelector(selectProjectLoading)
+    const loadingStreets = useAppSelector(selectStreetsLoading)
+    const loadingMarkers = useAppSelector(selectMarkersLoading)
 
     useEffect(() => {
         dispatch(getProjectAction())
@@ -75,8 +78,6 @@ export const DrawerDialog = () => {
         setSelectedMarker(marker)
     }
 
-
-
     const handleChange =
         (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
             setExpanded(isExpanded ? panel : false);
@@ -86,7 +87,6 @@ export const DrawerDialog = () => {
         setOpen(false)
         flyToLocation(map, lat, lng)
     }
-
 
     return (
         <>
@@ -142,7 +142,15 @@ export const DrawerDialog = () => {
                         </Fab>
                     </ListItem>
                 </List>
-
+                {
+                    loadingProjects && (
+                        <Box display={'flex'} flexDirection={'column'} gap={2}>
+                            <Skeleton variant="rectangular" height={60} />
+                            <Skeleton variant="rectangular" height={60} />
+                            <Skeleton variant="rectangular" height={60} />
+                        </Box>
+                    )
+                }
                 {
                     projectItems?.map((item: ProjectModel) => {
                         if (item.city.toLowerCase().includes(search.toLowerCase())) {
@@ -209,6 +217,15 @@ export const DrawerDialog = () => {
 
                                             <Box sx={{ display: 'flex' }} flexDirection={'column'} gap={2} marginTop={2}>
                                                 {
+                                                    loadingStreets && (
+                                                        <Box display={'flex'} flexDirection={'column'} gap={2}>
+                                                            <Skeleton variant="rectangular" height={60} />
+                                                            <Skeleton variant="rectangular" height={60} />
+                                                            <Skeleton variant="rectangular" height={60} />
+                                                        </Box>
+                                                    )
+                                                }
+                                                {
                                                     item.strazi?.map((streetItem: StreetModel) => {
                                                         return (
                                                             <Accordion key={streetItem.id}>
@@ -256,6 +273,15 @@ export const DrawerDialog = () => {
                                                                 </Badge>
                                                                 <AccordionDetails>
                                                                     <List>
+                                                                        {
+                                                                            loadingMarkers && (
+                                                                                <Box display={'flex'} flexDirection={'column'} gap={2}>
+                                                                                    <Skeleton variant="rectangular" height={60} />
+                                                                                    <Skeleton variant="rectangular" height={60} />
+                                                                                    <Skeleton variant="rectangular" height={60} />
+                                                                                </Box>
+                                                                            )
+                                                                        }
                                                                         {streetItem?.markersArray?.map((marker: Tables<'markers'>, index: number) => {
                                                                             return (
                                                                                 <ListItem key={marker.id}

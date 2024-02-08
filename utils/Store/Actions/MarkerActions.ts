@@ -3,13 +3,14 @@ import { Tables, TablesInsert, TablesUpdate } from "../Models/Database";
 import { ProjectModel } from "../Models/Project/ProjectModel";
 import { addAppNotification } from "../Slices/appNotificationSlice";
 import { setTooltips } from "../Slices/miscSlice";
-import { deleteMarker, setFocusedProject, setMarker, setMarkersItems, updateMarker } from "../Slices/projectSlice";
+import { deleteMarker, setFocusedProject, setMarker, setMarkersItems, setMarkersLoading, updateMarker } from "../Slices/projectSlice";
 
 let fetchedStreets: string[] = []
 export const getMarkersAction = (street_id?: string, project?: ProjectModel) => {
     return async (dispatch: any, getState: () => any) => {
         try {
 
+            dispatch(setMarkersLoading(true))
             if (street_id) {
                 if (fetchedStreets.includes(street_id)) {
                     return
@@ -30,6 +31,11 @@ export const getMarkersAction = (street_id?: string, project?: ProjectModel) => 
                 }
 
                 if (error) {
+                    dispatch(setMarkersLoading(false))
+                    dispatch(addAppNotification({
+                        severity: 'error',
+                        message: error.message
+                    }))
                     throw error;
                 }
             }

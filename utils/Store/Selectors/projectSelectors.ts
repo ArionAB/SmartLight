@@ -14,3 +14,13 @@ export const selectStreetItems = (state: RootState): Tables<'strazi'>[] => {
 export const selectFocusedProject = (state: RootState): FocusedProjectModel => {
     return state.project.focusedProject
 }
+
+export const selectProjectLoading = (state: RootState): boolean => {
+    return state.project.loadingProjects
+}
+export const selectStreetsLoading = (state: RootState): boolean => {
+    return state.project.loadingStreets
+}
+export const selectMarkersLoading = (state: RootState): boolean => {
+    return state.project.loadingMarkers
+}

@@ -3,7 +3,7 @@ import { Tables, TablesInsert, TablesUpdate } from "../Models/Database";
 import { StreetFiltersModel } from "../Models/Street/StreetFiltersModel";
 import { StreetModel } from "../Models/Street/StreetModel";
 import { addAppNotification } from "../Slices/appNotificationSlice";
-import { deleteStreet, setStreet, setStreetItems, updateStreet } from "../Slices/projectSlice";
+import { deleteStreet, setStreet, setStreetItems, setStreetsLoading, updateStreet } from "../Slices/projectSlice";
 
 export const addStreetAction = (street: TablesInsert<'strazi'>) => {
     return async (dispatch: any, getState: () => any) => {
@@ -27,7 +27,7 @@ export const addStreetAction = (street: TablesInsert<'strazi'>) => {
             }
 
         } catch (error) {
-            console.error('Error deleting item:', error);
+            console.error('Error adding item', error);
         }
     };
 };
@@ -51,6 +51,7 @@ export const getStreetAction = (proiect_id: string, filters?: StreetFiltersModel
                     query = query.ilike('name', `%${filters.name}%`);
                 }
             }
+            dispatch(setStreetsLoading(true))
 
             const { data: strazi, error } = await query;
 
@@ -64,6 +65,9 @@ export const getStreetAction = (proiect_id: string, filters?: StreetFiltersModel
             }
 
             if (error) {
+                dispatch(setStreetsLoading(false))
+                dispatch(addAppNotification({ message: error.message, severity: 'error' }))
+
                 throw error;
             }
 
