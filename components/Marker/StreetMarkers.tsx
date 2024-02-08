@@ -2,7 +2,7 @@ import { Enums, Tables } from '@/utils/Store/Models/Database'
 import { selectFocusedProject, selectProjectItems } from '@/utils/Store/Selectors/projectSelectors'
 import { useAppDispatch, useAppSelector } from '@/utils/Store/hooks'
 import { Box, Button, Dialog, IconButton, Popover, Typography } from '@mui/material'
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { Marker, Popup, Tooltip } from 'react-leaflet'
 import { StreetMarkerDetails } from './StreetMarkerDetails'
 import { renderToStaticMarkup } from 'react-dom/server'
@@ -129,6 +129,10 @@ export const StreetMarkers = () => {
         setOpen(true),
             setSelectedMarker(marker)
     }
+
+    useMemo(() => {
+        console.log('FP', focusedProject)
+    }, [focusedProject])
 
     const anchor = Boolean(anchorEl)
     return (

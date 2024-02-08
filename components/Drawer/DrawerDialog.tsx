@@ -208,7 +208,7 @@ export const DrawerDialog = () => {
                                                     item.strazi?.map((streetItem: StreetModel) => {
                                                         return (
                                                             <Accordion key={streetItem.id}>
-                                                                <Badge color="secondary" badgeContent={streetItem?.markers[0].count}
+                                                                <Badge color="secondary" badgeContent={streetItem.markers && streetItem?.markers[0]?.count}
                                                                     sx={{
                                                                         width: '100%'
                                                                     }}
