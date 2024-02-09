@@ -10,12 +10,12 @@ export const getMarkersAction = (street_id?: string, project?: ProjectModel) => 
     return async (dispatch: any, getState: () => any) => {
         try {
 
-            dispatch(setMarkersLoading(true))
             if (street_id) {
                 if (fetchedStreets.includes(street_id)) {
                     return
                 }
 
+                dispatch(setMarkersLoading(true))
 
                 let { data: markers, error } = await supabase
                     .from('markers')
@@ -26,6 +26,8 @@ export const getMarkersAction = (street_id?: string, project?: ProjectModel) => 
                     fetchedStreets.push(street_id)
                     if (markers && markers.length > 0) {
                         dispatch(setMarkersItems({ markers: markers, proiect_id: markers[0].proiect_id, street_id: markers[0].street_id }))
+                    } else {
+                        dispatch(setMarkersLoading(false))
                     }
 
                 }
