@@ -4,12 +4,13 @@ import { addProjectAction, updateProjectAction } from '@/utils/Store/Actions/Pro
 import { LocalityModel } from '@/utils/Store/Models/LocalityModel';
 import { CountyModel } from '@/utils/Store/Models/CountyModel';
 import { useAppDispatch } from '@/utils/Store/hooks';
-import { Autocomplete, Container, Dialog, DialogTitle, FormControl, FormGroup, InputLabel, MenuItem, Select, TextField } from '@mui/material'
+import { Autocomplete, Container, Dialog, DialogTitle, FormControl, FormGroup, InputLabel, Menu, MenuItem, Select, TextField } from '@mui/material'
 import Button from '@mui/material/Button';
 import React, { FC, useEffect, useState } from 'react'
 import { localities } from "@/utils/localities"
 import { Enums } from '@/utils/Store/Models/Database';
 import { ProjectModel } from '@/utils/Store/Models/Project/ProjectModel';
+import { projectTypeItems } from '@/utils/Store/items/projectTypeItems';
 
 export const AddOrEditProject: FC<{
     setOpenAddMarker: Function,
@@ -21,7 +22,7 @@ export const AddOrEditProject: FC<{
     const [cities, setCities] = useState<LocalityModel[]>([])
     const [selectedCounty, setSelectedCounty] = useState<CountyModel | null>(null)
     const [selectedCity, setSelectedCity] = useState<LocalityModel | null>(null)
-    const [projectType, setProjectType] = useState<Enums<'project_type'>>(project?.project_type ?? 'Proiectare')
+    const [projectType, setProjectType] = useState<Enums<'project_type'>>(project?.project_type ?? 'Stalpi')
     const dispatch = useAppDispatch();
 
     const handleSubmit = () => {
@@ -101,12 +102,15 @@ export const AddOrEditProject: FC<{
                     label="Tip proiect"
                     onChange={(e) => setProjectType(e.target.value as any)}
                 >
-                    <MenuItem value='Proiectare'>
-                        Proiectare
-                    </MenuItem>
-                    <MenuItem value='Executare'>
-                        Executare
-                    </MenuItem>
+                    {
+                        projectTypeItems.map((item) => {
+                            return (
+                                <MenuItem value={item} key={item}>
+                                    {item}
+                                </MenuItem>
+                            )
+                        })
+                    }
                 </Select>
             </FormControl>
             <Autocomplete

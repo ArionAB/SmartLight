@@ -2,7 +2,7 @@
 
 import Box from '@mui/material/Box';
 import React from 'react'
-import { IconButton, Switch, Typography } from '@mui/material';
+import { Button, IconButton, Switch, Typography } from '@mui/material';
 import Image from 'next/image';
 import { useAppDispatch, useAppSelector } from '@/utils/Store/hooks';
 import { selectFocusedProject } from '@/utils/Store/Selectors/projectSelectors';
@@ -54,13 +54,14 @@ const Navbar = () => {
                 display: 'flex',
                 justifyContent: "flex-end",
                 alignItems: 'center',
-                width: '100%'
+                width: '100%',
+                paddingRight: '10px'
             }}>
                 <Switch checked={isTooltips} onChange={handleTooltipChange} />
-                <Image src="/Logo.jpeg" width='63' height='63' alt='Logo' />
-                {/* <Button size='small' variant='contained' sx={{ background: palette.primary.light }}>Login</Button> */}
+                {/* <Image src="/Logo.jpeg" width='63' height='63' alt='Logo' /> */}
+                <Button size='small' variant='contained'>Login</Button>
             </Box>
-        </Box>
+        </Box >
     )
 }
 
