@@ -59,7 +59,7 @@ const Navbar = () => {
             }}>
                 <Switch checked={isTooltips} onChange={handleTooltipChange} />
                 {/* <Image src="/Logo.jpeg" width='63' height='63' alt='Logo' /> */}
-                <Button size='small' variant='contained'>Login</Button>
+                <Button LinkComponent={'a'} href='/login' size='small' variant='contained'>Login</Button>
             </Box>
         </Box >
     )

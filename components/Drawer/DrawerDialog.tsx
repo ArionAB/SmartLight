@@ -2,7 +2,7 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
-import { Accordion, AccordionDetails, AccordionSummary, Avatar, Badge, Box, Dialog, Divider, Fab, IconButton, InputAdornment, List, ListItem, ListItemAvatar, ListItemText, Menu, MenuItem, Paper, Skeleton, TextField, Typography } from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, Avatar, Badge, Box, Button, Dialog, Divider, Fab, IconButton, InputAdornment, List, ListItem, ListItemAvatar, ListItemText, Menu, MenuItem, Paper, Skeleton, TextField, Typography } from '@mui/material';
 import CreateNewFolderIcon from '@mui/icons-material/CreateNewFolder';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import { AddOrEditProject } from '../Project/AddOrEditProject';
@@ -29,6 +29,7 @@ import StreetMenu from '../Street/StreetMenu';
 import ProjectMenu from '../Project/ProjectMenu';
 import { getStreetAction } from '@/utils/Store/Actions/StreetActions';
 import { getMarkersAction } from '@/utils/Store/Actions/MarkerActions';
+import useBreakpointDown from '@/utils/Hooks/useBreakpoints';
 
 
 
@@ -87,11 +88,15 @@ export const DrawerDialog = () => {
         setOpen(false)
         flyToLocation(map, lat, lng)
     }
+    const isMobile = useBreakpointDown('sm');
+
+
 
     return (
         <>
-            <Dialog open={openAddMarker} onClose={() => setOpenAddMarker(false)}>
+            <Dialog open={openAddMarker} onClose={() => setOpenAddMarker(false)} fullScreen={isMobile}>
                 <AddOrEditProject setOpenAddMarker={setOpenAddMarker} />
+                <Button sx={{ marginX: "1rem" }} variant='outlined' onClick={() => setOpenAddMarker(false)}>Anulează</Button>
             </Dialog>
             <Dialog open={openStreet} onClose={() => setOpenStreet(false)}>
                 <AddStreet project={selectedProject!} setOpenStreet={setOpenStreet} />
@@ -308,16 +313,33 @@ export const DrawerDialog = () => {
                                                                                             // backgroundColor: marker.marker_status === 'Ok' ? '#4caf50' : '#f44336'
                                                                                         }}></Box>
                                                                                         <Avatar>
-                                                                                            {marker.marker_type === 'Lampa' ? <svg width="20px" height="20px" viewBox="0 0 512 512" version="1.1" >
-                                                                                                <g id="Page-1" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
-                                                                                                    <g id="drop" fill="#fff" transform="translate(32.000000, 42.666667)">
-                                                                                                        <path d="M246.312928,5.62892705 C252.927596,9.40873724 258.409564,14.8907053 262.189374,21.5053731 L444.667042,340.84129 C456.358134,361.300701 449.250007,387.363834 428.790595,399.054926 C422.34376,402.738832 415.04715,404.676552 407.622001,404.676552 L42.6666667,404.676552 C19.1025173,404.676552 7.10542736e-15,385.574034 7.10542736e-15,362.009885 C7.10542736e-15,354.584736 1.93772021,347.288125 5.62162594,340.84129 L188.099293,21.5053731 C199.790385,1.04596203 225.853517,-6.06216498 246.312928,5.62892705 Z" id="Combined-Shape">
-                                                                                                        </path>
-                                                                                                    </g>
-                                                                                                </g>
-                                                                                            </svg> : <svg fill={marker.lamp_type === 'Cu lampa' ? '#4caf50' : '#b22a00'} width="15px" height="15px" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
-                                                                                                <circle cx="16" cy="16" r="16" />
-                                                                                            </svg>}
+                                                                                            {
+                                                                                                marker.marker_type === 'Senzor' && (
+                                                                                                    <svg width="20px" height="20px" viewBox="0 0 24 24" fill="#fff" xmlns="http://www.w3.org/2000/svg">
+                                                                                                        <rect x="4" y="4" width="16" height="16" rx="2" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                                                                                    </svg>
+                                                                                                )
+                                                                                            }
+                                                                                            {
+                                                                                                marker.marker_type === 'Lampa' && (
+                                                                                                    <svg width="20px" height="20px" viewBox="0 0 512 512" version="1.1" >
+                                                                                                        <g id="Page-1" stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
+                                                                                                            <g id="drop" fill="#fff" transform="translate(32.000000, 42.666667)">
+                                                                                                                <path d="M246.312928,5.62892705 C252.927596,9.40873724 258.409564,14.8907053 262.189374,21.5053731 L444.667042,340.84129 C456.358134,361.300701 449.250007,387.363834 428.790595,399.054926 C422.34376,402.738832 415.04715,404.676552 407.622001,404.676552 L42.6666667,404.676552 C19.1025173,404.676552 7.10542736e-15,385.574034 7.10542736e-15,362.009885 C7.10542736e-15,354.584736 1.93772021,347.288125 5.62162594,340.84129 L188.099293,21.5053731 C199.790385,1.04596203 225.853517,-6.06216498 246.312928,5.62892705 Z" id="Combined-Shape">
+                                                                                                                </path>
+                                                                                                            </g>
+                                                                                                        </g>
+                                                                                                    </svg>
+                                                                                                )
+                                                                                            }
+                                                                                            {
+                                                                                                marker.marker_type === 'Stalp' && (
+                                                                                                    <svg fill={marker.lamp_type === 'Cu lampa' ? '#4caf50' : '#b22a00'} width="15px" height="15px" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+                                                                                                        <circle cx="16" cy="16" r="16" />
+                                                                                                    </svg>
+                                                                                                )
+                                                                                            }
+
                                                                                         </Avatar>
                                                                                     </ListItemAvatar>
                                                                                     <ListItemText

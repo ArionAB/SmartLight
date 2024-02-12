@@ -1,5 +1,5 @@
 import { Enums, TablesInsert } from '@/utils/Store/Models/Database'
-import { selectFocusedProject, selectProjectItems } from '@/utils/Store/Selectors/projectSelectors'
+import { selectFocusedProject } from '@/utils/Store/Selectors/projectSelectors'
 import { useAppDispatch, useAppSelector } from '@/utils/Store/hooks'
 import { Button, ButtonGroup, Container, DialogTitle, FormControl, FormGroup, InputLabel, MenuItem, Select, SelectChangeEvent, TextField, Typography } from '@mui/material'
 import React, { FC, useState } from 'react'
@@ -11,6 +11,7 @@ import { lampItems } from '@/utils/Store/items/lampItems'
 import { poleTypeItems } from '@/utils/Store/items/poleTypeItems'
 import { addAppNotification } from '@/utils/Store/Slices/appNotificationSlice'
 import { LocationModel } from '@/utils/Store/Models/Location/LocationModel'
+import { sensorTypeItems } from '@/utils/Store/items/sensorTypeItems'
 
 export const AddMarker: FC<{
     selectedMarker: Enums<'marker_type'>,
@@ -28,7 +29,8 @@ export const AddMarker: FC<{
             observatii: '',
             lamp_type: 'Cu lampa',
             pole_type: '',
-            power_type: ''
+            power_type: '',
+            sensor_type: ''
         })
         const [uploadedFiles, setUploadedFiles] = useState<File[]>([])
         const [loading, setLoading] = useState(false)
@@ -75,7 +77,7 @@ export const AddMarker: FC<{
                 street_id: focusedProject.street.id,
                 images: imageUrls,
                 observatii: marker.observatii,
-                accuracy: accuracy
+                accuracy: accuracy,
 
             }
             if (!focusedProject.street?.markersArray?.length) {
@@ -90,11 +92,17 @@ export const AddMarker: FC<{
             if (selectedMarker === 'Lampa') {
                 //@ts-ignore
                 markerData.power_type = marker.power_type
-            } else {
+            }
+            if (selectedMarker === 'Stalp') {
                 //@ts-ignore
                 markerData.lamp_type = marker.lamp_type
                 //@ts-ignore
                 markerData.pole_type = marker.pole_type
+            }
+
+            if (selectedMarker === 'Senzor') {
+                //@ts-ignore
+                markerData.sensor_type = marker.sensor_type
             }
 
 
@@ -110,12 +118,12 @@ export const AddMarker: FC<{
 
         return (
             <Container >
-                <DialogTitle>Adauga {selectedMarker}</DialogTitle>
+                <DialogTitle textAlign={'center'}>{selectedMarker === 'Senzor' ? 'Adaugă senzor sau punct de aprindere' : `Adaugă ${selectedMarker}`}</DialogTitle>
                 <form onSubmit={handleSubmit}>
                     <FormGroup sx={{
                         gap: '10px'
                     }}>
-                        {selectedMarker === 'Lampa' ? (
+                        {selectedMarker === 'Lampa' && (
                             <FormControl fullWidth >
                                 <InputLabel id="demo-simple-select-label">Tip lampa</InputLabel>
                                 <Select
@@ -137,7 +145,8 @@ export const AddMarker: FC<{
                                     }
                                 </Select>
                             </FormControl>
-                        ) : (
+                        )}
+                        {selectedMarker === "Stalp" && (
                             <>
                                 <FormControl fullWidth >
                                     <InputLabel id="demo-simple-select-label">Tip lampa</InputLabel>
@@ -184,6 +193,31 @@ export const AddMarker: FC<{
                             </>
 
                         )}
+                        {
+                            selectedMarker === 'Senzor' && (
+                                <FormControl fullWidth >
+                                    <InputLabel id="demo-simple-select-label">Tip</InputLabel>
+                                    <Select
+                                        labelId="demo-simple-select-label"
+                                        id="demo-simple-select"
+                                        name="sensor_type"
+                                        value={marker.sensor_type}
+                                        label="Tip"
+                                        onChange={(e) => handleChange(e)}
+                                    >
+                                        {
+                                            sensorTypeItems?.map((item: any) => {
+                                                return (
+                                                    <MenuItem key={item} value={item}>
+                                                        {item}
+                                                    </MenuItem>
+                                                )
+                                            })
+                                        }
+                                    </Select>
+                                </FormControl>
+                            )
+                        }
 
                         <TextField
                             id="outlined-multiline-flexible"

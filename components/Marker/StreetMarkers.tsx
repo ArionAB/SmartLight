@@ -94,7 +94,17 @@ export const StreetMarkers = () => {
         </svg>
     );
 
+    const sensorHTML = renderToStaticMarkup(
+        <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="4" y="4" width="16" height="16" rx="2" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
+    )
 
+    const customSensorIcon = divIcon({
+        html: sensorHTML,
+        iconSize: [0, 0],
+        iconAnchor: [12, 12],
+    })
 
     const customLampIcon30 = divIcon({
         html: lampHTML30,
@@ -141,7 +151,7 @@ export const StreetMarkers = () => {
                             key={marker.id}
                             position={[Number(marker.latitude), Number(marker.longitude)]}
                             //@ts-ignore
-                            icon={marker.marker_type === 'Lampa' ? lampColor(marker.power_type) : poleColor(marker.lamp_type)}
+                            icon={marker.marker_type === 'Lampa' ? lampColor(marker.power_type) : marker.marker_type === 'Stalp' ? poleColor(marker.lamp_type) : customSensorIcon}
                         >
                             <Popup >
                                 <Box sx={{ display: 'flex', justifyContent: 'space-between' }} >

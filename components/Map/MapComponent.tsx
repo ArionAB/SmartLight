@@ -15,6 +15,7 @@ import { AddLampIcon } from '../Marker/AddLampIcon';
 import { AddPoleIcon } from '../Marker/AddPoleIcon';
 import useLocation from '@/utils/Hooks/useLocation';
 import ZoomControl from './ZoomControl';
+import { AddSensorIcon } from '../Marker/AddSensorIcon';
 
 
 const MapComponent: FC = () => {
@@ -43,6 +44,7 @@ const MapComponent: FC = () => {
                         zoom={13}
                         zoomControl={false}
                         style={{
+                            // height: "calc(100dvh - 128px)",
                             height: "calc(100dvh - 64px)",
                             width: "100%",
                         }}>
@@ -52,6 +54,7 @@ const MapComponent: FC = () => {
                         />
                         {location && <AddPoleIcon handleAddDraggableMarkers={handleAddDraggableMarkers} />}
                         {location && <AddLampIcon handleAddDraggableMarkers={handleAddDraggableMarkers} />}
+                        {location && <AddSensorIcon handleAddDraggableMarkers={handleAddDraggableMarkers} />}
                         {location && (<MyLocationMarker position={location} accuracy={accuracy!} />)}
                         {
                             markers.length > 0 && markers?.map((item, index) => {

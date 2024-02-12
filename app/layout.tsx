@@ -6,6 +6,8 @@ import StoreProvider from "./StoreProvider";
 import AppSnackbar from "@/components/Notifications/Notifications";
 import { Metadata } from "next";
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v13-appRouter';
+import BottomTabs from "@/components/Drawer/BottomTabs";
+import { Box } from "@mui/material";
 
 
 export const metadata: Metadata = {
@@ -27,6 +29,7 @@ export default function RootLayout({
                             <AppSnackbar />
                             <Navbar />
                             {children}
+                            {/* <BottomTabs /> */}
                         </main>
                     </AppRouterCacheProvider>
                 </body>

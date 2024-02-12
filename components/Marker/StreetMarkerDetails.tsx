@@ -127,28 +127,23 @@ export const StreetMarkerDetails: FC<{
     return (
         <Container max-width='1200' >
             <form onSubmit={handleSubmit}>
-                <Box sx={{ display: 'flex', justifyContent: "space-between", alignItems: 'center' }}>
+                <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: "space-between", alignItems: 'center' }}>
                     <DialogTitle sx={{
                         display: 'flex',
                         justifyContent: "space-between",
                         alignItems: 'center',
-                        gap: '2rem'
+                        width: '100%'
                     }}>
-                        {marker?.marker_type} #{marker?.number}
-
-                        <FormControlLabel
-                            control={<IOSSwitch sx={{ m: 1 }} defaultChecked />}
-                            label="Status"
-                        />
-
-
+                        <Typography variant='h6' textAlign={'center'}>{marker?.marker_type === 'Senzor' ? marker?.sensor_type : marker.marker_type} #{marker?.number}</Typography>
+                        <IconButton onClick={() => setOpen(false)}>
+                            <Close />
+                        </IconButton>
                     </DialogTitle>
-                    <IconButton onClick={() => setOpen(false)}>
-                        <Close />
-                    </IconButton>
+                    <FormControlLabel
+                        control={<IOSSwitch sx={{ m: 1 }} defaultChecked />}
+                        label="Status"
+                    />
                 </Box>
-
-
                 <Grid container spacing={2}>
                     <Grid item xs={12} sm={6} sx={{ display: 'flex', gap: '10px' }}>
                         <TextField
@@ -172,27 +167,32 @@ export const StreetMarkerDetails: FC<{
 
                     <Grid item xs={12} sm={6}>
                         {
-                            marker.marker_type === 'Stalp' ? (<FormControl fullWidth>
-                                <InputLabel id="demo-simple-select-label">Tip lampa</InputLabel>
-                                <Select
-                                    labelId="demo-simple-select-label"
-                                    id="demo-simple-select"
-                                    value={form.lamp_type}
-                                    label="Tip lampa"
-                                    name='lamp_type'
-                                    onChange={(e) => handleChange(e)}
-                                >
-                                    {
-                                        lampItems?.map((item, index) => {
-                                            return (
-                                                <MenuItem key={index} value={item}>
-                                                    {item}
-                                                </MenuItem>
-                                            )
-                                        })
-                                    }
-                                </Select>
-                            </FormControl>) : (
+                            marker.marker_type === 'Stalp' && (
+                                <FormControl fullWidth>
+                                    <InputLabel id="demo-simple-select-label">Tip lampa</InputLabel>
+                                    <Select
+                                        labelId="demo-simple-select-label"
+                                        id="demo-simple-select"
+                                        value={form.lamp_type}
+                                        label="Tip lampa"
+                                        name='lamp_type'
+                                        onChange={(e) => handleChange(e)}
+                                    >
+                                        {
+                                            lampItems?.map((item, index) => {
+                                                return (
+                                                    <MenuItem key={index} value={item}>
+                                                        {item}
+                                                    </MenuItem>
+                                                )
+                                            })
+                                        }
+                                    </Select>
+                                </FormControl>
+                            )
+                        }
+                        {
+                            marker.marker_type === 'Lampa' && (
                                 <FormControl fullWidth>
                                     <InputLabel id="demo-simple-select-label">Tip lampa</InputLabel>
                                     <Select
@@ -216,31 +216,35 @@ export const StreetMarkerDetails: FC<{
                                 </FormControl>
                             )
                         }
+                    </Grid>
+                    {
+                        marker.marker_type !== 'Senzor' && (
+                            <Grid item xs={12} sm={6}>
+                                <FormControl fullWidth>
+                                    <InputLabel id="demo-simple-select-label">Tip stalp</InputLabel>
+                                    <Select
+                                        labelId="demo-simple-select-label"
+                                        id="demo-simple-select"
+                                        value={form.pole_type}
+                                        label="Tip stalp"
+                                        name='pole_type'
+                                        onChange={(e) => handleChange(e)}
+                                    >
+                                        {
+                                            poleTypeItems?.map((item, index) => {
+                                                return (
+                                                    <MenuItem key={index} value={item}>
+                                                        {item}
+                                                    </MenuItem>
+                                                )
+                                            })
+                                        }
+                                    </Select>
+                                </FormControl>
+                            </Grid>
+                        )
+                    }
 
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                        <FormControl fullWidth>
-                            <InputLabel id="demo-simple-select-label">Tip stalp</InputLabel>
-                            <Select
-                                labelId="demo-simple-select-label"
-                                id="demo-simple-select"
-                                value={form.pole_type}
-                                label="Tip stalp"
-                                name='pole_type'
-                                onChange={(e) => handleChange(e)}
-                            >
-                                {
-                                    poleTypeItems?.map((item, index) => {
-                                        return (
-                                            <MenuItem key={index} value={item}>
-                                                {item}
-                                            </MenuItem>
-                                        )
-                                    })
-                                }
-                            </Select>
-                        </FormControl>
-                    </Grid>
                     <Grid item xs={12}>
                         <TextField
                             id="outlined-multiline-flexible"
