@@ -23,7 +23,7 @@ export const ProjectEdit: FC<{
 
     const handleSubmitForm = () => {
         setLoading(true)
-        dispatch(updateStreetAction(form)).then((res) => {
+        dispatch(updateStreetAction({ ...form, name: form.name ?? '' })).then((res) => {
             if (res?.severity === 'success') {
                 setLoading(false)
                 onClose(false)

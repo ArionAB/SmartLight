@@ -36,11 +36,11 @@ export const AddOrEditProject: FC<{
         if (!project) {
             dispatch(addProjectAction({
                 name: name,
-                long: selectedCity?.lng,
-                lat: selectedCity?.lat,
+                long: Number(selectedCity!.lng),
+                lat: Number(selectedCity?.lat),
                 project_type: projectType,
-                county: selectedCounty?.auto,
-                city: selectedCity?.nume
+                county: selectedCounty!.auto,
+                city: selectedCity!.nume
             })).then(() => {
                 setLoading(false)
                 setOpenAddMarker(false)
@@ -49,8 +49,8 @@ export const AddOrEditProject: FC<{
             dispatch(updateProjectAction({
                 id: project.id,
                 name: name,
-                long: selectedCity?.lng,
-                lat: selectedCity?.lat,
+                long: Number(selectedCity!.lng),
+                lat: Number(selectedCity!.lat),
                 project_type: projectType,
                 county: selectedCounty?.auto,
                 city: selectedCity?.nume

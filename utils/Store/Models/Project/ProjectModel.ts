@@ -4,8 +4,8 @@ import { StreetModel } from "../Street/StreetModel"
 export interface ProjectModel {
     created_at: string,
     id: string,
-    lat?: string,
-    long?: string,
+    lat: number,
+    long: number,
     name: string,
     city: string,
     county: string,
