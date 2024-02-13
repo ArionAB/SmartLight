@@ -1,4 +1,4 @@
-import { createUserAction } from '@/utils/Store/Actions/AuthActions'
+import { createUserAction } from '@/utils/Store/Actions/UsersActions'
 import { TablesInsert } from '@/utils/Store/Models/Database'
 import { AddUserModel } from '@/utils/Store/Models/Users/AddUserModel'
 import { useAppDispatch } from '@/utils/Store/hooks'

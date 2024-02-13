@@ -1,4 +1,4 @@
-import { editUserAction } from '@/utils/Store/Actions/AuthActions'
+import { editUserAction } from '@/utils/Store/Actions/UsersActions'
 import { Tables } from '@/utils/Store/Models/Database'
 import { useAppDispatch } from '@/utils/Store/hooks'
 import { roleTypeItems } from '@/utils/Store/items/roleTypeItems'

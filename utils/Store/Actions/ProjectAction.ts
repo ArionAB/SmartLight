@@ -11,6 +11,7 @@ export const getProjectAction = () => {
             let { data: proiecte, error } = await supabase
                 .from('proiecte')
                 .select("*, markers(count)")
+                .order('county', { ascending: true });
 
             if (!error) {
                 dispatch(setProjectItems(proiecte))

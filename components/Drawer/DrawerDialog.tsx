@@ -180,7 +180,7 @@ export const DrawerDialog = () => {
                                                     alignItems: 'center',
                                                     gap: '5px'
                                                 }}>
-                                                    <Badge badgeContent={item.markers[0].count} max={10000} color="info" anchorOrigin={{
+                                                    <Badge badgeContent={item.markers ? item.markers[0].count : 0} max={10000} color="info" anchorOrigin={{
                                                         vertical: 'top',
                                                         horizontal: 'left',
                                                     }}>

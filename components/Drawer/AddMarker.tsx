@@ -75,7 +75,7 @@ export const AddMarker: FC<{
             for (let file of uploadedFiles) {
                 const randomNumber = Math.floor(Math.random() * 1000) + 1;
                 let { data, error } = await supabase.storage
-                    .from('smart-light-bucket')
+                    .from('illumitech-bucket')
                     .upload(focusedProject.item.city + '/' + focusedProject.street.name + "/" + `${markerNumber}/${file.name}-${year}-${month}-${day}-${hour}-${minute}-${second}-${randomNumber}`, file);
                 if (error) throw error;
                 imageUrls.push(data!.path);

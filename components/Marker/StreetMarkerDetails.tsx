@@ -45,7 +45,7 @@ export const StreetMarkerDetails: FC<{
 
         const imageUrls: string[] = [];
         for (let file of uploadedFiles) {
-            let { data, error } = await supabase.storage.from('smart-light-bucket').upload(`${file.name}`, file);
+            let { data, error } = await supabase.storage.from('illumitech-bucket').upload(`${file.name}`, file);
             if (error) throw error;
             imageUrls.push(data!.path);
         }

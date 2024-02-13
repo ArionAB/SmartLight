@@ -8,12 +8,20 @@ import { Autocomplete, Container, Dialog, DialogTitle, FormControl, FormGroup, I
 import Button from '@mui/material/Button';
 import React, { FC, useEffect, useState } from 'react'
 import { localities } from "@/utils/localities"
-import { Enums, Tables } from '@/utils/Store/Models/Database';
+import { Enums, Tables, TablesInsert } from '@/utils/Store/Models/Database';
 import { ProjectModel } from '@/utils/Store/Models/Project/ProjectModel';
 import { projectTypeItems } from '@/utils/Store/items/projectTypeItems';
-import { getUsersAction } from '@/utils/Store/Actions/AuthActions';
+import { getUsersAction } from '@/utils/Store/Actions/UsersActions';
 import { selectUsers } from '@/utils/Store/Selectors/usersSelectors';
 import { ChipsArray } from '../Material/ChipArray';
+import { assignUsersToProjectAction } from '@/utils/Store/Actions/PermissionActions';
+
+type UserChip = {
+    id: string,
+    key: string,
+    label: string
+}
+
 
 export const AddOrEditProject: FC<{
     setOpenAddMarker: Function,
@@ -28,7 +36,6 @@ export const AddOrEditProject: FC<{
     const [projectType, setProjectType] = useState<Enums<'project_type'>>(project?.project_type ?? 'Stalpi')
     const [usersArray, setUsersArray] = useState<any>([])
     const dispatch = useAppDispatch();
-
     const users = useAppSelector(selectUsers)
 
     const handleSubmit = () => {
@@ -56,6 +63,13 @@ export const AddOrEditProject: FC<{
                 city: selectedCity?.nume
             })).then((res) => {
                 if (res?.severity === 'success') {
+                    const usersWithProject: TablesInsert<'users_projects'>[] = usersArray.map((chip: UserChip) => {
+                        return {
+                            user_id: chip.id,
+                            project_id: project.id
+                        }
+                    })
+                    // dispatch(assignUsersToProjectAction(usersWithProject))
                     setLoading(false)
                     setOpenAddMarker(false)
                 } else {
@@ -165,7 +179,7 @@ export const AddOrEditProject: FC<{
                     }
                 }}
             />
-            <ChipsArray array={usersArray} setArray={setUsersArray} />
+            {/* <ChipsArray array={usersArray} setArray={setUsersArray} /> */}
             <Button disabled={loading} onClick={() => handleSubmit()} variant="contained" color='secondary'>{project ? `Modifică proiect` : "Adaugă proiect"}</Button>
         </Container>
     )

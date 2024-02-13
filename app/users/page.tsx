@@ -1,5 +1,5 @@
 'use client'
-import { getUsersAction } from '@/utils/Store/Actions/AuthActions'
+import { getUsersAction } from '@/utils/Store/Actions/UsersActions'
 import { dateTimeFormatOptions, getDateLabel } from '@/utils/Store/Functions/dateTimeFormat'
 import { useAppDispatch, useAppSelector } from '@/utils/Store/hooks'
 import { Box, Button, Container, Dialog, IconButton } from '@mui/material'
