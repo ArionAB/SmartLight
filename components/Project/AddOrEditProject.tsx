@@ -3,14 +3,17 @@
 import { addProjectAction, updateProjectAction } from '@/utils/Store/Actions/ProjectAction';
 import { LocalityModel } from '@/utils/Store/Models/LocalityModel';
 import { CountyModel } from '@/utils/Store/Models/CountyModel';
-import { useAppDispatch } from '@/utils/Store/hooks';
-import { Autocomplete, Container, Dialog, DialogTitle, FormControl, FormGroup, InputLabel, Menu, MenuItem, Select, TextField } from '@mui/material'
+import { useAppDispatch, useAppSelector } from '@/utils/Store/hooks';
+import { Autocomplete, Container, Dialog, DialogTitle, FormControl, FormGroup, InputLabel, Menu, MenuItem, Select, TextField, Typography } from '@mui/material'
 import Button from '@mui/material/Button';
 import React, { FC, useEffect, useState } from 'react'
 import { localities } from "@/utils/localities"
-import { Enums } from '@/utils/Store/Models/Database';
+import { Enums, Tables } from '@/utils/Store/Models/Database';
 import { ProjectModel } from '@/utils/Store/Models/Project/ProjectModel';
 import { projectTypeItems } from '@/utils/Store/items/projectTypeItems';
+import { getUsersAction } from '@/utils/Store/Actions/AuthActions';
+import { selectUsers } from '@/utils/Store/Selectors/usersSelectors';
+import { ChipsArray } from '../Material/ChipArray';
 
 export const AddOrEditProject: FC<{
     setOpenAddMarker: Function,
@@ -23,7 +26,10 @@ export const AddOrEditProject: FC<{
     const [selectedCounty, setSelectedCounty] = useState<CountyModel | null>(null)
     const [selectedCity, setSelectedCity] = useState<LocalityModel | null>(null)
     const [projectType, setProjectType] = useState<Enums<'project_type'>>(project?.project_type ?? 'Stalpi')
+    const [usersArray, setUsersArray] = useState<any>([])
     const dispatch = useAppDispatch();
+
+    const users = useAppSelector(selectUsers)
 
     const handleSubmit = () => {
         setLoading(true)
@@ -80,8 +86,8 @@ export const AddOrEditProject: FC<{
 
     useEffect(() => {
         getCounties()
+        dispatch(getUsersAction())
     }, [])
-
 
     return (
         <Container sx={{
@@ -141,7 +147,25 @@ export const AddOrEditProject: FC<{
                 getOptionKey={(option) => option.id}
                 renderInput={(params) => <TextField {...params} label="Oraș" />}
             />
-
+            <Typography>Lista access:</Typography>
+            <Autocomplete
+                options={users}
+                getOptionLabel={(option) => option.email}
+                getOptionKey={(option) => option.id}
+                renderInput={(params) => <TextField {...params} label="Useri" />}
+                //@ts-ignore
+                onChange={(e: any, newValue: Tables<'users'>) => {
+                    let item = {
+                        key: newValue.id,
+                        id: newValue.id,
+                        label: newValue.email
+                    }
+                    if (!usersArray.some((user: Tables<'users'>) => user.id === item.id)) {
+                        setUsersArray([...usersArray, item]);
+                    }
+                }}
+            />
+            <ChipsArray array={usersArray} setArray={setUsersArray} />
             <Button disabled={loading} onClick={() => handleSubmit()} variant="contained" color='secondary'>{project ? `Modifică proiect` : "Adaugă proiect"}</Button>
         </Container>
     )

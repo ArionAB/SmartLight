@@ -53,9 +53,30 @@ export const AddMarker: FC<{
             e.preventDefault();
             setLoading(true)
 
+            let markerNumber = 1
+            if (!focusedProject.street?.markersArray?.length) {
+                markerNumber = 1
+            } else {
+                let lastMarker = { ...focusedProject.street.markersArray[focusedProject.street.markersArray.length - 1] }
+                const increment = Number(lastMarker.number!) + 1
+                markerNumber = increment
+            }
+
+            const currentDate = new Date();
+            const timestamp = currentDate.toISOString().replace(/[-:]/g, '').split('.')[0];
+            const year = timestamp.slice(0, 4);
+            const month = timestamp.slice(4, 6);
+            const day = timestamp.slice(6, 8);
+            const hour = timestamp.slice(9, 11);
+            const minute = timestamp.slice(11, 13);
+            const second = timestamp.slice(13, 15);
             const imageUrls: string[] = [];
+
             for (let file of uploadedFiles) {
-                let { data, error } = await supabase.storage.from('smart-light-bucket').upload(`${file.name}`, file);
+                const randomNumber = Math.floor(Math.random() * 1000) + 1;
+                let { data, error } = await supabase.storage
+                    .from('smart-light-bucket')
+                    .upload(focusedProject.item.city + '/' + focusedProject.street.name + "/" + `${markerNumber}/${file.name}-${year}-${month}-${day}-${hour}-${minute}-${second}-${randomNumber}`, file);
                 if (error) throw error;
                 imageUrls.push(data!.path);
             }
@@ -78,16 +99,9 @@ export const AddMarker: FC<{
                 images: imageUrls,
                 observatii: marker.observatii,
                 accuracy: accuracy,
+                number: markerNumber
 
             }
-            if (!focusedProject.street?.markersArray?.length) {
-                markerData.number = '1'
-            } else {
-                let lastMarker = { ...focusedProject.street.markersArray[focusedProject.street.markersArray.length - 1] }
-                const increment = Number(lastMarker.number!) + 1
-                markerData.number = increment.toString()
-            }
-
 
             if (selectedMarker === 'Lampa') {
                 //@ts-ignore

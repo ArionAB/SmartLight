@@ -1,25 +1,26 @@
 'use client'
 import { getUsersAction } from '@/utils/Store/Actions/AuthActions'
 import { dateTimeFormatOptions, getDateLabel } from '@/utils/Store/Functions/dateTimeFormat'
-import { useAppDispatch } from '@/utils/Store/hooks'
-import { Box, Button, Container, Dialog } from '@mui/material'
+import { useAppDispatch, useAppSelector } from '@/utils/Store/hooks'
+import { Box, Button, Container, Dialog, IconButton } from '@mui/material'
 import { DataGrid, GridColDef, GridPagination, GridRenderCellParams, GridValueFormatterParams, GridValueGetterParams } from '@mui/x-data-grid'
 import React, { useEffect, useState } from 'react'
 import AddIcon from '@mui/icons-material/Add';
 import { Tables } from '@/utils/Store/Models/Database'
 import AddUser from '@/components/Users/AddUser'
-
+import { selectUsers } from '@/utils/Store/Selectors/usersSelectors'
+import EditIcon from '@mui/icons-material/Edit';
+import EditUser from '@/components/Users/EditUser'
 
 const Users = () => {
-    const [users, setUsers] = useState<Tables<'users'>[] | null>([])
     const [addUserDialog, setAddUserDialog] = useState(false)
+    const [editDialog, setEditDialog] = useState(false)
+    const [selectedUser, setSelectedUser] = useState<Tables<'users'> | null>(null)
     const dispatch = useAppDispatch()
+    const users = useAppSelector(selectUsers)
+
     useEffect(() => {
-        dispatch(getUsersAction()).then((res) => {
-            if (res) {
-                setUsers(res.data)
-            }
-        })
+        dispatch(getUsersAction())
     }, [])
 
     const columns: GridColDef[] = [
@@ -79,29 +80,26 @@ const Users = () => {
             valueFormatter: (params: GridValueFormatterParams) =>
                 getDateLabel(params.value, dateTimeFormatOptions),
         },
-        // {
-        //     field: "",
-        //     headerName: "Optiuni",
-        //     sortable: false,
-        //     // hide: isEmployer(currentUser?.userType),
-        //     flex: 1,
-        //     minWidth: 100,
-        //     align: "center",
-        //     renderCell: (params: GridRenderCellParams) => {
-        //         return (
-        //             <Button
-        //                 variant="contained"
-        //                 //   color="error"
-        //                 onClick={() => {
-        //                     // setOpen(true);
-        //                     // setSelectedOrder(params.row);
-        //                 }}
-        //             >
-        //                 Detalii
-        //             </Button>
-        //         );
-        //     },
-        // },
+        {
+            field: "",
+            headerName: "Optiuni",
+            sortable: false,
+            // hide: isEmployer(currentUser?.userType),
+            // flex: 1,
+            // minWidth: 100,
+            // width: 1,
+            align: "center",
+            renderCell: (params: GridRenderCellParams) => {
+                return (
+                    <IconButton color='warning' onClick={() => {
+                        setSelectedUser(params.row)
+                        setEditDialog(true)
+                    }}>
+                        <EditIcon />
+                    </IconButton>
+                );
+            },
+        },
     ];
     const CustomFooter = () => {
         return (
@@ -115,7 +113,10 @@ const Users = () => {
     return (
         <Container>
             <Dialog open={addUserDialog} onClose={() => setAddUserDialog(false)}>
-                <AddUser />
+                <AddUser onClose={setAddUserDialog} />
+            </Dialog>
+            <Dialog open={editDialog} onClose={() => setEditDialog(false)}>
+                <EditUser selectedUser={selectedUser} onClose={setEditDialog} />
             </Dialog>
             <DataGrid
                 className="allocations-data-grid"
@@ -140,6 +141,7 @@ const Users = () => {
                     noRowsLabel: "Fără rezultate",
                 }}
                 sx={{
+                    background: "#fff",
                     '.MuiDataGrid-columnHeader': {
                         background: '#000',
                         color: "#fff"

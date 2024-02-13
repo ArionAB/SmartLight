@@ -92,7 +92,6 @@ const projectSlice = createSlice({
             const markerIndex = street?.markersArray.findIndex((marker) => marker.id === action.payload.id);
             if (markerIndex !== -1) {
                 street!.markersArray[markerIndex!] = action.payload;
-
             }
         },
         deleteMarker: (state, action) => {
