@@ -1,8 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { Tables } from '../Models/Database';
+import { userState } from './userState';
 
-const initialState: any = {
-    users: []
+
+const initialState: userState = {
+    users: [],
+    assignedUsers: []
 };
 
 const usersSlice = createSlice({
@@ -20,11 +23,14 @@ const usersSlice = createSlice({
             if (userIndex !== -1) {
                 state.users[userIndex] = action.payload
             }
+        },
+        setAssignedUsers: (state, action) => {
+            state.assignedUsers = action.payload
         }
 
     },
 });
 
-export const { setUsers, addUser, editUser } = usersSlice.actions;
+export const { setUsers, addUser, editUser, setAssignedUsers } = usersSlice.actions;
 
 export default usersSlice.reducer;

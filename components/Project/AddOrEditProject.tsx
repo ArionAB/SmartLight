@@ -12,9 +12,9 @@ import { Enums, Tables, TablesInsert } from '@/utils/Store/Models/Database';
 import { ProjectModel } from '@/utils/Store/Models/Project/ProjectModel';
 import { projectTypeItems } from '@/utils/Store/items/projectTypeItems';
 import { getUsersAction } from '@/utils/Store/Actions/UsersActions';
-import { selectUsers } from '@/utils/Store/Selectors/usersSelectors';
+import { selectAssignedUsers, selectUsers } from '@/utils/Store/Selectors/usersSelectors';
 import { ChipsArray } from '../Material/ChipArray';
-import { assignUsersToProjectAction } from '@/utils/Store/Actions/PermissionActions';
+import { assignUsersToProjectAction, getAssignedUsersAction } from '@/utils/Store/Actions/PermissionActions';
 
 type UserChip = {
     id: string,
@@ -37,6 +37,7 @@ export const AddOrEditProject: FC<{
     const [usersArray, setUsersArray] = useState<any>([])
     const dispatch = useAppDispatch();
     const users = useAppSelector(selectUsers)
+    const assignedUsers = useAppSelector(selectAssignedUsers)
 
     const handleSubmit = () => {
         setLoading(true)
@@ -69,7 +70,8 @@ export const AddOrEditProject: FC<{
                             project_id: project.id
                         }
                     })
-                    // dispatch(assignUsersToProjectAction(usersWithProject))
+
+                    dispatch(assignUsersToProjectAction(usersWithProject, project))
                     setLoading(false)
                     setOpenAddMarker(false)
                 } else {
@@ -101,8 +103,22 @@ export const AddOrEditProject: FC<{
     useEffect(() => {
         getCounties()
         dispatch(getUsersAction())
+        dispatch(getAssignedUsersAction(project?.id!))
     }, [])
 
+    useEffect(() => {
+        if (assignedUsers.length > 0) {
+            const usersToChip = assignedUsers.map((user) => {
+                return {
+                    key: user.user_id,
+                    label: user.users.email,
+                    id: user.user_id
+                }
+            })
+            setUsersArray(usersToChip)
+        }
+    }, [assignedUsers])
+    console.log('users', usersArray)
     return (
         <Container sx={{
             display: 'flex',
