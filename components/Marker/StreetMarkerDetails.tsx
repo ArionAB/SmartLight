@@ -10,8 +10,9 @@ import FileUploadComponent from '../FileUpload/FileUploadComponent'
 import { Close } from '@mui/icons-material'
 import supabase from '@/utils/supabase/createClient'
 import { updateMarkerAction } from '@/utils/Store/Actions/MarkerActions'
-import { useAppDispatch } from '@/utils/Store/hooks'
+import { useAppDispatch, useAppSelector } from '@/utils/Store/hooks'
 import { powerTypeItems } from '@/utils/Store/items/powerTypeItems'
+import { selectCurrentUser } from '@/utils/Store/Selectors/usersSelectors'
 
 export const StreetMarkerDetails: FC<{
     marker: Tables<'markers'>,
@@ -30,6 +31,7 @@ export const StreetMarkerDetails: FC<{
     const [uploadedFiles, setUploadedFiles] = useState<File[]>([])
     const [loading, setLoading] = useState(false)
     const dispatch = useAppDispatch();
+    const currentUser = useAppSelector(selectCurrentUser)
 
     const handleChange = (event: SelectChangeEvent | React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setForm({ ...form, [event.target.name]: event.target.value });
@@ -293,7 +295,7 @@ export const StreetMarkerDetails: FC<{
                         <Button variant='outlined' onClick={() => setOpen(false)}>
                             Anulează
                         </Button>
-                        <Button disabled={loading} variant="contained" type="submit" color="secondary">
+                        <Button disabled={loading || currentUser?.role_type === 'Visitor'} variant="contained" type="submit" color="secondary">
                             Salvează
                         </Button>
                     </Grid>

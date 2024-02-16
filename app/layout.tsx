@@ -7,7 +7,6 @@ import AppSnackbar from "@/components/Notifications/Notifications";
 import { Metadata } from "next";
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v13-appRouter';
 import BottomTabs from "@/components/Drawer/BottomTabs";
-import { Box } from "@mui/material";
 
 
 export const metadata: Metadata = {
@@ -15,7 +14,7 @@ export const metadata: Metadata = {
     title: "Illumitech Solution"
 }
 
-export default function RootLayout({
+function RootLayout({
     children,
 }: {
     children: React.ReactNode;
@@ -29,7 +28,7 @@ export default function RootLayout({
                             <AppSnackbar />
                             <Navbar />
                             {children}
-                            {/* <BottomTabs /> */}
+                            <BottomTabs />
                         </main>
                     </AppRouterCacheProvider>
                 </body>
@@ -37,3 +36,5 @@ export default function RootLayout({
         </StoreProvider>
     );
 }
+
+export default RootLayout

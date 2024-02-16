@@ -8,11 +8,12 @@ import { ProjectModel } from '@/utils/Store/Models/Project/ProjectModel';
 import { AddOrEditProject } from './AddOrEditProject';
 import DeleteProject from './DeleteProject';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import { useAppDispatch } from '@/utils/Store/hooks';
+import { useAppDispatch, useAppSelector } from '@/utils/Store/hooks';
 import { getMarkersAction } from '@/utils/Store/Actions/MarkerActions';
 import MapIcon from '@mui/icons-material/Map';
 import { useMap } from 'react-leaflet';
 import { flyToLocation } from '../Map/FlyToLocation';
+import { selectCurrentUser } from '@/utils/Store/Selectors/usersSelectors';
 
 
 const StyledMenu = styled((props: MenuProps) => (
@@ -68,6 +69,7 @@ const ProjectMenu: FC<{ project: ProjectModel }> = ({ project }) => {
     const [openTable, setOpenTable] = useState(false)
     const [openEditDialog, setOpenEditDialog] = useState(false)
 
+    const currentUser = useAppSelector(selectCurrentUser)
     const map = useMap();
     const dispatch = useAppDispatch()
 
@@ -119,29 +121,33 @@ const ProjectMenu: FC<{ project: ProjectModel }> = ({ project }) => {
                     Afișează proiect
                 </MenuItem>
                 <Divider sx={{ my: 0.5 }} />
-                <MenuItem onClick={() => {
-                    setOpenEditDialog(true)
-                    handleClose()
-                }} disableRipple>
-                    <EditIcon color='warning' />
-                    Edit
-                </MenuItem>
-                {/* <Divider sx={{ my: 0.5 }} /> */}
-                {/* <MenuItem onClick={() => {
-                    setOpenTable(true),
-                        handleClose()
-                }} disableRipple>
-                    <InfoIcon style={{ color: 'success' }} />
-                    Info
-                </MenuItem> */}
-                <Divider sx={{ my: 0.5 }} />
-                <MenuItem onClick={() => {
-                    setDeleteDialog(true),
-                        handleClose()
-                }} disableRipple>
-                    <Delete color="error" />
-                    Șterge
-                </MenuItem>
+                {
+                    currentUser?.role_type === 'Admin' && (
+                        <Box>
+                            <MenuItem onClick={() => {
+                                setOpenEditDialog(true)
+                                handleClose()
+                            }} disableRipple>
+                                <EditIcon color='warning' />
+                                Edit
+                            </MenuItem>
+                            <Divider sx={{ my: 0.5 }} />
+                        </Box>
+
+                    )
+                }
+                {
+                    currentUser?.role_type === 'Admin' && (
+                        <MenuItem onClick={() => {
+                            setDeleteDialog(true),
+                                handleClose()
+                        }} disableRipple>
+                            <Delete color="error" />
+                            Șterge
+                        </MenuItem>
+                    )
+                }
+
             </StyledMenu>
             <Dialog fullScreen maxWidth="md" open={openTable} onClose={() => setOpenTable(false)}>
                 {/* <StreetTable street={street} /> */}

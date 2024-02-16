@@ -2,7 +2,7 @@ import supabase from "../../supabase/createClient";
 import { CreateUserModel } from "../Models/Auth/CreateUserModel";
 import { TablesUpdate } from "../Models/Database";
 import { addAppNotification } from "../Slices/appNotificationSlice";
-import { addUser, editUser, setUsers } from "../Slices/usersSlice";
+import { addUser, editUser, setCurrentUser, setUsers } from "../Slices/usersSlice";
 
 
 export const createUserAction = (form: CreateUserModel) => {
@@ -105,4 +105,37 @@ export const editUserAction = (form: TablesUpdate<'users'>) => {
     };
 };
 
+export const getUserAction = (id: string) => {
+    return async (dispatch: any, getState: () => any) => {
+        try {
+
+            let { data: user, error } = await supabase
+                .from('users')
+                .select('*')
+                .eq('id', id)
+
+            if (!error) {
+                if (user) {
+                    dispatch(setCurrentUser(user[0]))
+                }
+                return {
+                    data: user,
+                    severity: 'success'
+                }
+            }
+
+
+            if (error) {
+                dispatch(addAppNotification({
+                    severity: 'error',
+                    message: error.message
+                }))
+                throw error;
+            }
+
+        } catch (error) {
+            console.error('Error retrieveing users:', error);
+        }
+    }
+}
 

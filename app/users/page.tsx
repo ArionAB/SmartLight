@@ -11,6 +11,7 @@ import AddUser from '@/components/Users/AddUser'
 import { selectUsers } from '@/utils/Store/Selectors/usersSelectors'
 import EditIcon from '@mui/icons-material/Edit';
 import EditUser from '@/components/Users/EditUser'
+import withAuth from '@/components/Auth/withAuth'
 
 const Users = () => {
     const [addUserDialog, setAddUserDialog] = useState(false)
@@ -169,4 +170,4 @@ const Users = () => {
     )
 }
 
-export default Users
+export default withAuth(Users, true)

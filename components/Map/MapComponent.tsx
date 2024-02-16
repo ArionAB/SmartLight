@@ -16,6 +16,9 @@ import { AddPoleIcon } from '../Marker/AddPoleIcon';
 import useLocation from '@/utils/Hooks/useLocation';
 import ZoomControl from './ZoomControl';
 import { AddSensorIcon } from '../Marker/AddSensorIcon';
+import withAuth from '../Auth/withAuth';
+import { useAppSelector } from '@/utils/Store/hooks';
+import { selectCurrentUser } from '@/utils/Store/Selectors/usersSelectors';
 
 
 const MapComponent: FC = () => {
@@ -29,6 +32,7 @@ const MapComponent: FC = () => {
         setMarkers(markersArr)
     }
 
+    const currentUser = useAppSelector(selectCurrentUser)
     const [location, accuracy, error] = useLocation(true); // Enable, Accuracy Threshold, Threshold Wait Time
 
     return (
@@ -44,17 +48,16 @@ const MapComponent: FC = () => {
                         zoom={13}
                         zoomControl={false}
                         style={{
-                            // height: "calc(100dvh - 128px)",
-                            height: "calc(100dvh - 64px)",
+                            height: "calc(100dvh - 128px)",
                             width: "100%",
                         }}>
                         <TileLayer
                             //@ts-ignore
                             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                         />
-                        {location && <AddPoleIcon handleAddDraggableMarkers={handleAddDraggableMarkers} />}
-                        {location && <AddLampIcon handleAddDraggableMarkers={handleAddDraggableMarkers} />}
-                        {location && <AddSensorIcon handleAddDraggableMarkers={handleAddDraggableMarkers} />}
+                        {location && currentUser?.role_type !== 'Visitor' && <AddPoleIcon handleAddDraggableMarkers={handleAddDraggableMarkers} />}
+                        {location && currentUser?.role_type !== 'Visitor' && <AddLampIcon handleAddDraggableMarkers={handleAddDraggableMarkers} />}
+                        {location && currentUser?.role_type !== 'Visitor' && <AddSensorIcon handleAddDraggableMarkers={handleAddDraggableMarkers} />}
                         {location && (<MyLocationMarker position={location} accuracy={accuracy!} />)}
                         {
                             markers.length > 0 && markers?.map((item, index) => {
@@ -75,4 +78,5 @@ const MapComponent: FC = () => {
     )
 }
 
+// export default withAuth(MapComponent, false)
 export default MapComponent

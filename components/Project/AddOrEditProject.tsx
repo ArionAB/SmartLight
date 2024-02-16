@@ -118,7 +118,6 @@ export const AddOrEditProject: FC<{
             setUsersArray(usersToChip)
         }
     }, [assignedUsers])
-    console.log('users', usersArray)
     return (
         <Container sx={{
             display: 'flex',
@@ -195,7 +194,7 @@ export const AddOrEditProject: FC<{
                     }
                 }}
             />
-            {/* <ChipsArray array={usersArray} setArray={setUsersArray} /> */}
+            <ChipsArray array={usersArray} setArray={setUsersArray} />
             <Button disabled={loading} onClick={() => handleSubmit()} variant="contained" color='secondary'>{project ? `Modifică proiect` : "Adaugă proiect"}</Button>
         </Container>
     )

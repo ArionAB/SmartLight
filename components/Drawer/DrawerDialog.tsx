@@ -30,6 +30,7 @@ import ProjectMenu from '../Project/ProjectMenu';
 import { getStreetAction } from '@/utils/Store/Actions/StreetActions';
 import { getMarkersAction } from '@/utils/Store/Actions/MarkerActions';
 import useBreakpointDown from '@/utils/Hooks/useBreakpoints';
+import { selectCurrentUser } from '@/utils/Store/Selectors/usersSelectors';
 
 
 
@@ -52,10 +53,13 @@ export const DrawerDialog = () => {
     const loadingProjects = useAppSelector(selectProjectLoading)
     const loadingStreets = useAppSelector(selectStreetsLoading)
     const loadingMarkers = useAppSelector(selectMarkersLoading)
+    const currentUser = useAppSelector(selectCurrentUser)
 
     useEffect(() => {
-        dispatch(getProjectAction())
-    }, [])
+        if (currentUser) {
+            dispatch(getProjectAction(currentUser))
+        }
+    }, [currentUser])
 
     const handleAddStreet = (project: ProjectModel) => {
         setSelectedProject(project)
@@ -89,7 +93,6 @@ export const DrawerDialog = () => {
         flyToLocation(map, lat, lng)
     }
     const isMobile = useBreakpointDown('sm');
-
 
 
     return (
@@ -142,9 +145,12 @@ export const DrawerDialog = () => {
                                 </InputAdornment>
                             ),
                         }}></TextField>
-                        <Fab onClick={() => setOpenAddMarker(true)} color='primary'>
-                            <CreateNewFolderIcon />
-                        </Fab>
+                        {currentUser?.role_type === 'Admin' && (
+                            <Fab onClick={() => setOpenAddMarker(true)} color='primary'>
+                                <CreateNewFolderIcon />
+                            </Fab>
+                        )}
+
                     </ListItem>
                 </List>
                 {
@@ -158,7 +164,7 @@ export const DrawerDialog = () => {
                 }
                 {
                     projectItems?.map((item: ProjectModel) => {
-                        if (item.city.toLowerCase().includes(search.toLowerCase())) {
+                        if (item?.city?.toLowerCase().includes(search.toLowerCase())) {
                             return (
                                 <List key={item.id}>
                                     <Accordion expanded={expanded === item.id} onChange={handleChange(item.id)} sx={selectedProject?.id === item.id ? { border: "2px solid #0052cc" } : {}}>
@@ -215,9 +221,14 @@ export const DrawerDialog = () => {
                                                         </InputAdornment>
                                                     ),
                                                 }}></TextField>
-                                                <Fab size='small' color='info' onClick={() => handleAddStreet(item)}>
-                                                    <AddRoad />
-                                                </Fab>
+                                                {
+                                                    currentUser?.role_type !== 'Visitor' && (
+                                                        <Fab size='small' color='info' onClick={() => handleAddStreet(item)}>
+                                                            <AddRoad />
+                                                        </Fab>
+                                                    )
+                                                }
+
                                             </ListItem>
 
                                             <Box sx={{ display: 'flex' }} flexDirection={'column'} gap={2} marginTop={2}>

@@ -2,26 +2,60 @@ import supabase from "../../supabase/createClient";
 import { deleteProject, setProjectItems, setProjectsLoading, updateProject } from "../Slices/projectSlice";
 import { Tables, TablesInsert, TablesUpdate } from "../Models/Database";
 import { addAppNotification } from "../Slices/appNotificationSlice";
+import { getUserModel } from "../Models/Users/GetUsersModel";
 
 
-export const getProjectAction = () => {
+export const getProjectAction = (currentUser: getUserModel) => {
     return async (dispatch: any, getState: () => any) => {
+
         try {
             dispatch(setProjectsLoading(true))
-            let { data: proiecte, error } = await supabase
-                .from('proiecte')
-                .select("*, markers(count)")
-                .order('county', { ascending: true });
+            if (currentUser.role_type === 'User') {
+                const { data: proiecte, error } = await supabase
+                    .from('users_projects')
+                    .select('*, proiecte (*, markers(count))')
+                    .eq('user_id', currentUser.id);
 
-            if (!error) {
-                dispatch(setProjectItems(proiecte))
+                if (!error) {
+                    dispatch(setProjectItems([proiecte[0].proiecte]))
+                }
+
+
+                if (error) {
+                    dispatch(setProjectsLoading(false))
+                    throw error;
+                }
+
+            } else {
+                const { data: proiecte, error } = await supabase
+                    .from('proiecte')
+                    .select('*, markers(count)')
+                    .order('county', { ascending: true })
+
+                if (!error) {
+                    dispatch(setProjectItems(proiecte))
+                }
+
+
+                if (error) {
+                    dispatch(setProjectsLoading(false))
+                    throw error;
+                }
+
             }
 
 
-            if (error) {
-                dispatch(setProjectsLoading(false))
-                throw error;
-            }
+
+
+            // if (!error) {
+            //     dispatch(setProjectItems(proiecte))
+            // }
+
+
+            // if (error) {
+            //     dispatch(setProjectsLoading(false))
+            //     throw error;
+            // }
 
         } catch (error) {
             console.error('Error deleting item:', error);
@@ -41,9 +75,13 @@ export const addProjectAction = (project: TablesInsert<'proiecte'>) => {
                 ])
                 .select()
 
+
+
             if (!error) {
                 dispatch(addAppNotification({ message: `Proiectul ${data[0].city} a fost adaugat!`, severity: 'success' }))
-                dispatch(getProjectAction())
+
+                const { users } = getState()
+                dispatch(getProjectAction(users.currentUser))
 
             }
 

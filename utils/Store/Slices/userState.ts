@@ -4,4 +4,5 @@ import { getUserModel } from "../Models/Users/GetUsersModel";
 export interface userState {
     users: getUserModel[],
     assignedUsers: getAssignedUsersModel[]
+    currentUser: getUserModel | null
 }

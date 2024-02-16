@@ -12,6 +12,7 @@ import { poleTypeItems } from '@/utils/Store/items/poleTypeItems'
 import { addAppNotification } from '@/utils/Store/Slices/appNotificationSlice'
 import { LocationModel } from '@/utils/Store/Models/Location/LocationModel'
 import { sensorTypeItems } from '@/utils/Store/items/sensorTypeItems'
+import { selectCurrentUser } from '@/utils/Store/Selectors/usersSelectors'
 
 export const AddMarker: FC<{
     selectedMarker: Enums<'marker_type'>,
@@ -35,6 +36,7 @@ export const AddMarker: FC<{
         const [uploadedFiles, setUploadedFiles] = useState<File[]>([])
         const [loading, setLoading] = useState(false)
 
+        const currentUser = useAppSelector(selectCurrentUser)
         const dispatch = useAppDispatch()
 
 
@@ -99,7 +101,8 @@ export const AddMarker: FC<{
                 images: imageUrls,
                 observatii: marker.observatii,
                 accuracy: accuracy,
-                number: markerNumber
+                number: markerNumber,
+                user_id: currentUser?.id
 
             }
 

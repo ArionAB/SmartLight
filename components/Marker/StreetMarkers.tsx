@@ -1,8 +1,8 @@
 import { Enums, Tables } from '@/utils/Store/Models/Database'
-import { selectFocusedProject, selectProjectItems } from '@/utils/Store/Selectors/projectSelectors'
+import { selectFocusedProject } from '@/utils/Store/Selectors/projectSelectors'
 import { useAppDispatch, useAppSelector } from '@/utils/Store/hooks'
 import { Box, Button, Dialog, IconButton, Popover, Typography } from '@mui/material'
-import React, { useMemo, useState } from 'react'
+import React, { useState } from 'react'
 import { Marker, Popup, Tooltip } from 'react-leaflet'
 import { StreetMarkerDetails } from './StreetMarkerDetails'
 import { renderToStaticMarkup } from 'react-dom/server'
@@ -11,6 +11,7 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { deleteMarkerAction } from '@/utils/Store/Actions/MarkerActions'
 import { selectIsTooltipOpen } from '@/utils/Store/Selectors/miscSelectors'
+import { selectCurrentUser } from '@/utils/Store/Selectors/usersSelectors'
 
 export const StreetMarkers = () => {
     const [selectedMarker, setSelectedMarker] = useState<Tables<'markers'>>(null!)
@@ -18,9 +19,9 @@ export const StreetMarkers = () => {
     const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
 
     const dispatch = useAppDispatch()
-    const projectItems = useAppSelector(selectProjectItems)
     const focusedProject = useAppSelector(selectFocusedProject)
     const isTooltips = useAppSelector(selectIsTooltipOpen)
+    const currentUser = useAppSelector(selectCurrentUser)
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
@@ -84,7 +85,7 @@ export const StreetMarkers = () => {
         </svg>
     );
     const poleHTMLwithLamp = renderToStaticMarkup(
-        <svg fill="#4caf50" width="12px" height="12px" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style={{ border: "rgba(89,89,89,1) 1px solid;", borderRadius: "50%" }}>
+        <svg fill="#4caf50" width="12px" height="12px" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style={{ border: "rgba(89,89,89,1) 1px solid", borderRadius: "50%" }}>
             <circle cx="16" cy="16" r="16" />
         </svg>
     );
@@ -159,9 +160,14 @@ export const StreetMarkers = () => {
                                     <IconButton onClick={() => handleOpenDialog(marker)} color='warning'>
                                         <EditIcon />
                                     </IconButton>
-                                    <IconButton color='error' onClick={handleClick} aria-describedby='delete'>
-                                        <DeleteForeverIcon />
-                                    </IconButton>
+                                    {
+                                        currentUser?.role_type !== 'Visitor' && (
+                                            <IconButton color='error' onClick={handleClick} aria-describedby='delete'>
+                                                <DeleteForeverIcon />
+                                            </IconButton>
+                                        )
+                                    }
+
                                     <Popover
                                         id='delete'
                                         open={anchor}

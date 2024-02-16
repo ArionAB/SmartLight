@@ -9,6 +9,8 @@ import DeleteStreet from './DeleteStreet';
 import StreetTable from './StreetTable';
 import styled from '@emotion/styled';
 import { Delete } from '@mui/icons-material';
+import { useAppSelector } from '@/utils/Store/hooks';
+import { selectCurrentUser } from '@/utils/Store/Selectors/usersSelectors';
 
 const StyledMenu = styled((props: MenuProps) => (
     <Menu
@@ -63,6 +65,7 @@ const StreetMenu: FC<{ street: StreetModel }> = ({ street }) => {
     const [openTable, setOpenTable] = useState(false)
     const [openEditDialog, setOpenEditDialog] = useState(false)
 
+    const currentUser = useAppSelector(selectCurrentUser)
 
     const handleOpenStreetMenu = (event: React.MouseEvent<HTMLElement>) => {
         setAnchor(event.currentTarget);
@@ -101,21 +104,29 @@ const StreetMenu: FC<{ street: StreetModel }> = ({ street }) => {
                     Info
                 </MenuItem>
                 <Divider sx={{ my: 0.5 }} />
-                <MenuItem onClick={() => {
-                    setOpenEditDialog(true)
-                    handleClose()
-                }} disableRipple>
-                    <EditIcon color='warning' />
-                    Edit
-                </MenuItem>
-                <Divider sx={{ my: 0.5 }} />
-                <MenuItem onClick={() => {
-                    setDeleteDialog(true),
-                        handleClose()
-                }} disableRipple>
-                    <Delete color='error' />
-                    Șterge
-                </MenuItem>
+                {
+                    currentUser?.role_type !== 'Visitor' && (
+                        <Box>
+                            <MenuItem onClick={() => {
+                                setOpenEditDialog(true)
+                                handleClose()
+                            }} disableRipple>
+                                <EditIcon color='warning' />
+                                Edit
+                            </MenuItem>
+                            <Divider sx={{ my: 0.5 }} />
+                            <MenuItem onClick={() => {
+                                setDeleteDialog(true),
+                                    handleClose()
+                            }} disableRipple>
+                                <Delete color='error' />
+                                Șterge
+                            </MenuItem>
+                        </Box>
+
+                    )
+                }
+
             </StyledMenu>
             <Dialog fullScreen maxWidth="md" open={openTable} onClose={() => setOpenTable(false)}>
                 <StreetTable street={street} />

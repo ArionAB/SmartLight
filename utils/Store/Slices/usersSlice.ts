@@ -5,7 +5,8 @@ import { userState } from './userState';
 
 const initialState: userState = {
     users: [],
-    assignedUsers: []
+    assignedUsers: [],
+    currentUser: null
 };
 
 const usersSlice = createSlice({
@@ -26,11 +27,14 @@ const usersSlice = createSlice({
         },
         setAssignedUsers: (state, action) => {
             state.assignedUsers = action.payload
+        },
+        setCurrentUser: (state, action) => {
+            state.currentUser = action.payload
         }
 
     },
 });
 
-export const { setUsers, addUser, editUser, setAssignedUsers } = usersSlice.actions;
+export const { setUsers, addUser, editUser, setAssignedUsers, setCurrentUser } = usersSlice.actions;
 
 export default usersSlice.reducer;
