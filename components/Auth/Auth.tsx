@@ -10,6 +10,7 @@ import { getUserAction } from '@/utils/Store/Actions/UsersActions';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { Database } from '@/utils/Store/Models/Database';
 import { setCurrentUser } from '@/utils/Store/Slices/usersSlice';
+import { addAppNotification } from '@/utils/Store/Slices/appNotificationSlice';
 
 
 const Auth = () => {
@@ -30,11 +31,16 @@ const Auth = () => {
         if (user) {
             localStorage.setItem('user', JSON.stringify(user))
             dispatch(getUserAction(user.id))
+            router.push('/')
+
         }
         if (!user) {
+            dispatch(addAppNotification({
+                severity: "error",
+                message: "Email sau parola incorecte"
+            }))
             console.error('no USer')
         }
-        router.push('/')
     }
 
     return (
