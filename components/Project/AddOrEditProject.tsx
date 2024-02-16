@@ -103,7 +103,9 @@ export const AddOrEditProject: FC<{
     useEffect(() => {
         getCounties()
         dispatch(getUsersAction())
-        dispatch(getAssignedUsersAction(project?.id!))
+        if (project) {
+            dispatch(getAssignedUsersAction(project?.id!))
+        }
     }, [])
 
     useEffect(() => {
@@ -176,25 +178,31 @@ export const AddOrEditProject: FC<{
                 getOptionKey={(option) => option.id}
                 renderInput={(params) => <TextField {...params} label="Oraș" />}
             />
-            <Typography>Lista access:</Typography>
-            <Autocomplete
-                options={users}
-                getOptionLabel={(option) => option.email}
-                getOptionKey={(option) => option.id}
-                renderInput={(params) => <TextField {...params} label="Useri" />}
-                //@ts-ignore
-                onChange={(e: any, newValue: Tables<'users'>) => {
-                    let item = {
-                        key: newValue.id,
-                        id: newValue.id,
-                        label: newValue.email
-                    }
-                    if (!usersArray.some((user: Tables<'users'>) => user.id === item.id)) {
-                        setUsersArray([...usersArray, item]);
-                    }
-                }}
-            />
-            <ChipsArray array={usersArray} setArray={setUsersArray} />
+            {project && (
+                <>
+                    <Typography>Lista access:</Typography>
+                    <Autocomplete
+                        options={users}
+                        getOptionLabel={(option) => option.email}
+                        getOptionKey={(option) => option.id}
+                        renderInput={(params) => <TextField {...params} label="Useri" />}
+                        //@ts-ignore
+                        onChange={(e: any, newValue: Tables<'users'>) => {
+                            let item = {
+                                key: newValue.id,
+                                id: newValue.id,
+                                label: newValue.email
+                            }
+                            if (!usersArray.some((user: Tables<'users'>) => user.id === item.id)) {
+                                setUsersArray([...usersArray, item]);
+                            }
+                        }}
+                    />
+                    <ChipsArray array={usersArray} setArray={setUsersArray} />
+                </>
+
+            )}
+
             <Button disabled={loading} onClick={() => handleSubmit()} variant="contained" color='secondary'>{project ? `Modifică proiect` : "Adaugă proiect"}</Button>
         </Container>
     )
