@@ -2,11 +2,11 @@ import { Enums, Tables } from "../Database"
 import { StreetModel } from "../Street/StreetModel"
 
 export interface ProjectModel {
-    created_at: string,
+    created_at: string | null,
     id: string,
     lat: number,
     long: number,
-    name: string,
+    name: string | null,
     city: string,
     county: string,
     markers: [{

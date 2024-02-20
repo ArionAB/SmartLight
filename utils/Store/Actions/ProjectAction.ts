@@ -3,6 +3,8 @@ import { deleteProject, setProjectItems, setProjectsLoading, updateProject } fro
 import { Tables, TablesInsert, TablesUpdate } from "../Models/Database";
 import { addAppNotification } from "../Slices/appNotificationSlice";
 import { getUserModel } from "../Models/Users/GetUsersModel";
+import { UsersProjectModel } from "../Models/Project/UsersProjectModel";
+import { ProjectModel } from "../Models/Project/ProjectModel";
 
 
 export const getProjectAction = (currentUser: getUserModel) => {
@@ -17,7 +19,13 @@ export const getProjectAction = (currentUser: getUserModel) => {
                     .eq('user_id', currentUser.id);
 
                 if (!error) {
-                    dispatch(setProjectItems([proiecte[0].proiecte]))
+                    let projects: ProjectModel[] = []
+
+                    proiecte?.map((project: any) => {
+                        projects.push(project.proiecte)
+                    })
+                    dispatch(setProjectItems(projects))
+
                 }
 
 
