@@ -118,8 +118,8 @@ const FileUploadComponent: FC<FileUploadProps> = ({
     }, [files]);
 
     return (
-        <Grid sx={{ height: "100%" }}>
-            <Grid sx={{ height: "90%" }}>
+        <Grid sx={{ maxHeight: 70 }}>
+            <Grid sx={{}}>
                 <Paper
                     className="upload-file-component"
                     {...getRootProps()}
@@ -140,16 +140,16 @@ const FileUploadComponent: FC<FileUploadProps> = ({
                             container
                             justifyContent="center"
                             alignContent="center"
-                            sx={{ height: "100%" }}
+                        // sx={{ height: "100%" }}
                         >
                             <Grid item>
                                 {isDragActive ? (
-                                    <Typography variant="h5" color="secondary" textAlign="center">
+                                    <Typography variant="h6" color="secondary" textAlign="center">
                                         Drop the files here ...
                                     </Typography>
                                 ) : (
                                     <Typography
-                                        variant="h5"
+                                        variant="h6"
                                         textAlign="center"
                                         sx={{ fontSize: fontSize }}
                                     >

@@ -15,6 +15,7 @@ import { sensorTypeItems } from '@/utils/Store/items/sensorTypeItems'
 import { selectCurrentUser } from '@/utils/Store/Selectors/usersSelectors'
 import { selectHasInternet } from '@/utils/Store/Selectors/miscSelectors'
 import { StreetModel } from '@/utils/Store/Models/Street/StreetModel'
+import { ProjectModel } from '@/utils/Store/Models/Project/ProjectModel'
 
 export const AddMarker: FC<{
     selectedMarker: Enums<'marker_type'>,
@@ -150,8 +151,8 @@ export const AddMarker: FC<{
                 const offlineProjects = localStorage.getItem('project')
                 if (offlineProjects) {
                     try {
-                        const project = JSON.parse(offlineProjects)
-                        const street: StreetModel = project.strazi.find((street: StreetModel) => street.id === markerData.street_id)
+                        const project: ProjectModel = JSON.parse(offlineProjects)
+                        const street: StreetModel | undefined = project.strazi.find((street: StreetModel) => street.id === markerData.street_id)
                         if (street) {
                             if (!street.markersArray) {
                                 street.markersArray = [];
@@ -159,6 +160,8 @@ export const AddMarker: FC<{
 
                             //@ts-ignore
                             street.markersArray.push(markerData);
+                            street.markers[0].count = street.markersArray.length + 1
+                            project.markers[0].count = street.markersArray.length + 1
                         }
                         localStorage.setItem('project', JSON.stringify(project))
                         dispatch(addAppNotification({

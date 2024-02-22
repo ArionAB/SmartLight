@@ -55,7 +55,6 @@ export const DrawerDialog = () => {
     const loadingMarkers = useAppSelector(selectMarkersLoading)
     const currentUser = useAppSelector(selectCurrentUser)
     const hasInternet = useAppSelector(selectHasInternet)
-    console.log('hasInternet', hasInternet)
     useEffect(() => {
         if (currentUser) {
             dispatch(getProjectAction(currentUser))

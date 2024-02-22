@@ -6,13 +6,13 @@ import { useMap } from 'react-leaflet';
 
 const ZoomControl = () => {
     const map = useMap()
-
     const zoomIn = () => {
         map.setZoom(map.getZoom() + 1);
     };
     const zoomOut = () => {
         map.setZoom(map.getZoom() - 1);
     };
+
 
 
     return (

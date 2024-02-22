@@ -83,7 +83,6 @@ const ProjectMenu: FC<{ project: ProjectModel }> = ({ project }) => {
     }
 
     const saveProjectToLocalStorage = (project: ProjectModel) => {
-        console.log(project)
         localStorage.setItem("project", JSON.stringify(project))
         dispatch(addAppNotification({
             severity: 'success',

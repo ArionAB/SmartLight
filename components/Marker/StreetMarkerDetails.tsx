@@ -141,10 +141,10 @@ export const StreetMarkerDetails: FC<{
                             <Close />
                         </IconButton>
                     </DialogTitle>
-                    <FormControlLabel
+                    {/* <FormControlLabel
                         control={<IOSSwitch sx={{ m: 1 }} defaultChecked />}
                         label="Status"
-                    />
+                    /> */}
                 </Box>
                 <Grid container spacing={2}>
                     <Grid item xs={12} sm={6} sx={{ display: 'flex', gap: '10px' }}>
@@ -284,7 +284,7 @@ export const StreetMarkerDetails: FC<{
                             )
                         }
                     </Grid>
-                    <Grid item xs={12} height={200}>
+                    <Grid item xs={12} >
                         <FileUploadComponent onFilesChange={uploadPictures} />
                     </Grid>
                     <Grid item xs={12} width="100%" sx={{

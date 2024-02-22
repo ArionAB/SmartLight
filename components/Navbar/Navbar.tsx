@@ -117,7 +117,10 @@ const Navbar: FC = () => {
                     </Box>
                 </Dialog> */}
                 {
-                    currentUser ? (<Button variant='contained' onClick={() => handleSignOut()}>Logout</Button>) : (<Link href="/login">Login</Link>)
+                    currentUser ? (<Button variant='contained' onClick={() => handleSignOut()}>Logout</Button>) :
+                        (<Link style={{
+                            background: "#1976d2", color: "#fff", padding: '5px 10px', borderRadius: '3px'
+                        }} href="/login">LOGIN</Link>)
                 }
             </Box>
         </Box >
