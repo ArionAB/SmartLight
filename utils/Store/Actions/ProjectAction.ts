@@ -3,7 +3,6 @@ import { deleteProject, setProjectItems, setProjectsLoading, updateProject } fro
 import { Tables, TablesInsert, TablesUpdate } from "../Models/Database";
 import { addAppNotification } from "../Slices/appNotificationSlice";
 import { getUserModel } from "../Models/Users/GetUsersModel";
-import { UsersProjectModel } from "../Models/Project/UsersProjectModel";
 import { ProjectModel } from "../Models/Project/ProjectModel";
 
 

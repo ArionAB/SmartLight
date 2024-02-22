@@ -1,15 +1,13 @@
 'use client'
 
 import React, { useState } from 'react'
-// import supabase from '@/utils/supabase/createClient'
-import { redirect, usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { Box, Button, Card, TextField } from '@mui/material';
 import Image from 'next/image';
 import { useAppDispatch } from '@/utils/Store/hooks';
 import { getUserAction } from '@/utils/Store/Actions/UsersActions';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { Database } from '@/utils/Store/Models/Database';
-import { setCurrentUser } from '@/utils/Store/Slices/usersSlice';
 import { addAppNotification } from '@/utils/Store/Slices/appNotificationSlice';
 
 
@@ -51,7 +49,7 @@ const Auth = () => {
             margin: "0 auto",
             width: "100%"
         }}>
-            <Image src="/logo-illu.jpeg" width="250" height="250" alt='logo' objectFit="contained" />
+            <Image src="/Logo-illu.jpeg" width="250" height="250" alt='logo' objectFit="contained" />
             <Card sx={{
                 display: 'flex',
                 flexDirection: 'column',

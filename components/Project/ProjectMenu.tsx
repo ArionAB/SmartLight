@@ -14,7 +14,8 @@ import MapIcon from '@mui/icons-material/Map';
 import { useMap } from 'react-leaflet';
 import { flyToLocation } from '../Map/FlyToLocation';
 import { selectCurrentUser } from '@/utils/Store/Selectors/usersSelectors';
-
+import DownloadForOfflineIcon from '@mui/icons-material/DownloadForOffline';
+import { addAppNotification } from '@/utils/Store/Slices/appNotificationSlice';
 
 const StyledMenu = styled((props: MenuProps) => (
     <Menu
@@ -81,6 +82,15 @@ const ProjectMenu: FC<{ project: ProjectModel }> = ({ project }) => {
         setAnchor(null)
     }
 
+    const saveProjectToLocalStorage = (project: ProjectModel) => {
+        console.log(project)
+        localStorage.setItem("project", JSON.stringify(project))
+        dispatch(addAppNotification({
+            severity: 'success',
+            message: "Proiectul a fost descărcat!"
+        }))
+    }
+
     const handleGoToLocation = (lat: number, lng: number) => {
         flyToLocation(map, lat, lng)
     }
@@ -121,6 +131,14 @@ const ProjectMenu: FC<{ project: ProjectModel }> = ({ project }) => {
                     Afișează proiect
                 </MenuItem>
                 <Divider sx={{ my: 0.5 }} />
+                <MenuItem onClick={() => {
+                    saveProjectToLocalStorage(project),
+                        handleClose()
+                }} disableRipple>
+                    <DownloadForOfflineIcon color="primary" />
+                    Descarcă offline
+                </MenuItem>
+                <Divider sx={{ my: 0.5 }} />
                 {
                     currentUser?.role_type === 'Admin' && (
                         <Box>
@@ -136,6 +154,7 @@ const ProjectMenu: FC<{ project: ProjectModel }> = ({ project }) => {
 
                     )
                 }
+
                 {
                     currentUser?.role_type === 'Admin' && (
                         <MenuItem onClick={() => {

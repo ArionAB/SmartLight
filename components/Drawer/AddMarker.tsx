@@ -13,6 +13,8 @@ import { addAppNotification } from '@/utils/Store/Slices/appNotificationSlice'
 import { LocationModel } from '@/utils/Store/Models/Location/LocationModel'
 import { sensorTypeItems } from '@/utils/Store/items/sensorTypeItems'
 import { selectCurrentUser } from '@/utils/Store/Selectors/usersSelectors'
+import { selectHasInternet } from '@/utils/Store/Selectors/miscSelectors'
+import { StreetModel } from '@/utils/Store/Models/Street/StreetModel'
 
 export const AddMarker: FC<{
     selectedMarker: Enums<'marker_type'>,
@@ -37,6 +39,8 @@ export const AddMarker: FC<{
         const [loading, setLoading] = useState(false)
 
         const currentUser = useAppSelector(selectCurrentUser)
+        const hasInternet = useAppSelector(selectHasInternet)
+
         const dispatch = useAppDispatch()
 
 
@@ -51,8 +55,18 @@ export const AddMarker: FC<{
         };
 
         const focusedProject = useAppSelector(selectFocusedProject)
+
         const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
             e.preventDefault();
+
+            if (!focusedProject) {
+                dispatch(addAppNotification({
+                    severity: 'error',
+                    message: "Trebuie sa selectati un proiect si o strada!"
+                }))
+                return
+            }
+
             setLoading(true)
 
             let markerNumber = 1
@@ -83,12 +97,7 @@ export const AddMarker: FC<{
                 imageUrls.push(data!.path);
             }
 
-            if (!focusedProject) {
-                dispatch(addAppNotification({
-                    severity: 'error',
-                    message: "Trebuie sa selectati un proiect si o strada!"
-                }))
-            }
+
 
 
             let markerData: TablesInsert<'markers'> = {
@@ -102,8 +111,17 @@ export const AddMarker: FC<{
                 observatii: marker.observatii,
                 accuracy: accuracy,
                 number: markerNumber,
-                user_id: currentUser?.id
 
+            }
+
+            if (hasInternet) {
+                markerData.user_id = currentUser?.id
+            } else {
+                const offlineUser: any = localStorage.getItem('user')
+                if (offlineUser) {
+                    const parsedUser = JSON.parse(offlineUser)
+                    markerData.user_id = parsedUser.id
+                }
             }
 
             if (selectedMarker === 'Lampa') {
@@ -123,12 +141,41 @@ export const AddMarker: FC<{
             }
 
 
+            if (hasInternet) {
+                dispatch(addMarkerAction(markerData)).then(() => {
+                    setLoading(false),
+                        setOpen(false)
+                })
+            } else {
+                const offlineProjects = localStorage.getItem('project')
+                if (offlineProjects) {
+                    try {
+                        const project = JSON.parse(offlineProjects)
+                        const street: StreetModel = project.strazi.find((street: StreetModel) => street.id === markerData.street_id)
+                        if (street) {
+                            if (!street.markersArray) {
+                                street.markersArray = [];
+                            }
 
-            dispatch(addMarkerAction(markerData)).then(() => {
-                setLoading(false),
-                    setOpen(false)
-            })
+                            //@ts-ignore
+                            street.markersArray.push(markerData);
+                        }
+                        localStorage.setItem('project', JSON.stringify(project))
+                        dispatch(addAppNotification({
+                            severity: 'success',
+                            message: `${selectedMarker} adaugat cu success!`
+                        }))
+                        setLoading(false),
+                            setOpen(false)
+                    } catch (error) {
+                        dispatch(addAppNotification({
+                            severity: 'error',
+                            message: "eroare adaugare marker"
+                        }))
+                    }
+                }
 
+            }
 
         }
 
@@ -246,7 +293,7 @@ export const AddMarker: FC<{
                             onChange={(e) => handleChange(e)}
                         />
                         <DialogTitle>Poze</DialogTitle>
-                        <FileUploadComponent onFilesChange={uploadPictures} />
+                        {hasInternet && <FileUploadComponent onFilesChange={uploadPictures} />}
                         <ButtonGroup sx={{
                             display: 'flex',
                             justifyContent: 'space-around',

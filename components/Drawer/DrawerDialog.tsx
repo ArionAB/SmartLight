@@ -24,7 +24,7 @@ import MapIcon from '@mui/icons-material/Map';
 import SearchIcon from '@mui/icons-material/Search';
 import { flyToLocation } from '../Map/FlyToLocation';
 import { useMap } from 'react-leaflet';
-import { selectIsDrawerOpen } from '@/utils/Store/Selectors/miscSelectors';
+import { selectHasInternet, selectIsDrawerOpen } from '@/utils/Store/Selectors/miscSelectors';
 import StreetMenu from '../Street/StreetMenu';
 import ProjectMenu from '../Project/ProjectMenu';
 import { getStreetAction } from '@/utils/Store/Actions/StreetActions';
@@ -54,12 +54,14 @@ export const DrawerDialog = () => {
     const loadingStreets = useAppSelector(selectStreetsLoading)
     const loadingMarkers = useAppSelector(selectMarkersLoading)
     const currentUser = useAppSelector(selectCurrentUser)
-
+    const hasInternet = useAppSelector(selectHasInternet)
+    console.log('hasInternet', hasInternet)
     useEffect(() => {
         if (currentUser) {
             dispatch(getProjectAction(currentUser))
         }
     }, [currentUser])
+
 
     const handleAddStreet = (project: ProjectModel) => {
         setSelectedProject(project)
@@ -67,13 +69,13 @@ export const DrawerDialog = () => {
     }
 
     useEffect(() => {
-        if (selectedProject) {
+        if (selectedProject && hasInternet) {
             dispatch(getStreetAction(selectedProject.id))
         }
     }, [selectedProject])
 
     useEffect(() => {
-        if (street) {
+        if (street && hasInternet) {
             dispatch(getMarkersAction(street.id))
         }
     }, [street])
@@ -94,6 +96,15 @@ export const DrawerDialog = () => {
     }
     const isMobile = useBreakpointDown('sm');
 
+    const projects = () => {
+        const offlineProjects = localStorage.getItem('project')
+
+        if (hasInternet) {
+            return projectItems
+        } else if (offlineProjects) {
+            return [JSON.parse(offlineProjects)]
+        }
+    }
 
     return (
         <>
@@ -163,7 +174,7 @@ export const DrawerDialog = () => {
                     )
                 }
                 {
-                    projectItems?.map((item: ProjectModel) => {
+                    projects()?.map((item: ProjectModel) => {
                         if (item?.city?.toLowerCase().includes(search.toLowerCase())) {
                             return (
                                 <List key={item.id}>

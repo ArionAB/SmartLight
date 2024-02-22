@@ -20,6 +20,7 @@
   "autoprefixer": "10.4.17",
   "geist": "^1.2.1",
   "leaflet-defaulticon-compatibility": "^0.1.2",
+  "leaflet.offline": "^3.0.1",
   "next": "latest",
   "postcss": "8.4.33",
   "react": "18.2.0",

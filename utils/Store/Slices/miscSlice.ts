@@ -1,8 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { miscState } from './miscState';
 
-const initialState: any = {
+const initialState: miscState = {
     drawer: false,
-    tooltips: false
+    tooltips: false,
+    hasInternet: true,
 };
 
 const miscSlice = createSlice({
@@ -14,10 +16,13 @@ const miscSlice = createSlice({
         },
         setTooltips: (state, action) => {
             state.tooltips = action.payload
+        },
+        setHasInternet: (state, action) => {
+            state.hasInternet = action.payload
         }
     },
 });
 
-export const { setDrawer, setTooltips } = miscSlice.actions;
+export const { setDrawer, setTooltips, setHasInternet } = miscSlice.actions;
 
 export default miscSlice.reducer;
