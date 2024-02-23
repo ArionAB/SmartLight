@@ -171,3 +171,29 @@ export const deleteMarkerAction = (marker: Tables<'markers'>) => {
         }
     };
 }
+
+export const addOfflineMarkers = (markers: Tables<'markers'>[]) => {
+    return async (dispatch: any, getState: () => any) => {
+        try {
+
+            const { data, error } = await supabase
+                .from('markers')
+                .insert(
+                    markers
+                )
+                .select()
+
+            if (!error) {
+                localStorage.removeItem('project')
+                dispatch(addAppNotification({ message: `Markerii offline au fost adaugati cu success!`, severity: 'success' }))
+            }
+
+            if (error) {
+                dispatch(addAppNotification({ message: error.message, severity: 'error' }))
+            }
+
+        } catch (error) {
+            console.error('error adding offline markers')
+        }
+    }
+}

@@ -67,7 +67,7 @@ const projectSlice = createSlice({
         setMarker: (state, action) => {
             const project: ProjectModel = state.projects.find((project: ProjectModel) => project.id === action.payload.proiect_id)
             const street = project.strazi.find((street) => street.id === action.payload.street_id)
-
+            console.log('aciton.payload', action.payload)
             if (street) {
                 if (!street.markersArray) {
                     street.markersArray = [];

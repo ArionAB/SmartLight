@@ -1,30 +1,31 @@
 'use client'
 
 import Box from '@mui/material/Box';
-import React, { FC, useEffect, useState } from 'react'
-import { Button, Card, Dialog, IconButton, Switch, TextField, Typography } from '@mui/material';
+import React, { FC, useEffect } from 'react'
+import { Button, IconButton, Switch, Typography } from '@mui/material';
 import Image from 'next/image';
 import { useAppDispatch, useAppSelector } from '@/utils/Store/hooks';
 import { selectFocusedProject } from '@/utils/Store/Selectors/projectSelectors';
 import FolderIcon from '@mui/icons-material/Folder';
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
-import { selectIsTooltipOpen } from '@/utils/Store/Selectors/miscSelectors';
+import { selectHasInternet, selectIsTooltipOpen } from '@/utils/Store/Selectors/miscSelectors';
 import { setDrawer, setTooltips } from '@/utils/Store/Slices/miscSlice';
-import { createClient } from '@/utils/supabase/client';
 import { selectCurrentUser } from '@/utils/Store/Selectors/usersSelectors';
 import { setCurrentUser } from '@/utils/Store/Slices/usersSlice';
-import withAuth from '../Auth/withAuth';
 import { getUserAction } from '@/utils/Store/Actions/UsersActions';
 import Link from 'next/link';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { Database } from '@/utils/Store/Models/Database';
 import { useRouter } from "next/navigation";
+import { addOfflineMarkers } from '@/utils/Store/Actions/MarkerActions';
 const Navbar: FC = () => {
     const router = useRouter()
     const dispatch = useAppDispatch()
     const focusedProject = useAppSelector(selectFocusedProject)
     const currentUser = useAppSelector(selectCurrentUser)
     const supabase = createClientComponentClient<Database>()
+    const hasInternet = useAppSelector(selectHasInternet)
+
     const handleTooltipChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         dispatch(setTooltips(event.target.checked));
     };
@@ -48,6 +49,30 @@ const Navbar: FC = () => {
         currentUser()
     }, [])
 
+    useEffect(() => {
+        const offlineProject = localStorage.getItem('project')
+
+        if (offlineProject && hasInternet) {
+            let parsedProject = [JSON.parse(offlineProject)]
+
+            let markersArray: any[] = []
+
+            parsedProject.forEach((project: any) => {
+                project.strazi.forEach((street: any) => {
+                    if (street?.markersArray) {
+                        const offlineMarkers = street?.markersArray?.filter((marker: any) => !marker.id)
+                        markersArray = markersArray.concat(offlineMarkers)
+                    }
+                })
+
+            })
+            if (markersArray.length > 0) {
+                dispatch(addOfflineMarkers(markersArray))
+            }
+
+        }
+
+    }, [hasInternet])
 
     const handleSignOut = async () => {
         await supabase.auth.signOut()
@@ -55,6 +80,9 @@ const Navbar: FC = () => {
         router.push('/')
     }
     const isTooltips = useAppSelector(selectIsTooltipOpen)
+
+
+
     return (
         <Box sx={{
             display: 'flex',

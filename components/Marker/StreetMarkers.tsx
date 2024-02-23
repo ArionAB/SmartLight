@@ -10,7 +10,7 @@ import { divIcon } from 'leaflet'
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { deleteMarkerAction } from '@/utils/Store/Actions/MarkerActions'
-import { selectIsTooltipOpen } from '@/utils/Store/Selectors/miscSelectors'
+import { selectHasInternet, selectIsTooltipOpen } from '@/utils/Store/Selectors/miscSelectors'
 import { selectCurrentUser } from '@/utils/Store/Selectors/usersSelectors'
 
 export const StreetMarkers = () => {
@@ -22,6 +22,7 @@ export const StreetMarkers = () => {
     const focusedProject = useAppSelector(selectFocusedProject)
     const isTooltips = useAppSelector(selectIsTooltipOpen)
     const currentUser = useAppSelector(selectCurrentUser)
+    const hasInternet = useAppSelector(selectHasInternet)
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
@@ -140,6 +141,20 @@ export const StreetMarkers = () => {
         setOpen(true),
             setSelectedMarker(marker)
     }
+    // const projects = () => {
+    //     const offlineProjects = localStorage.getItem('project')
+
+    //     if (hasInternet) {
+    //         return focusedProject
+    //     } else if (offlineProjects) {
+    //         const parsedProject = [JSON.parse(offlineProjects)]
+    //         return parsedProject.map((project) => {
+    //             ...projects,
+
+    //         })
+    //         return []
+    //     }
+    // }
 
 
     const anchor = Boolean(anchorEl)

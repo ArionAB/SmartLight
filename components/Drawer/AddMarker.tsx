@@ -16,6 +16,7 @@ import { selectCurrentUser } from '@/utils/Store/Selectors/usersSelectors'
 import { selectHasInternet } from '@/utils/Store/Selectors/miscSelectors'
 import { StreetModel } from '@/utils/Store/Models/Street/StreetModel'
 import { ProjectModel } from '@/utils/Store/Models/Project/ProjectModel'
+import { setMarker as dispatchMarker } from '@/utils/Store/Slices/projectSlice'
 
 export const AddMarker: FC<{
     selectedMarker: Enums<'marker_type'>,
@@ -70,14 +71,19 @@ export const AddMarker: FC<{
 
             setLoading(true)
 
+
             let markerNumber = 1
-            if (!focusedProject.street?.markersArray?.length) {
-                markerNumber = 1
-            } else {
-                let lastMarker = { ...focusedProject.street.markersArray[focusedProject.street.markersArray.length - 1] }
-                const increment = Number(lastMarker.number!) + 1
-                markerNumber = increment
+
+            if (hasInternet) {
+                if (!focusedProject.street?.markersArray?.length) {
+                    markerNumber = 1
+                } else {
+                    let lastMarker = { ...focusedProject.street.markersArray[focusedProject.street.markersArray.length - 1] }
+                    const increment = Number(lastMarker.number!) + 1
+                    markerNumber = increment
+                }
             }
+
 
             const currentDate = new Date();
             const timestamp = currentDate.toISOString().replace(/[-:]/g, '').split('.')[0];
@@ -157,11 +163,25 @@ export const AddMarker: FC<{
                             if (!street.markersArray) {
                                 street.markersArray = [];
                             }
+                            console.log(street)
+                            let markerNumber = 1
+
+                            if (!street?.markersArray?.length) {
+                                markerNumber = 1
+                            } else {
+                                let lastMarker = { ...street.markersArray[street.markersArray?.length - 1] }
+                                console.log('lastMarker', lastMarker)
+                                const increment = Number(lastMarker.number!) + 1
+                                markerNumber = increment
+                            }
+
+                            markerData.number = markerNumber
 
                             //@ts-ignore
                             street.markersArray.push(markerData);
                             street.markers[0].count = street.markersArray.length + 1
                             project.markers[0].count = street.markersArray.length + 1
+                            dispatch(dispatchMarker(markerData))
                         }
                         localStorage.setItem('project', JSON.stringify(project))
                         dispatch(addAppNotification({
@@ -173,7 +193,7 @@ export const AddMarker: FC<{
                     } catch (error) {
                         dispatch(addAppNotification({
                             severity: 'error',
-                            message: "eroare adaugare marker"
+                            message: `eroare adaugare marker (${error})`
                         }))
                     }
                 }
