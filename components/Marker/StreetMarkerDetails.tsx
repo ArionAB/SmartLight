@@ -220,7 +220,7 @@ export const StreetMarkerDetails: FC<{
                                     )
                                 })
                             ) : (
-                                <Typography variant='h6' width='100%' textAlign='center'>Nu exista poze momentan</Typography>
+                                <Typography width='100%' textAlign='center'>Nu exista poze momentan</Typography>
                             )
                         }
                     </Grid>

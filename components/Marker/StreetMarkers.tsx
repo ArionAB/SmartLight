@@ -90,36 +90,36 @@ export const StreetMarkers = () => {
     const customSensorIcon = divIcon({
         html: sensorHTML,
         iconSize: [0, 0],
-        iconAnchor: [12, 12],
+
     })
 
     const customLampIcon30 = divIcon({
         html: lampHTML30,
         iconSize: [0, 0],
-        iconAnchor: [12, 12],
+
     });
 
     const customLampIcon60 = divIcon({
         html: lampHTML60,
         iconSize: [0, 0],
-        iconAnchor: [12, 12],
+
     });
 
     const customLampIcon80 = divIcon({
         html: lampHTML80,
         iconSize: [0, 0],
-        iconAnchor: [12, 12],
+
     });
 
     const customPoleIconWithLamp = divIcon({
         html: poleHTMLwithLamp,
-        iconSize: [0, 0],
-        iconAnchor: [12, 12],
+        iconSize: [-0, -0],
+
     });
     const customPoleIconNoLamp = divIcon({
         html: poleHTMLNoLamp,
         iconSize: [0, 0],
-        iconAnchor: [12, 12],
+
     });
 
     const handleOpenDialog = (marker: Tables<'markers'>) => {
