@@ -163,14 +163,12 @@ export const AddMarker: FC<{
                             if (!street.markersArray) {
                                 street.markersArray = [];
                             }
-                            console.log(street)
                             let markerNumber = 1
 
                             if (!street?.markersArray?.length) {
                                 markerNumber = 1
                             } else {
                                 let lastMarker = { ...street.markersArray[street.markersArray?.length - 1] }
-                                console.log('lastMarker', lastMarker)
                                 const increment = Number(lastMarker.number!) + 1
                                 markerNumber = increment
                             }
