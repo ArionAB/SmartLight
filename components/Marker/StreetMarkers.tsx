@@ -56,33 +56,33 @@ export const StreetMarkers = () => {
     }
 
     const lampHTML30 = renderToStaticMarkup(
-        <svg fill="#f44336" width="12px" height="12px" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style={{ border: "rgba(89,89,89,1) 1px solid", borderRadius: "50%" }}>
+        <svg fill="#f44336" width="12px" height="12px" viewBox="0 0 32 32" style={{ border: "rgba(89,89,89,1) 1px solid", borderRadius: "50%" }}>
             <circle cx="16" cy="16" r="16" />
         </svg>
     );
     const lampHTML60 = renderToStaticMarkup(
-        <svg fill="#004aad" width="12px" height="12px" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style={{ border: "rgba(89,89,89,1) 1px solid", borderRadius: "50%" }}>
+        <svg fill="#4caf50" width="12px" height="12px" viewBox="0 0 32 32" style={{ border: "rgba(89,89,89,1) 1px solid", borderRadius: "50%" }}>
             <circle cx="16" cy="16" r="16" />
         </svg>
     );
     const lampHTML80 = renderToStaticMarkup(
-        <svg fill="#4caf50" width="12px" height="12px" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style={{ border: "rgba(89,89,89,1) 1px solid", borderRadius: "50%" }}>
+        <svg fill="#673ab7" width="12px" height="12px" viewBox="0 0 32 32" style={{ border: "rgba(89,89,89,1) 1px solid", borderRadius: "50%" }}>
             <circle cx="16" cy="16" r="16" />
         </svg>
     );
     const poleHTMLwithLamp = renderToStaticMarkup(
-        <svg fill="#4caf50" width="12px" height="12px" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" style={{ border: "rgba(89,89,89,1) 1px solid", borderRadius: "50%" }}>
+        <svg fill="#4caf50" width="12px" height="12px" viewBox="0 0 32 32" style={{ border: "rgba(89,89,89,1) 1px solid", borderRadius: "50%" }}>
             <circle cx="16" cy="16" r="16" />
         </svg>
     );
     const poleHTMLNoLamp = renderToStaticMarkup(
-        <svg fill="#b22a00" width="15px" height="15px" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+        <svg fill="#b22a00" width="15px" height="15px" viewBox="0 0 32 32">
             <circle cx="16" cy="16" r="16" />
         </svg>
     );
 
     const sensorHTML = renderToStaticMarkup(
-        <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none">
             <rect x="4" y="4" width="16" height="16" rx="2" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
     )
