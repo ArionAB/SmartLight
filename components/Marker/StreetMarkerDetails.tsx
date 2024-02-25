@@ -79,7 +79,7 @@ export const StreetMarkerDetails: FC<{
                         alignItems: 'center',
                         width: '100%'
                     }}>
-                        <Typography variant='h6' textAlign={'center'}>{marker?.marker_type === 'Senzor' ? marker?.sensor_type : marker.marker_type} #{marker?.number}</Typography>
+                        <Typography textAlign={'center'} fontWeight={600}>{marker?.marker_type === 'Senzor' ? marker?.sensor_type : marker.marker_type} #{marker?.number}</Typography>
                         <IconButton onClick={() => setOpen(false)}>
                             <Close />
                         </IconButton>
@@ -90,7 +90,7 @@ export const StreetMarkerDetails: FC<{
                     <Grid item xs={12} sm={6} sx={{ display: 'flex', gap: '10px' }}>
                         <TextField
                             fullWidth
-                            value={form.latitude}
+                            value={form.latitude ?? ''}
                             name="latitude"
                             label="Latitudine"
                             onChange={handleChange}
@@ -100,7 +100,7 @@ export const StreetMarkerDetails: FC<{
                     <Grid item xs={12} sm={6} sx={{ display: 'flex', gap: '10px' }}>
                         <TextField
                             fullWidth
-                            value={form.longitude}
+                            value={form.longitude ?? ''}
                             name="longitude"
                             label="Longitudine"
                             onChange={handleChange}
@@ -194,7 +194,7 @@ export const StreetMarkerDetails: FC<{
                             multiline
                             maxRows={4}
                             fullWidth
-                            value={form.observatii}
+                            value={form.observatii ?? ''}
                             name="observatii"
                             onChange={(e) => handleChange(e)}
                         />
