@@ -24,14 +24,11 @@ export const MyLocationMarker: FC<{ position: LocationModel, accuracy: number }>
 
     const { orientation, requestAccess, revokeAccess, error } = useDeviceOrientation();
 
-    const calculateRotationAngle = (alpha: number) => {
-        return (alpha - 90) % 360;
-    };
-    const rotationAngle = calculateRotationAngle(orientation?.alpha ?? 0);
+
     const iconHTML = renderToStaticMarkup(
-        <div style={{ position: 'relative' }}>
-            <svg width="20px" height="20px" viewBox="0 0 24 24" fill="#4285F4" style={{ transform: `rotate(${rotationAngle}deg)`, transformOrigin: 'center' }}>
-                <path d="M10.9792 4.26973L4.59197 18.4636C4.10239 19.5516 3.85761 20.0955 3.9608 20.4146C4.05015 20.6908 4.2714 20.9042 4.55064 20.9836C4.87315 21.0753 5.40801 20.8112 6.47772 20.283L11.2921 17.9055C11.552 17.7771 11.682 17.713 11.8181 17.6877C11.9387 17.6653 12.0624 17.6653 12.183 17.6877C12.3192 17.713 12.4491 17.7771 12.709 17.9055L17.5234 20.283C18.5931 20.8112 19.128 21.0753 19.4505 20.9836C19.7298 20.9042 19.951 20.6908 20.0403 20.4146C20.1435 20.0955 19.8988 19.5516 19.4092 18.4636L13.0219 4.26973C12.6979 3.54967 12.5359 3.18964 12.3108 3.07837C12.1153 2.98169 11.8859 2.98169 11.6903 3.07837C11.4653 3.18964 11.3032 3.54967 10.9792 4.26973Z" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+        <div>
+            <svg width="20px" height="20px" viewBox="0 0 24 24" fill="#4285F4">
+                <path d="M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="#fff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
         </div>
     );
