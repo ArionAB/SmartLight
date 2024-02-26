@@ -5,4 +5,5 @@ export interface getUserModel {
     id: string;
     last_name: string | null;
     role_type: "Admin" | "User" | "Visitor";
+    deleted_at: string | null;
 } 

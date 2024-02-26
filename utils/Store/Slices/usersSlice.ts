@@ -30,11 +30,17 @@ const usersSlice = createSlice({
         },
         setCurrentUser: (state, action) => {
             state.currentUser = action.payload
+        },
+        removeUser: (state, action) => {
+            const index = state.users.findIndex((user) => user.id === action.payload.id)
+            if (index !== -1) {
+                state.users.splice(index, 1)
+            }
         }
 
     },
 });
 
-export const { setUsers, addUser, editUser, setAssignedUsers, setCurrentUser } = usersSlice.actions;
+export const { setUsers, addUser, editUser, setAssignedUsers, setCurrentUser, removeUser } = usersSlice.actions;
 
 export default usersSlice.reducer;

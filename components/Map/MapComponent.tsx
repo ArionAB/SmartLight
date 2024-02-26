@@ -7,7 +7,7 @@ import "leaflet.offline";
 import "leaflet/dist/leaflet.css"
 import "leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.webpack.css";
 import "leaflet-defaulticon-compatibility";
-import { Box, Icon } from '@mui/material';
+import { Box, } from '@mui/material';
 import { DraggableMarker } from '../Marker/DraggableMarker';
 import { MyLocationMarker } from './MyLocationMarker';
 import { StreetMarkers } from '../Marker/StreetMarkers';
@@ -18,11 +18,8 @@ import { AddPoleIcon } from '../Marker/AddPoleIcon';
 import useLocation from '@/utils/Hooks/useLocation';
 import ZoomControl from './ZoomControl';
 import { AddSensorIcon } from '../Marker/AddSensorIcon';
-import withAuth from '../Auth/withAuth';
 import { useAppDispatch, useAppSelector } from '@/utils/Store/hooks';
 import { selectCurrentUser } from '@/utils/Store/Selectors/usersSelectors';
-import { Delete, Save, SaveAlt } from '@mui/icons-material';
-import IconButton from '@mui/material/IconButton';
 import { setHasInternet } from '@/utils/Store/Slices/miscSlice';
 
 const MapComponent: FC = () => {

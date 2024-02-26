@@ -1,8 +1,8 @@
 'use client'
-import { getUsersAction } from '@/utils/Store/Actions/UsersActions'
+import { deleteUserAction, getUsersAction } from '@/utils/Store/Actions/UsersActions'
 import { dateTimeFormatOptions, getDateLabel } from '@/utils/Store/Functions/dateTimeFormat'
 import { useAppDispatch, useAppSelector } from '@/utils/Store/hooks'
-import { Box, Button, Container, Dialog, IconButton } from '@mui/material'
+import { Box, Button, Container, Dialog, IconButton, Popover, Typography } from '@mui/material'
 import { DataGrid, GridColDef, GridPagination, GridRenderCellParams, GridValueFormatterParams, GridValueGetterParams } from '@mui/x-data-grid'
 import React, { useEffect, useState } from 'react'
 import AddIcon from '@mui/icons-material/Add';
@@ -12,11 +12,14 @@ import { selectUsers } from '@/utils/Store/Selectors/usersSelectors'
 import EditIcon from '@mui/icons-material/Edit';
 import EditUser from '@/components/Users/EditUser'
 import withAuth from '@/components/Auth/withAuth'
+import { DeleteForever } from '@mui/icons-material'
 
 const Users = () => {
     const [addUserDialog, setAddUserDialog] = useState(false)
     const [editDialog, setEditDialog] = useState(false)
     const [selectedUser, setSelectedUser] = useState<Tables<'users'> | null>(null)
+    const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
+
     const dispatch = useAppDispatch()
     const users = useAppSelector(selectUsers)
 
@@ -92,12 +95,52 @@ const Users = () => {
             align: "center",
             renderCell: (params: GridRenderCellParams) => {
                 return (
-                    <IconButton color='warning' onClick={() => {
-                        setSelectedUser(params.row)
-                        setEditDialog(true)
-                    }}>
-                        <EditIcon />
-                    </IconButton>
+                    <Box>
+                        <IconButton color='warning' onClick={() => {
+                            setSelectedUser(params.row)
+                            setEditDialog(true)
+                        }}>
+                            <EditIcon />
+                        </IconButton>
+                        {
+                            params.row.role_type !== 'Admin' && (
+                                <>
+                                    <IconButton color='error' onClick={(e) => {
+                                        setAnchorEl(e.currentTarget)
+                                        setSelectedUser(params.row)
+                                    }}>
+                                        <DeleteForever />
+                                    </IconButton>
+                                    <Popover
+                                        open={anchorEl ? true : false}
+                                        anchorEl={anchorEl}
+                                        onClose={() => setAnchorEl(null)}
+                                        anchorOrigin={{
+                                            vertical: 'bottom',
+                                            horizontal: 'left',
+                                        }}
+                                        elevation={1}
+                                    >
+                                        <Typography sx={{ p: 2 }} textAlign={'center'}>Sunteti sigur ca doriti sa stergeti utilizatorul  {selectedUser?.email}?</Typography>
+                                        <Box sx={{
+                                            display: 'flex',
+                                            justifyContent: 'space-around',
+                                            marginBottom: 2
+                                        }}>
+                                            <Button variant='outlined' onClick={() => setAnchorEl(null)}>Anuleaza</Button>
+                                            <Button variant='contained' color='error' onClick={() => {
+                                                dispatch(deleteUserAction(selectedUser!.id)).then(() => {
+                                                    setAnchorEl(null)
+                                                })
+                                            }}>Da</Button>
+                                        </Box>
+                                    </Popover>
+                                </>
+                            )
+                        }
+
+                    </Box>
+
                 );
             },
         },

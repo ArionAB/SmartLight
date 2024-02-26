@@ -2,7 +2,7 @@ import supabase from "../../supabase/createClient";
 import { CreateUserModel } from "../Models/Auth/CreateUserModel";
 import { TablesUpdate } from "../Models/Database";
 import { addAppNotification } from "../Slices/appNotificationSlice";
-import { addUser, editUser, setCurrentUser, setUsers } from "../Slices/usersSlice";
+import { addUser, editUser, removeUser, setCurrentUser, setUsers } from "../Slices/usersSlice";
 
 
 export const createUserAction = (form: CreateUserModel) => {
@@ -44,6 +44,7 @@ export const getUsersAction = () => {
             let { data: users, error } = await supabase
                 .from('users')
                 .select('*')
+                .is('deleted_at', null)
 
             if (!error) {
                 dispatch(setUsers(users))
@@ -139,3 +140,40 @@ export const getUserAction = (id: string) => {
     }
 }
 
+export const deleteUserAction = (id: string) => {
+    return async (dispatch: any, getState: () => any) => {
+
+        try {
+            const { data, error } = await supabase
+                .from('users')
+                .update({ deleted_at: new Date().toISOString() })
+                .eq('id', id)
+                .select()
+
+            if (!error) {
+                dispatch(addAppNotification({
+                    severity: 'success',
+                    message: `Userul a fost șters!`
+                }))
+                console.log(data[0])
+                dispatch(removeUser(data[0]))
+                return {
+                    severity: 'success',
+                    data: data
+                }
+            }
+
+
+            if (error) {
+                dispatch(addAppNotification({
+                    severity: 'error',
+                    message: error.message
+                }))
+                throw error;
+            }
+
+        } catch (error) {
+            console.error('Error edit item:', error);
+        }
+    };
+};
