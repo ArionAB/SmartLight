@@ -194,7 +194,7 @@ export const StreetMarkerDetails: FC<{
                                         </Select>
                                     </FormControl>
                                     <FormControlLabel
-                                        control={<IOSSwitch sx={{ m: 1 }} onChange={(e) => setForm({ ...form, hub_c: e.target.checked })} checked={marker.hub_c} />}
+                                        control={<IOSSwitch sx={{ m: 1 }} onChange={(e) => setForm({ ...form, hub_c: e.target.checked })} checked={form.hub_c} />}
                                         label="HUB-C"
                                     />
                                 </>
