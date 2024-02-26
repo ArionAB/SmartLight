@@ -1,19 +1,21 @@
 import supabase from "@/utils/supabase/createClient";
 import { addAppNotification } from "../Slices/appNotificationSlice";
 
-export const deleteFilesActions = (url: string) => {
+export const deleteFilesActions = (url: string[]) => {
     return async (dispatch: any, getState: () => any) => {
         try {
 
             const { data, error } = await supabase
                 .storage
-                .from('avatars')
-                .remove(['folder/avatar1.png'])
+                .from('illumitech-bucket')
+                .remove(url)
 
-            console.log('data', data)
 
             if (!error) {
                 dispatch(addAppNotification({ message: `Poza a fost ștearsă!`, severity: 'success' }))
+                return {
+                    severity: 'success',
+                }
             }
 
             if (error) {

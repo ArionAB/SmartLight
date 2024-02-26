@@ -7,13 +7,15 @@ import { Box, Container, DialogTitle, FormControl, Grid, InputLabel, Select, Sel
 import Image from 'next/image'
 import React, { FC, useState } from 'react'
 import FileUploadComponent from '../FileUpload/FileUploadComponent'
-import { Close } from '@mui/icons-material'
+import { Close, HighlightOff, RemoveCircle } from '@mui/icons-material'
 import supabase from '@/utils/supabase/createClient'
 import { updateMarkerAction } from '@/utils/Store/Actions/MarkerActions'
 import { useAppDispatch, useAppSelector } from '@/utils/Store/hooks'
 import { powerTypeItems } from '@/utils/Store/items/powerTypeItems'
 import { selectCurrentUser } from '@/utils/Store/Selectors/usersSelectors'
 import { IOSSwitch } from '../Material/iOSSwitch'
+import { deleteFilesActions } from '@/utils/Store/Actions/FilesActions'
+import { selectFocusedProject } from '@/utils/Store/Selectors/projectSelectors'
 
 export const StreetMarkerDetails: FC<{
     marker: Tables<'markers'>,
@@ -32,8 +34,11 @@ export const StreetMarkerDetails: FC<{
     })
     const [uploadedFiles, setUploadedFiles] = useState<File[]>([])
     const [loading, setLoading] = useState(false)
+    const [deletedImages, setDeletedImages] = useState<string[]>([])
+
     const dispatch = useAppDispatch();
     const currentUser = useAppSelector(selectCurrentUser)
+    const focusedProject = useAppSelector(selectFocusedProject)
 
     const handleChange = (event: SelectChangeEvent | React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setForm({ ...form, [event.target.name]: event.target.value });
@@ -47,9 +52,20 @@ export const StreetMarkerDetails: FC<{
         e.preventDefault();
         setLoading(true)
 
+        const currentDate = new Date();
+        const timestamp = currentDate.toISOString().replace(/[-:]/g, '').split('.')[0];
+        const year = timestamp.slice(0, 4);
+        const month = timestamp.slice(4, 6);
+        const day = timestamp.slice(6, 8);
+        const hour = timestamp.slice(9, 11);
+        const minute = timestamp.slice(11, 13);
+        const second = timestamp.slice(13, 15);
+
         const imageUrls: string[] = [];
         for (let file of uploadedFiles) {
-            let { data, error } = await supabase.storage.from('illumitech-bucket').upload(`${file.name}`, file);
+            const randomNumber = Math.floor(Math.random() * 1000) + 1;
+            let { data, error } = await supabase.storage.from('illumitech-bucket')
+                .upload(focusedProject.item.city + '/' + focusedProject.street.name + "/" + `${marker.number}/${file.name}-${year}-${month}-${day}-${hour}-${minute}-${second}-${randomNumber}`, file);
             if (error) throw error;
             imageUrls.push(data!.path);
         }
@@ -64,10 +80,28 @@ export const StreetMarkerDetails: FC<{
             id: marker.id
         }
 
-        dispatch(updateMarkerAction(markerData)).then(() => {
-            setOpen(false)
-            setLoading(false)
-        })
+        if (deletedImages.length > 0) {
+            dispatch(deleteFilesActions(deletedImages)).then((res) => {
+                if (res?.severity === 'success') {
+                    dispatch(updateMarkerAction(markerData)).then(() => {
+                        setOpen(false)
+                        setLoading(false)
+                    })
+                }
+            })
+        } else {
+            dispatch(updateMarkerAction(markerData)).then(() => {
+                setOpen(false)
+                setLoading(false)
+            })
+        }
+
+
+    }
+    const handleRemoveImage = (urlToRemove: string) => {
+        setDeletedImages(deletedImages.concat(urlToRemove))
+        const images = form.images!.filter((url: string) => url !== urlToRemove)
+        setForm({ ...form, images: images })
     }
 
 
@@ -210,21 +244,37 @@ export const StreetMarkerDetails: FC<{
                     <Grid item xs={12} sx={{
                         display: 'flex',
                         gap: '1rem',
-                        flexWrap: 'wrap'
+                        flexWrap: 'wrap',
+
                     }}>
                         {
                             marker?.images && marker?.images?.length > 0 ? (
                                 marker.images?.map((image, index) => {
                                     return (
-                                        <Image src={getImage(image)}
-                                            key={index}
-                                            alt={image}
-                                            width={250}
-                                            height={300}
-                                            objectFit="contain"
-                                            placeholder='blur'
-                                            blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxwYXRoIGQ9Ik0xMDAgMjAwQzE1NS4yMjkgMjAwIDIwMCAxNTUuMjI5IDIwMCAxMDBDMjAwIDQ0Ljc3MSAxNTUuMjI5IDAgMTAwIDBDMzQuNzcxIDAgMCA0NC43NzEgMCAxMDBDMCAxNTUuMjI5IDQ0Ljc3MSAyMDAgMTAwIDIwMFoiIGZpbGw9IiNDNkM2QzYiLz4KPC9zdmc+Cg=="
-                                        />
+                                        <Box sx={{
+                                            position: 'relative',
+                                            display: form.images.includes(image) ? 'flex' : 'none'
+                                        }}>
+                                            <Image src={getImage(image)}
+                                                key={index}
+                                                alt={image}
+                                                width={250}
+                                                height={300}
+                                                objectFit="contain"
+                                                placeholder='blur'
+                                                blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxwYXRoIGQ9Ik0xMDAgMjAwQzE1NS4yMjkgMjAwIDIwMCAxNTUuMjI5IDIwMCAxMDBDMjAwIDQ0Ljc3MSAxNTUuMjI5IDAgMTAwIDBDMzQuNzcxIDAgMCA0NC43NzEgMCAxMDBDMCAxNTUuMjI5IDQ0Ljc3MSAyMDAgMTAwIDIwMFoiIGZpbGw9IiNDNkM2QzYiLz4KPC9zdmc+Cg=="
+                                            />
+
+                                            <IconButton color="error" onClick={() => handleRemoveImage(image)} sx={{
+                                                position: 'absolute',
+                                                top: -20,
+                                                right: -20,
+                                                background: "#fff"
+                                            }}>
+                                                <HighlightOff />
+                                            </IconButton>
+                                        </Box>
+
                                     )
                                 })
                             ) : (
