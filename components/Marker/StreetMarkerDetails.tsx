@@ -3,7 +3,7 @@ import { lampItems } from '@/utils/Store/items/lampItems'
 import { poleTypeItems } from '@/utils/Store/items/poleTypeItems'
 import { getImage } from '@/utils/supabase/getImage'
 import styled from '@emotion/styled'
-import { Box, Container, DialogTitle, FormControl, Grid, InputLabel, Select, SelectChangeEvent, Typography, MenuItem, Switch, SwitchProps, TextField, Button, IconButton, } from '@mui/material'
+import { Box, Container, DialogTitle, FormControl, Grid, InputLabel, Select, SelectChangeEvent, Typography, MenuItem, Switch, SwitchProps, TextField, Button, IconButton, FormControlLabel, } from '@mui/material'
 import Image from 'next/image'
 import React, { FC, useState } from 'react'
 import FileUploadComponent from '../FileUpload/FileUploadComponent'
@@ -13,6 +13,7 @@ import { updateMarkerAction } from '@/utils/Store/Actions/MarkerActions'
 import { useAppDispatch, useAppSelector } from '@/utils/Store/hooks'
 import { powerTypeItems } from '@/utils/Store/items/powerTypeItems'
 import { selectCurrentUser } from '@/utils/Store/Selectors/usersSelectors'
+import { IOSSwitch } from '../Material/iOSSwitch'
 
 export const StreetMarkerDetails: FC<{
     marker: Tables<'markers'>,
@@ -26,7 +27,8 @@ export const StreetMarkerDetails: FC<{
         images: marker.images,
         latitude: marker.latitude,
         longitude: marker.longitude,
-        power_type: marker.power_type
+        power_type: marker.power_type,
+        hub_c: marker.hub_c
     })
     const [uploadedFiles, setUploadedFiles] = useState<File[]>([])
     const [loading, setLoading] = useState(false)
@@ -135,27 +137,33 @@ export const StreetMarkerDetails: FC<{
                         }
                         {
                             marker.marker_type === 'Lampa' && (
-                                <FormControl fullWidth>
-                                    <InputLabel id="demo-simple-select-label">Tip lampa</InputLabel>
-                                    <Select
-                                        labelId="demo-simple-select-label"
-                                        id="demo-simple-select"
-                                        value={form.power_type}
-                                        label="Tip lampa"
-                                        name='power_type'
-                                        onChange={(e) => handleChange(e)}
-                                    >
-                                        {
-                                            powerTypeItems?.map((item, index) => {
-                                                return (
-                                                    <MenuItem key={index} value={item}>
-                                                        {item}
-                                                    </MenuItem>
-                                                )
-                                            })
-                                        }
-                                    </Select>
-                                </FormControl>
+                                <>
+                                    <FormControl fullWidth>
+                                        <InputLabel id="demo-simple-select-label">Tip lampa</InputLabel>
+                                        <Select
+                                            labelId="demo-simple-select-label"
+                                            id="demo-simple-select"
+                                            value={form.power_type}
+                                            label="Tip lampa"
+                                            name='power_type'
+                                            onChange={(e) => handleChange(e)}
+                                        >
+                                            {
+                                                powerTypeItems?.map((item, index) => {
+                                                    return (
+                                                        <MenuItem key={index} value={item}>
+                                                            {item}
+                                                        </MenuItem>
+                                                    )
+                                                })
+                                            }
+                                        </Select>
+                                    </FormControl>
+                                    <FormControlLabel
+                                        control={<IOSSwitch sx={{ m: 1 }} onChange={(e) => setForm({ ...form, hub_c: e.target.checked })} checked={marker.hub_c} />}
+                                        label="HUB-C"
+                                    />
+                                </>
                             )
                         }
                     </Grid>

@@ -1,7 +1,7 @@
 import { Enums, TablesInsert } from '@/utils/Store/Models/Database'
 import { selectFocusedProject } from '@/utils/Store/Selectors/projectSelectors'
 import { useAppDispatch, useAppSelector } from '@/utils/Store/hooks'
-import { Button, ButtonGroup, Container, DialogTitle, FormControl, FormGroup, InputLabel, MenuItem, Select, SelectChangeEvent, TextField, Typography } from '@mui/material'
+import { Button, ButtonGroup, Container, DialogTitle, FormControl, FormControlLabel, FormGroup, InputLabel, MenuItem, Select, SelectChangeEvent, TextField, Typography } from '@mui/material'
 import React, { FC, useState } from 'react'
 import FileUploadComponent from '../FileUpload/FileUploadComponent'
 import supabase from '@/utils/supabase/createClient'
@@ -17,6 +17,7 @@ import { selectHasInternet } from '@/utils/Store/Selectors/miscSelectors'
 import { StreetModel } from '@/utils/Store/Models/Street/StreetModel'
 import { ProjectModel } from '@/utils/Store/Models/Project/ProjectModel'
 import { setMarker as dispatchMarker } from '@/utils/Store/Slices/projectSlice'
+import { IOSSwitch } from '../Material/iOSSwitch'
 
 export const AddMarker: FC<{
     selectedMarker: Enums<'marker_type'>,
@@ -35,7 +36,8 @@ export const AddMarker: FC<{
             lamp_type: 'Cu lampa',
             pole_type: '',
             power_type: '',
-            sensor_type: ''
+            sensor_type: '',
+            hub_c: false,
         })
         const [uploadedFiles, setUploadedFiles] = useState<File[]>([])
         const [loading, setLoading] = useState(false)
@@ -118,6 +120,7 @@ export const AddMarker: FC<{
                 observatii: marker.observatii,
                 accuracy: accuracy,
                 number: markerNumber,
+                hub_c: marker.hub_c
 
             }
 
@@ -209,27 +212,34 @@ export const AddMarker: FC<{
                         gap: '10px'
                     }}>
                         {selectedMarker === 'Lampa' && (
-                            <FormControl fullWidth >
-                                <InputLabel id="demo-simple-select-label">Tip lampa</InputLabel>
-                                <Select
-                                    labelId="demo-simple-select-label"
-                                    id="demo-simple-select"
-                                    name="power_type"
-                                    value={marker.power_type}
-                                    label="Tip lampa"
-                                    onChange={(e) => handleChange(e)}
-                                >
-                                    {
-                                        powerTypeItems?.map((item: any) => {
-                                            return (
-                                                <MenuItem key={item} value={item}>
-                                                    {item}
-                                                </MenuItem>
-                                            )
-                                        })
-                                    }
-                                </Select>
-                            </FormControl>
+                            <>
+                                <FormControl fullWidth >
+                                    <InputLabel id="demo-simple-select-label">Tip lampa</InputLabel>
+                                    <Select
+                                        labelId="demo-simple-select-label"
+                                        id="demo-simple-select"
+                                        name="power_type"
+                                        value={marker.power_type}
+                                        label="Tip lampa"
+                                        onChange={(e) => handleChange(e)}
+                                    >
+                                        {
+                                            powerTypeItems?.map((item: any) => {
+                                                return (
+                                                    <MenuItem key={item} value={item}>
+                                                        {item}
+                                                    </MenuItem>
+                                                )
+                                            })
+                                        }
+                                    </Select>
+                                </FormControl>
+                                <FormControlLabel
+                                    control={<IOSSwitch sx={{ m: 1 }} onChange={(e) => setMarker({ ...marker, hub_c: e.target.checked })} checked={marker.hub_c} />}
+                                    label="HUB-C"
+                                />
+                            </>
+
                         )}
                         {selectedMarker === "Stalp" && (
                             <>

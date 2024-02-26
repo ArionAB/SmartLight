@@ -1,9 +1,8 @@
 'use client'
 
 import Box from '@mui/material/Box';
-import React, { FC, useEffect } from 'react'
-import { Avatar, Button, IconButton, Switch, Typography } from '@mui/material';
-import Image from 'next/image';
+import React, { FC, MouseEvent, useEffect, useState } from 'react'
+import { Button, Divider, FormControlLabel, IconButton, Popover, Typography } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '@/utils/Store/hooks';
 import { selectFocusedProject } from '@/utils/Store/Selectors/projectSelectors';
 import FolderIcon from '@mui/icons-material/Folder';
@@ -19,13 +18,19 @@ import { Database } from '@/utils/Store/Models/Database';
 import { useRouter } from "next/navigation";
 import { addOfflineMarkers } from '@/utils/Store/Actions/MarkerActions';
 import BackgroundLetterAvatars from '../Material/StringAvatar';
+import { IOSSwitch } from '../Material/iOSSwitch';
+import RefreshIcon from '@mui/icons-material/Refresh';
+
 const Navbar: FC = () => {
+    const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>(null);
+
     const router = useRouter()
     const dispatch = useAppDispatch()
     const focusedProject = useAppSelector(selectFocusedProject)
     const currentUser = useAppSelector(selectCurrentUser)
     const supabase = createClientComponentClient<Database>()
     const hasInternet = useAppSelector(selectHasInternet)
+    const isTooltips = useAppSelector(selectIsTooltipOpen)
 
 
     const handleToggleDrawer = () => {
@@ -73,10 +78,23 @@ const Navbar: FC = () => {
     }, [hasInternet])
 
     const handleSignOut = async () => {
+        handleClose()
         await supabase.auth.signOut()
         dispatch(setCurrentUser(null))
         router.push('/')
     }
+
+    const handleClick = (event: MouseEvent<HTMLDivElement, globalThis.MouseEvent>) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleClose = () => {
+        setAnchorEl(null);
+    };
+
+    const handleTooltipChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        dispatch(setTooltips(event.target.checked));
+    };
 
 
     return (
@@ -94,7 +112,8 @@ const Navbar: FC = () => {
                 display: 'flex',
                 alignItems: 'center',
                 gap: '5px',
-                width: '100%'
+                width: '100%',
+                minWidth: '250px'
             }}>
                 <IconButton onClick={handleToggleDrawer}>
                     <MenuOpenIcon />
@@ -105,6 +124,7 @@ const Navbar: FC = () => {
                 <Typography variant='caption'>{focusedProject?.item?.city}</Typography>
                 <Typography variant='caption'>{focusedProject?.street?.name}</Typography>
             </Box>
+
             <Box sx={{
                 display: 'flex',
                 justifyContent: "flex-end",
@@ -112,10 +132,12 @@ const Navbar: FC = () => {
                 width: '100%',
                 paddingRight: '10px'
             }}>
-
+                <IconButton sx={{ mr: 3 }} onClick={() => location.reload()}>
+                    <RefreshIcon />
+                </IconButton>
                 {
                     currentUser ? (
-                        <Box onClick={() => handleSignOut()} sx={{
+                        <Box onClick={(e: MouseEvent<HTMLDivElement, globalThis.MouseEvent>) => handleClick(e)} sx={{
                             cursor: 'pointer'
                         }}>
                             <BackgroundLetterAvatars name={`${currentUser?.first_name}, ${currentUser?.last_name}`} />
@@ -125,6 +147,24 @@ const Navbar: FC = () => {
                         }} href="/login">LOGIN</Link>)
                 }
             </Box>
+            <Popover
+                open={anchorEl ? true : false}
+                anchorEl={anchorEl}
+                onClose={handleClose}
+                anchorOrigin={{
+                    vertical: 'bottom',
+                    horizontal: 'left',
+                }}
+            >
+                <Box sx={{ p: 2 }}>
+                    <FormControlLabel
+                        control={<IOSSwitch sx={{ m: 1 }} onChange={handleTooltipChange} checked={isTooltips} />}
+                        label="Detalii markeri"
+                    />
+                    <Divider sx={{ my: 0.5 }} />
+                    <Button fullWidth variant='contained' color='info' onClick={() => handleSignOut()}>LOGOUT</Button>
+                </Box>
+            </Popover>
         </Box >
     )
 }

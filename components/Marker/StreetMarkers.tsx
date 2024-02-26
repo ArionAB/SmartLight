@@ -10,7 +10,7 @@ import { divIcon } from 'leaflet'
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { deleteMarkerAction } from '@/utils/Store/Actions/MarkerActions'
-import { selectHasInternet, selectIsTooltipOpen } from '@/utils/Store/Selectors/miscSelectors'
+import { selectIsTooltipOpen } from '@/utils/Store/Selectors/miscSelectors'
 import { selectCurrentUser } from '@/utils/Store/Selectors/usersSelectors'
 
 export const StreetMarkers = () => {
@@ -22,7 +22,6 @@ export const StreetMarkers = () => {
     const focusedProject = useAppSelector(selectFocusedProject)
     const isTooltips = useAppSelector(selectIsTooltipOpen)
     const currentUser = useAppSelector(selectCurrentUser)
-    const hasInternet = useAppSelector(selectHasInternet)
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
@@ -34,14 +33,14 @@ export const StreetMarkers = () => {
 
 
 
-    const lampColor = (power_type: Enums<'power_type'>) => {
+    const lampColor = (power_type: Enums<'power_type'>, hub_c: boolean) => {
         switch (power_type) {
             case '30W':
-                return customLampIcon30
+                return customLampIcon30(hub_c)
             case '60W':
-                return customLampIcon60
+                return customLampIcon60(hub_c)
             case '80W':
-                return customLampIcon80
+                return customLampIcon80(hub_c)
             default: 'black'
         }
     }
@@ -54,19 +53,18 @@ export const StreetMarkers = () => {
                 return customPoleIconNoLamp
         }
     }
-
-    const lampHTML30 = renderToStaticMarkup(
-        <svg fill="#f44336" width="12px" height="12px" viewBox="0 0 32 32" style={{ border: "rgba(89,89,89,1) 1px solid", borderRadius: "50%" }}>
+    const lampHTML30 = (hub_c: boolean) => renderToStaticMarkup(
+        <svg fill="#f44336" width="12px" height="12px" viewBox="0 0 32 32" style={{ border: hub_c ? "#FFD700 2px solid" : "rgba(89,89,89,1) 1px solid", borderRadius: "50%" }}>
             <circle cx="16" cy="16" r="16" />
         </svg>
     );
-    const lampHTML60 = renderToStaticMarkup(
-        <svg fill="#4caf50" width="12px" height="12px" viewBox="0 0 32 32" style={{ border: "rgba(89,89,89,1) 1px solid", borderRadius: "50%" }}>
+    const lampHTML60 = (hub_c: boolean) => renderToStaticMarkup(
+        <svg fill="#4caf50" width="12px" height="12px" viewBox="0 0 32 32" style={{ border: hub_c ? "#FFD700 2px solid" : "rgba(89,89,89,1) 1px solid", borderRadius: "50%" }}>
             <circle cx="16" cy="16" r="16" />
         </svg>
     );
-    const lampHTML80 = renderToStaticMarkup(
-        <svg fill="#673ab7" width="12px" height="12px" viewBox="0 0 32 32" style={{ border: "rgba(89,89,89,1) 1px solid", borderRadius: "50%" }}>
+    const lampHTML80 = (hub_c: boolean) => renderToStaticMarkup(
+        <svg fill="#673ab7" width="12px" height="12px" viewBox="0 0 32 32" style={{ border: hub_c ? "#FFD700 2px solid" : "rgba(89,89,89,1) 1px solid", borderRadius: "50%" }}>
             <circle cx="16" cy="16" r="16" />
         </svg>
     );
@@ -93,20 +91,20 @@ export const StreetMarkers = () => {
 
     })
 
-    const customLampIcon30 = divIcon({
-        html: lampHTML30,
+    const customLampIcon30 = (hub_c: boolean) => divIcon({
+        html: lampHTML30(hub_c),
         iconSize: [0, 0],
 
     });
 
-    const customLampIcon60 = divIcon({
-        html: lampHTML60,
+    const customLampIcon60 = (hub_c: boolean) => divIcon({
+        html: lampHTML60(hub_c),
         iconSize: [0, 0],
 
     });
 
-    const customLampIcon80 = divIcon({
-        html: lampHTML80,
+    const customLampIcon80 = (hub_c: boolean) => divIcon({
+        html: lampHTML80(hub_c),
         iconSize: [0, 0],
 
     });
@@ -126,21 +124,6 @@ export const StreetMarkers = () => {
         setOpen(true),
             setSelectedMarker(marker)
     }
-    // const projects = () => {
-    //     const offlineProjects = localStorage.getItem('project')
-
-    //     if (hasInternet) {
-    //         return focusedProject
-    //     } else if (offlineProjects) {
-    //         const parsedProject = [JSON.parse(offlineProjects)]
-    //         return parsedProject.map((project) => {
-    //             ...projects,
-
-    //         })
-    //         return []
-    //     }
-    // }
-
 
     const anchor = Boolean(anchorEl)
     return (
@@ -152,7 +135,7 @@ export const StreetMarkers = () => {
                             key={marker.id}
                             position={[Number(marker.latitude), Number(marker.longitude)]}
                             //@ts-ignore
-                            icon={marker.marker_type === 'Lampa' ? lampColor(marker.power_type) : marker.marker_type === 'Stalp' ? poleColor(marker.lamp_type) : customSensorIcon}
+                            icon={marker.marker_type === 'Lampa' ? lampColor(marker.power_type, marker.hub_c) : marker.marker_type === 'Stalp' ? poleColor(marker.lamp_type) : customSensorIcon}
                         >
                             <Popup >
                                 <Box sx={{ display: 'flex', justifyContent: 'space-between' }} >
