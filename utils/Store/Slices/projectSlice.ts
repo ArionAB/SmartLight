@@ -81,7 +81,8 @@ const projectSlice = createSlice({
                 if (!state.focusedProject.street.markersArray) {
                     state.focusedProject.street.markersArray = [];
                 }
-
+                project.markers[0].count = project.markers[0].count + 1
+                street.markers[0].count = street.markers[0].count + 1
                 state.focusedProject.street.markersArray.push(action.payload);
             }
         },

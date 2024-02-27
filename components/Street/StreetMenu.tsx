@@ -11,6 +11,7 @@ import styled from '@emotion/styled';
 import { Delete } from '@mui/icons-material';
 import { useAppSelector } from '@/utils/Store/hooks';
 import { selectCurrentUser } from '@/utils/Store/Selectors/usersSelectors';
+import LampTable from './LampTable';
 
 const StyledMenu = styled((props: MenuProps) => (
     <Menu
@@ -130,6 +131,7 @@ const StreetMenu: FC<{ street: StreetModel }> = ({ street }) => {
             </StyledMenu>
             <Dialog fullScreen maxWidth="md" open={openTable} onClose={() => setOpenTable(false)}>
                 <StreetTable street={street} />
+                {/* <LampTable street={street} /> */}
                 <Box sx={{
                     margin: "1rem",
                     display: 'flex',

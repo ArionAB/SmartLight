@@ -168,7 +168,6 @@ const ProjectMenu: FC<{ project: ProjectModel }> = ({ project }) => {
 
             </StyledMenu>
             <Dialog fullScreen maxWidth="md" open={openTable} onClose={() => setOpenTable(false)}>
-                {/* <StreetTable street={street} /> */}
                 <Box sx={{
                     margin: "1rem",
                     display: 'flex',

@@ -3,7 +3,7 @@ import styled from '@emotion/styled';
 import { Table, TableBody, TableContainer, TableHead, TableRow, Paper, TableCell, tableCellClasses } from '@mui/material';
 import React, { useMemo, FC } from 'react'
 
-const StreetTable: FC<{
+const LampTable: FC<{
     street: StreetModel,
 }> = ({ street }) => {
 
@@ -19,14 +19,6 @@ const StreetTable: FC<{
     let counter = useMemo(() => {
         return street?.markersArray?.reduce((acc: any, obj) => {
             // Initialize the counts if they don't exist yet
-            if (obj.pole_type) {
-                if (!acc[obj.pole_type]) {
-                    acc[obj.pole_type] = { total: 0, 'Cu lampa': 0, 'Fara lampa': 0 };
-                }
-                // Increment the total count for this pole_type
-                acc[obj.pole_type].total++;
-            }
-
             if (obj.power_type) {
                 if (!acc[obj.power_type]) {
                     acc[obj.power_type] = { total: 0, '30W': 0, '60W': 0, '80W': 0 };
@@ -37,15 +29,16 @@ const StreetTable: FC<{
 
 
 
-            // Increment the count for the lamp_type if it matches
-            if (obj.lamp_type === 'Cu lampa') {
-                if (obj.pole_type) {
-                    acc[obj.pole_type]['Cu lampa']++;
+
+            // Increment the count for the power_type if it matches
+            if (obj.hub_c) {
+                if (obj.power_type) {
+                    acc[obj.power_type]['Hub-c']++;
                 }
-            } else if (obj.lamp_type === 'Fara lampa') {
+            } else if (!obj.hub_c) {
                 //@ts-ignore
-                if (obj.pole_type) {
-                    acc[obj.pole_type]['Fara lampa']++;
+                if (obj.power_type) {
+                    acc[obj.power_type]['Fara Hub-c']++;
 
                 }
             }
@@ -60,8 +53,8 @@ const StreetTable: FC<{
                 const item = {
                     name: key,
                     total: value['total'],
-                    lamp: value['Cu lampa'],
-                    noLamp: value['Fara lampa']
+                    lamp: value['Hub-c'],
+                    noLamp: value['Fara Hub-c']
                 };
                 return createData(item.name, Number(item.total), Number(item.lamp), Number(item.noLamp));
             });
@@ -154,4 +147,4 @@ const StreetTable: FC<{
     )
 }
 
-export default StreetTable
+export default LampTable
