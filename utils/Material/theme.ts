@@ -22,7 +22,8 @@ const theme = createTheme({
         },
         common: {
             white: '#fffcf7'
-        }
+        },
+
 
     },
 });

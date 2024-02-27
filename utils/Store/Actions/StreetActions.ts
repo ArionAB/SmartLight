@@ -36,6 +36,8 @@ let alreadyFetched: string[] = []
 export const getStreetAction = (proiect_id: string, filters?: StreetFiltersModel) => {
     return async (dispatch: any, getState: () => any) => {
         try {
+
+
             if (alreadyFetched.includes(proiect_id) && !filters) {
                 return
             }

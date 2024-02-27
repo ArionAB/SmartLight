@@ -155,7 +155,6 @@ export const deleteUserAction = (id: string) => {
                     severity: 'success',
                     message: `Userul a fost șters!`
                 }))
-                console.log(data[0])
                 dispatch(removeUser(data[0]))
                 return {
                     severity: 'success',

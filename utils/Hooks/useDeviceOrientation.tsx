@@ -17,10 +17,8 @@ export const useDeviceOrientation = (): UseDeviceOrientationData => {
     const [error, setError] = useState<Error | null>(null);
     const [orientation, setOrientation] = useState<DeviceOrientation | null>(null);
 
-    console.log('hookOrientation', orientation)
 
     const onDeviceOrientation = (event: DeviceOrientationEvent): void => {
-        console.log('event', event)
         setOrientation({
             alpha: event.alpha,
             beta: event.beta,

@@ -56,7 +56,7 @@ export const DrawerDialog = () => {
     const currentUser = useAppSelector(selectCurrentUser)
     const hasInternet = useAppSelector(selectHasInternet)
     useEffect(() => {
-        if (currentUser) {
+        if (currentUser && projectItems.length === 0) {
             dispatch(getProjectAction(currentUser))
         }
     }, [currentUser])
