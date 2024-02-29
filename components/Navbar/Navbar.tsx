@@ -20,9 +20,13 @@ import { addOfflineMarkers } from '@/utils/Store/Actions/MarkerActions';
 import BackgroundLetterAvatars from '../Material/StringAvatar';
 import { IOSSwitch } from '../Material/iOSSwitch';
 import RefreshIcon from '@mui/icons-material/Refresh';
+import SortIcon from '@mui/icons-material/Sort';
+import Filter from '../Filter/Filter';
 
 const Navbar: FC = () => {
     const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>(null);
+    const [filterAnchor, setFilterAnchor] = useState<HTMLButtonElement | null>(null);
+
 
     const router = useRouter()
     const dispatch = useAppDispatch()
@@ -88,6 +92,8 @@ const Navbar: FC = () => {
         setAnchorEl(event.currentTarget);
     };
 
+
+
     const handleClose = () => {
         setAnchorEl(null);
     };
@@ -95,7 +101,6 @@ const Navbar: FC = () => {
     const handleTooltipChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         dispatch(setTooltips(event.target.checked));
     };
-
 
     return (
         <Box sx={{
@@ -132,6 +137,10 @@ const Navbar: FC = () => {
                 width: '100%',
                 paddingRight: '10px'
             }}>
+                <IconButton color='inherit' onClick={(e: MouseEvent<HTMLButtonElement, globalThis.MouseEvent>) => setFilterAnchor(e.currentTarget)}>
+                    <SortIcon />
+                </IconButton>
+                <Filter anchor={filterAnchor} setFilterAnchor={setFilterAnchor} />
                 <IconButton sx={{ mr: 3 }} onClick={() => location.reload()}>
                     <RefreshIcon />
                 </IconButton>

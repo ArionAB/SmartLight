@@ -5,6 +5,11 @@ const initialState: miscState = {
     drawer: false,
     tooltips: false,
     hasInternet: true,
+    filters: {
+        pictures: 'all_pictures',
+        lamps: "all_lamps",
+        type: "both"
+    }
 };
 
 const miscSlice = createSlice({
@@ -19,10 +24,13 @@ const miscSlice = createSlice({
         },
         setHasInternet: (state, action) => {
             state.hasInternet = action.payload
+        },
+        setFilters: (state, action) => {
+            state.filters = action.payload
         }
     },
 });
 
-export const { setDrawer, setTooltips, setHasInternet } = miscSlice.actions;
+export const { setDrawer, setTooltips, setHasInternet, setFilters } = miscSlice.actions;
 
 export default miscSlice.reducer;

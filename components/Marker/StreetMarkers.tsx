@@ -2,7 +2,7 @@ import { Enums, Tables } from '@/utils/Store/Models/Database'
 import { selectFocusedProject } from '@/utils/Store/Selectors/projectSelectors'
 import { useAppDispatch, useAppSelector } from '@/utils/Store/hooks'
 import { Box, Button, Dialog, IconButton, Popover, Typography } from '@mui/material'
-import React, { useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { Marker, Popup, Tooltip } from 'react-leaflet'
 import { StreetMarkerDetails } from './StreetMarkerDetails'
 import { renderToStaticMarkup } from 'react-dom/server'
@@ -10,7 +10,7 @@ import { divIcon } from 'leaflet'
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { deleteMarkerAction } from '@/utils/Store/Actions/MarkerActions'
-import { selectIsTooltipOpen } from '@/utils/Store/Selectors/miscSelectors'
+import { selectFilters, selectIsTooltipOpen } from '@/utils/Store/Selectors/miscSelectors'
 import { selectCurrentUser } from '@/utils/Store/Selectors/usersSelectors'
 
 export const StreetMarkers = () => {
@@ -22,6 +22,7 @@ export const StreetMarkers = () => {
     const focusedProject = useAppSelector(selectFocusedProject)
     const isTooltips = useAppSelector(selectIsTooltipOpen)
     const currentUser = useAppSelector(selectCurrentUser)
+    const filters = useAppSelector(selectFilters)
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
@@ -126,10 +127,51 @@ export const StreetMarkers = () => {
     }
 
     const anchor = Boolean(anchorEl)
+
+    const filterMarkers = () => {
+        return focusedProject?.street?.markersArray.filter((marker) => {
+            // Filter based on pictures
+            if (
+                (filters.pictures === "with_pictures" && (!marker.images || marker.images.length === 0)) ||
+                (filters.pictures === "no_pictures" && marker.images && marker.images.length > 0)
+            ) {
+                return false;
+            }
+
+            // Filter based on lamps
+            if (
+                (filters.lamps === "with_lamps" && marker.lamp_type === 'Cu lampa') ||
+                (filters.lamps === "no_lamps" && marker.lamp_type === 'Fara lampa')
+            ) {
+                return false;
+            }
+
+            // Filter based on type
+            if (
+                (filters.type === "pole" && marker.marker_type !== 'Stalp') ||
+                (filters.type === "lamp" && marker.marker_type !== 'Lampa')
+            ) {
+                return false;
+            }
+
+            // If all conditions pass, include the marker in the filtered array
+            return true;
+        });
+    };
+
+    // Inside your useMemo:
+    let markers = useMemo(() => {
+        if (focusedProject && focusedProject.street) {
+            return filterMarkers();
+        } else {
+            return [];
+        }
+    }, [filters, focusedProject]);
+
     return (
         <>
             {
-                focusedProject?.street?.markersArray?.map((marker: Tables<'markers'>) => {
+                markers?.map((marker: Tables<'markers'>) => {
                     return (
                         <Marker
                             key={marker.id}
