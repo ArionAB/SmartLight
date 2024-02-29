@@ -129,7 +129,7 @@ export const StreetMarkers = () => {
     const anchor = Boolean(anchorEl)
 
     const filterMarkers = () => {
-        return focusedProject?.street?.markersArray.filter((marker) => {
+        return focusedProject?.street?.markersArray?.filter((marker) => {
             // Filter based on pictures
             if (
                 (filters.pictures === "with_pictures" && (!marker.images || marker.images.length === 0)) ||
