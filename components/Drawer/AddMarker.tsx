@@ -34,8 +34,8 @@ export const AddMarker: FC<{
             number: '',
             observatii: '',
             lamp_type: 'Cu lampa',
-            pole_type: '',
-            power_type: '',
+            pole_type: 'SE4',
+            power_type: '60W',
             sensor_type: '',
             hub_c: false,
         })
@@ -136,18 +136,18 @@ export const AddMarker: FC<{
 
             if (selectedMarker === 'Lampa') {
                 //@ts-ignore
-                markerData.power_type = marker.power_type
+                markerData.power_type = marker.power_type ?? '60W'
             }
             if (selectedMarker === 'Stalp') {
                 //@ts-ignore
-                markerData.lamp_type = marker.lamp_type
+                markerData.lamp_type = marker.lamp_type ?? 'Cu lampa'
                 //@ts-ignore
-                markerData.pole_type = marker.pole_type
+                markerData.pole_type = marker.pole_type ?? 'Lemn'
             }
 
             if (selectedMarker === 'Senzor') {
                 //@ts-ignore
-                markerData.sensor_type = marker.sensor_type
+                markerData.sensor_type = marker.sensor_type ?? 'Punct de aprindere'
             }
 
 

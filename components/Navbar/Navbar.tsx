@@ -14,7 +14,7 @@ import { setCurrentUser } from '@/utils/Store/Slices/usersSlice';
 import { getUserAction } from '@/utils/Store/Actions/UsersActions';
 import Link from 'next/link';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
-import { Database } from '@/utils/Store/Models/Database';
+import { Database, Tables } from '@/utils/Store/Models/Database';
 import { useRouter } from "next/navigation";
 import { addOfflineMarkers } from '@/utils/Store/Actions/MarkerActions';
 import BackgroundLetterAvatars from '../Material/StringAvatar';
@@ -67,8 +67,15 @@ const Navbar: FC = () => {
             parsedProject.forEach((project: any) => {
                 project.strazi.forEach((street: any) => {
                     if (street?.markersArray) {
-                        const offlineMarkers = street?.markersArray?.filter((marker: any) => !marker.id)
-                        markersArray = markersArray.concat(offlineMarkers)
+                        let offlineMarkers = street?.markersArray?.filter((marker: any) => !marker.id)
+                        let markersWithPole = offlineMarkers.map((item: Tables<'markers'>) => {
+                            return {
+                                ...item,
+                                //@ts-ignore
+                                pole_type: item.pole_type === "" ? 'Lemn' : item.pole_type
+                            }
+                        })
+                        markersArray = markersArray.concat(markersWithPole)
                     }
                 })
 
