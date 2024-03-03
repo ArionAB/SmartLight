@@ -16,6 +16,7 @@ import { selectCurrentUser } from '@/utils/Store/Selectors/usersSelectors'
 import { IOSSwitch } from '../Material/iOSSwitch'
 import { deleteFilesActions } from '@/utils/Store/Actions/FilesActions'
 import { selectFocusedProject } from '@/utils/Store/Selectors/projectSelectors'
+import { selectHasInternet } from '@/utils/Store/Selectors/miscSelectors'
 
 export const StreetMarkerDetails: FC<{
     marker: Tables<'markers'>,
@@ -39,6 +40,7 @@ export const StreetMarkerDetails: FC<{
     const dispatch = useAppDispatch();
     const currentUser = useAppSelector(selectCurrentUser)
     const focusedProject = useAppSelector(selectFocusedProject)
+    const hasInternet = useAppSelector(selectHasInternet)
 
     const handleChange = (event: SelectChangeEvent | React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setForm({ ...form, [event.target.name]: event.target.value });

@@ -44,6 +44,8 @@ export const DrawerDialog = () => {
     const [street, setStreet] = useState<StreetModel | null>(null)
     const [expanded, setExpanded] = React.useState<string | false>(false);
     const [search, setSearch] = useState<string>('')
+    const [moreInfo, setMoreInfo] = useState(false)
+
     const map = useMap();
 
 
@@ -177,7 +179,7 @@ export const DrawerDialog = () => {
                         if (item?.city?.toLowerCase().includes(search.toLowerCase())) {
                             return (
                                 <List key={item.id}>
-                                    <Accordion expanded={expanded === item.id} onChange={handleChange(item.id)} sx={selectedProject?.id === item.id ? { border: "2px solid #0052cc" } : {}}>
+                                    <Accordion expanded={expanded === item.id && !moreInfo} onChange={handleChange(item.id)} sx={selectedProject?.id === item.id ? { border: "2px solid #0052cc" } : {}}>
                                         <AccordionSummary
                                             expandIcon={<ArrowDownwardIcon />}
                                             aria-controls="panel1-content"
@@ -210,7 +212,7 @@ export const DrawerDialog = () => {
                                                     display: 'flex',
                                                     alignItems: 'center'
                                                 }}>
-                                                    <ProjectMenu project={item} />
+                                                    <ProjectMenu project={item} setMoreInfo={setMoreInfo} />
 
                                                 </Box>
                                             </Box>

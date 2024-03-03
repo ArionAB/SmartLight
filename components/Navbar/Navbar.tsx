@@ -125,7 +125,7 @@ const Navbar: FC = () => {
                 alignItems: 'center',
                 gap: '5px',
                 width: '100%',
-                minWidth: '250px'
+                minWidth: '200px'
             }}>
                 <IconButton onClick={handleToggleDrawer}>
                     <MenuOpenIcon />

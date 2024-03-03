@@ -1,5 +1,5 @@
 import { Box, IconButton, Menu, Dialog, Button, Stack, Paper, MenuList, MenuItem, Popper, Grow, ClickAwayListener, MenuProps, alpha, Divider } from '@mui/material'
-import React, { FC, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import EditIcon from '@mui/icons-material/Edit';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import styled from '@emotion/styled';
@@ -64,7 +64,7 @@ const StyledMenu = styled((props: MenuProps) => (
 
 
 
-const ProjectMenu: FC<{ project: ProjectModel }> = ({ project }) => {
+const ProjectMenu: FC<{ project: ProjectModel, setMoreInfo: Function }> = ({ project, setMoreInfo }) => {
     const [anchor, setAnchor] = useState<null | HTMLElement>(null);
     const [deleteDialog, setDeleteDialog] = useState<boolean>(false)
     const [openTable, setOpenTable] = useState(false)
@@ -75,6 +75,7 @@ const ProjectMenu: FC<{ project: ProjectModel }> = ({ project }) => {
     const dispatch = useAppDispatch()
 
     const handleOpenProjectMenu = (event: React.MouseEvent<HTMLElement>) => {
+
         setAnchor(event.currentTarget);
     }
 
@@ -94,9 +95,15 @@ const ProjectMenu: FC<{ project: ProjectModel }> = ({ project }) => {
         flyToLocation(map, lat, lng)
     }
 
+    useEffect(() => {
+        if (anchor) {
+            setMoreInfo(true)
+        } else setMoreInfo(false)
+    }, [anchor])
+
     return (
         <>
-            <IconButton color='info' onClick={handleOpenProjectMenu}>
+            <IconButton color='info' size='small' onClick={handleOpenProjectMenu}>
                 <MoreVertIcon />
             </IconButton>
             <Dialog open={openEditDialog} onClose={() => setOpenEditDialog(false)} >
