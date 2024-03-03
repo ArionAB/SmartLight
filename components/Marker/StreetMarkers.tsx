@@ -10,8 +10,12 @@ import { divIcon } from 'leaflet'
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { deleteMarkerAction } from '@/utils/Store/Actions/MarkerActions'
-import { selectFilters, selectIsTooltipOpen } from '@/utils/Store/Selectors/miscSelectors'
+import { selectFilters, selectHasInternet, selectIsTooltipOpen } from '@/utils/Store/Selectors/miscSelectors'
 import { selectCurrentUser } from '@/utils/Store/Selectors/usersSelectors'
+import { deleteMarker, deleteOfflineMarker } from '@/utils/Store/Slices/projectSlice'
+import { addAppNotification } from '@/utils/Store/Slices/appNotificationSlice'
+import { ProjectModel } from '@/utils/Store/Models/Project/ProjectModel'
+import { StreetModel } from '@/utils/Store/Models/Street/StreetModel'
 
 export const StreetMarkers = () => {
     const [selectedMarker, setSelectedMarker] = useState<Tables<'markers'>>(null!)
@@ -23,6 +27,7 @@ export const StreetMarkers = () => {
     const isTooltips = useAppSelector(selectIsTooltipOpen)
     const currentUser = useAppSelector(selectCurrentUser)
     const filters = useAppSelector(selectFilters)
+    const hasInternet = useAppSelector(selectHasInternet)
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
@@ -31,6 +36,33 @@ export const StreetMarkers = () => {
     const handleClose = () => {
         setAnchorEl(null);
     };
+
+    const handleDeleteMarker = (marker: Tables<'markers'>) => {
+        if (hasInternet) {
+            dispatch(deleteMarkerAction(marker)).then(() => {
+                setAnchorEl(null)
+            })
+        } else {
+            const offlineProject = localStorage.getItem('project')
+            if (offlineProject) {
+
+                let project: ProjectModel = JSON.parse(offlineProject)
+                let street: StreetModel | undefined = project.strazi.find((street: StreetModel) => street.id === marker.street_id)
+                const markerIndex = street?.markersArray.findIndex((item) => item.number === marker.number);
+                if (markerIndex !== -1) {
+                    street!.markersArray.splice(markerIndex!, 1);
+                    street!.markers[0].count--
+                }
+                localStorage.setItem('project', JSON.stringify(project))
+                dispatch(deleteOfflineMarker(marker))
+                setTimeout(() => {
+                    setAnchorEl(null)
+                }, 500)
+
+            }
+
+        }
+    }
 
 
 
@@ -211,9 +243,7 @@ export const StreetMarkers = () => {
                                         }}>
                                             <Button variant='outlined' onClick={() => setAnchorEl(null)}>Anuleaza</Button>
                                             <Button variant='contained' color='error' onClick={() => {
-                                                dispatch(deleteMarkerAction(marker)).then(() => {
-                                                    setAnchorEl(null)
-                                                })
+                                                handleDeleteMarker(marker)
                                             }}>Da</Button>
                                         </Box>
 

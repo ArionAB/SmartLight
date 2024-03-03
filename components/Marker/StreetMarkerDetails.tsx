@@ -17,6 +17,9 @@ import { IOSSwitch } from '../Material/iOSSwitch'
 import { deleteFilesActions } from '@/utils/Store/Actions/FilesActions'
 import { selectFocusedProject } from '@/utils/Store/Selectors/projectSelectors'
 import { selectHasInternet } from '@/utils/Store/Selectors/miscSelectors'
+import { ProjectModel } from '@/utils/Store/Models/Project/ProjectModel'
+import { StreetModel } from '@/utils/Store/Models/Street/StreetModel'
+import { updateOfflineMarker } from '@/utils/Store/Slices/projectSlice'
 
 export const StreetMarkerDetails: FC<{
     marker: Tables<'markers'>,
@@ -100,6 +103,35 @@ export const StreetMarkerDetails: FC<{
 
 
     }
+
+    const handleOfflineSave = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+        const offlineProject = localStorage.getItem('project')
+        if (offlineProject) {
+
+            let project: ProjectModel = JSON.parse(offlineProject)
+            let street: StreetModel | undefined = project.strazi.find((street: StreetModel) => street.id === marker.street_id)
+            const markerIndex = street!.markersArray.findIndex((item) => item.number === marker.number);
+            if (markerIndex !== -1) {
+                let markerData = {
+                    ...form,
+                    marker_status: 'Ok',
+                    marker_type: marker.marker_type,
+                    number: marker.number,
+                    street_id: marker.street_id,
+                    proiect_id: marker.proiect_id
+                }
+
+                street!.markersArray[markerIndex] = markerData
+                dispatch(updateOfflineMarker(markerData))
+            }
+            localStorage.setItem('project', JSON.stringify(project))
+            setTimeout(() => {
+                setOpen(false)
+            }, 500)
+        }
+    }
+
     const handleRemoveImage = (urlToRemove: string) => {
         setDeletedImages(deletedImages.concat(urlToRemove))
         const images = form.images!.filter((url: string) => url !== urlToRemove)
@@ -109,7 +141,7 @@ export const StreetMarkerDetails: FC<{
 
     return (
         <Container max-width='1200' >
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={hasInternet ? handleSubmit : handleOfflineSave}>
                 <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: "space-between", alignItems: 'center' }}>
                     <DialogTitle sx={{
                         display: 'flex',
@@ -250,7 +282,7 @@ export const StreetMarkerDetails: FC<{
 
                     }}>
                         {
-                            marker?.images && marker?.images?.length > 0 ? (
+                            hasInternet && marker?.images && marker?.images?.length > 0 ? (
                                 marker.images?.map((image, index) => {
                                     return (
                                         <Box sx={{

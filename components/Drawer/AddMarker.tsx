@@ -159,30 +159,45 @@ export const AddMarker: FC<{
             } else {
                 const offlineProjects = localStorage.getItem('project')
                 if (offlineProjects) {
-                    try {
-                        const project: ProjectModel = JSON.parse(offlineProjects)
-                        const street: StreetModel | undefined = project.strazi.find((street: StreetModel) => street.id === markerData.street_id)
+                    // try {
+                    const project: ProjectModel = JSON.parse(offlineProjects)
+
+                    if (project.strazi && project.strazi.length > 0) {
+                        const street: StreetModel | undefined = project.strazi.find((street: StreetModel) => street.id === markerData.street_id);
                         if (street) {
                             if (!street.markersArray) {
                                 street.markersArray = [];
                             }
-                            let markerNumber = 1
 
-                            if (!street?.markersArray?.length) {
-                                markerNumber = 1
+                            let markerNumber = 1;
+
+                            if (!street.markersArray.length) {
+                                markerNumber = 1;
                             } else {
-                                let lastMarker = { ...street.markersArray[street.markersArray?.length - 1] }
-                                const increment = Number(lastMarker.number!) + 1
-                                markerNumber = increment
+                                let lastMarker = { ...street.markersArray[street.markersArray.length - 1] };
+                                const increment = Number(lastMarker.number!) + 1;
+                                markerNumber = increment;
                             }
 
-                            markerData.number = markerNumber
+                            markerData.number = markerNumber;
 
                             //@ts-ignore
                             street.markersArray.push(markerData);
-                            street.markers[0].count = street.markersArray.length + 1
-                            project.markers[0].count = street.markersArray.length + 1
+
+                            if (!street.markers || Number(street.markers.length) === 0) {
+                                street.markers = [{ count: 0 }];
+                            } else {
+                                street.markers[0].count++;
+                            }
+
+                            if (!project.markers || Number(project.markers.length) === 0) {
+                                project.markers = [{ count: 0 }];
+                            } else {
+                                project.markers[0].count++;
+                            }
+
                             dispatch(dispatchMarker(markerData))
+
                         }
                         localStorage.setItem('project', JSON.stringify(project))
                         dispatch(addAppNotification({
@@ -191,12 +206,14 @@ export const AddMarker: FC<{
                         }))
                         setLoading(false),
                             setOpen(false)
-                    } catch (error) {
-                        dispatch(addAppNotification({
-                            severity: 'error',
-                            message: `eroare adaugare marker (${error})`
-                        }))
                     }
+                    // } catch (error) {
+                    //     console.log(error)
+                    //     dispatch(addAppNotification({
+                    //         severity: 'error',
+                    //         message: `eroare adaugare marker (${error})`
+                    //     }))
+                    // }
                 }
 
             }

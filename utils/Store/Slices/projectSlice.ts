@@ -81,8 +81,14 @@ const projectSlice = createSlice({
                 if (!state.focusedProject.street.markersArray) {
                     state.focusedProject.street.markersArray = [];
                 }
-                project.markers[0].count = project.markers[0].count + 1
-                street.markers[0].count = street.markers[0].count + 1
+
+                if (!project.markers) {
+                    project.markers = [{ count: 0 }]
+                } else project.markers[0].count++
+
+                if (!street.markers) {
+                    street.markers = [{ count: 0 }]
+                } else street.markers[0].count++
                 state.focusedProject.street.markersArray.push(action.payload);
             }
         },
@@ -95,10 +101,28 @@ const projectSlice = createSlice({
                 state.focusedProject.street.markersArray[markerIndex!] = action.payload;
             }
         },
+        updateOfflineMarker: (state, action) => {
+            const project: ProjectModel = state.projects.find((project: ProjectModel) => project.id === action.payload.proiect_id);
+            const street = project.strazi.find((street) => street.id === action.payload.street_id);
+            const markerIndex = street?.markersArray.findIndex((marker) => marker.number === action.payload.number);
+            if (markerIndex !== -1) {
+                street!.markersArray[markerIndex!] = action.payload;
+                state.focusedProject.street.markersArray[markerIndex!] = action.payload;
+            }
+        },
         deleteMarker: (state, action) => {
             const project: ProjectModel = state.projects.find((project: ProjectModel) => project.id === action.payload.proiect_id);
             const street = project.strazi.find((street) => street.id === action.payload.street_id);
             const markerIndex = street?.markersArray.findIndex((marker) => marker.id === action.payload.id);
+            if (markerIndex !== -1) {
+                street!.markersArray.splice(markerIndex!, 1);
+                state.focusedProject.street.markersArray.splice(markerIndex!, 1)
+            }
+        },
+        deleteOfflineMarker: (state, action) => {
+            const project: ProjectModel = state.projects.find((project: ProjectModel) => project.id === action.payload.proiect_id);
+            const street = project.strazi.find((street) => street.id === action.payload.street_id);
+            const markerIndex = street?.markersArray.findIndex((marker) => marker.number === action.payload.number);
             if (markerIndex !== -1) {
                 street!.markersArray.splice(markerIndex!, 1);
                 state.focusedProject.street.markersArray.splice(markerIndex!, 1)
@@ -134,6 +158,6 @@ const projectSlice = createSlice({
     },
 });
 
-export const { setProjectItems, setStreetItems, setStreet, setFocusedProject, setMarker, updateMarker, deleteMarker, updateStreet, deleteStreet, updateProject, deleteProject, setMarkersItems, setProjectsLoading, setStreetsLoading, setMarkersLoading } = projectSlice.actions;
+export const { setProjectItems, setStreetItems, setStreet, setFocusedProject, setMarker, updateMarker, deleteMarker, updateStreet, deleteStreet, updateProject, deleteProject, setMarkersItems, setProjectsLoading, setStreetsLoading, setMarkersLoading, deleteOfflineMarker, updateOfflineMarker } = projectSlice.actions;
 
 export default projectSlice.reducer;
