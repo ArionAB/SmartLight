@@ -131,7 +131,7 @@ const Navbar: FC = () => {
                     <MenuOpenIcon />
                 </IconButton>
                 <FolderIcon sx={{
-                    color: '#F8D775'
+                    color: focusedProject?.item?.project_type === 'Lampi' ? "#CC5500" : '#F8D775'
                 }} />
                 <Typography variant='caption'>{focusedProject?.item?.city}</Typography>
                 <Typography variant='caption'>{focusedProject?.street?.name}</Typography>
