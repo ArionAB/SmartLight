@@ -203,7 +203,7 @@ export const DrawerDialog = () => {
                                                         horizontal: 'left',
                                                     }}>
                                                         <FolderIcon sx={{
-                                                            color: '#F8D775'
+                                                            color: item.project_type === 'Stalpi' ? '#F8D775' : '#CC5500'
                                                         }} />
                                                     </Badge>
                                                     <Typography variant='caption'>[{item?.county}] {item?.city}</Typography>
