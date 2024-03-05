@@ -151,7 +151,9 @@ const FileUploadComponent: FC<FileUploadProps> = ({
                                     <Typography
                                         variant="h6"
                                         textAlign="center"
-                                        sx={{ fontSize: fontSize }}
+                                        sx={{
+                                            fontSize: fontSize,
+                                        }}
                                     >
                                         {fileUploadText ??
                                             "Adaugati poze cu drag and drop sau dati click aici"}
@@ -165,6 +167,9 @@ const FileUploadComponent: FC<FileUploadProps> = ({
                         {files.map((file, index) => (
                             <Box sx={{ padding: "3px" }} key={`file-key-${index}`}>
                                 <Chip
+                                    sx={{
+                                        maxWidth: "250px"
+                                    }}
                                     label={
                                         showSize
                                             ? file.name +
