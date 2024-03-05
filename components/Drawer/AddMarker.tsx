@@ -1,7 +1,7 @@
 import { Enums, TablesInsert } from '@/utils/Store/Models/Database'
 import { selectFocusedProject } from '@/utils/Store/Selectors/projectSelectors'
 import { useAppDispatch, useAppSelector } from '@/utils/Store/hooks'
-import { Button, ButtonGroup, Container, DialogTitle, FormControl, FormControlLabel, FormGroup, InputLabel, MenuItem, Select, SelectChangeEvent, TextField, Typography } from '@mui/material'
+import { Button, ButtonGroup, CircularProgress, Container, DialogTitle, FormControl, FormControlLabel, FormGroup, InputLabel, MenuItem, Select, SelectChangeEvent, TextField, Typography } from '@mui/material'
 import React, { FC, useState } from 'react'
 import FileUploadComponent from '../FileUpload/FileUploadComponent'
 import supabase from '@/utils/supabase/createClient'
@@ -345,10 +345,12 @@ export const AddMarker: FC<{
                         <ButtonGroup sx={{
                             display: 'flex',
                             justifyContent: 'space-around',
-                            margin: "1rem"
+                            margin: "1rem",
                         }}>
                             <Button variant='outlined' onClick={() => setOpen(false)}>Anuleaza</Button>
-                            <Button disabled={loading} type="submit" variant='contained' color="success">Adauga</Button>
+                            {loading ? <CircularProgress sx={{
+                                color: "rgba(0, 0, 0, 0.26)"
+                            }} /> : <Button type="submit" variant='contained' color="success">Adauga</Button>}
                         </ButtonGroup>
                     </FormGroup>
                 </form>
