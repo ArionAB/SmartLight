@@ -2,8 +2,7 @@ import { Tables, TablesUpdate } from '@/utils/Store/Models/Database'
 import { lampItems } from '@/utils/Store/items/lampItems'
 import { poleTypeItems } from '@/utils/Store/items/poleTypeItems'
 import { getImage } from '@/utils/supabase/getImage'
-import styled from '@emotion/styled'
-import { Box, Container, DialogTitle, FormControl, Grid, InputLabel, Select, SelectChangeEvent, Typography, MenuItem, Switch, SwitchProps, TextField, Button, IconButton, FormControlLabel, } from '@mui/material'
+import { Box, Container, DialogTitle, FormControl, Grid, InputLabel, Select, SelectChangeEvent, Typography, MenuItem, Switch, SwitchProps, TextField, Button, IconButton, FormControlLabel, FilledInput, InputAdornment, } from '@mui/material'
 import Image from 'next/image'
 import React, { FC, useState } from 'react'
 import FileUploadComponent from '../FileUpload/FileUploadComponent'
@@ -20,6 +19,7 @@ import { selectHasInternet } from '@/utils/Store/Selectors/miscSelectors'
 import { ProjectModel } from '@/utils/Store/Models/Project/ProjectModel'
 import { StreetModel } from '@/utils/Store/Models/Street/StreetModel'
 import { updateOfflineMarker } from '@/utils/Store/Slices/projectSlice'
+import EditIcon from '@mui/icons-material/Edit';
 
 export const StreetMarkerDetails: FC<{
     marker: Tables<'markers'>,
@@ -39,6 +39,11 @@ export const StreetMarkerDetails: FC<{
     const [uploadedFiles, setUploadedFiles] = useState<File[]>([])
     const [loading, setLoading] = useState(false)
     const [deletedImages, setDeletedImages] = useState<string[]>([])
+    const [disabled, setDisabled] = useState({
+        latitude: true,
+        longitude: true,
+        observatii: true
+    })
 
     const dispatch = useAppDispatch();
     const currentUser = useAppSelector(selectCurrentUser)
@@ -161,11 +166,25 @@ export const StreetMarkerDetails: FC<{
                         <TextField
                             fullWidth
                             value={form.latitude ?? ''}
+                            disabled={disabled.latitude}
                             name="latitude"
                             label="Latitudine"
                             onChange={handleChange}
-                        />
 
+                            InputProps={{
+                                endAdornment: (
+                                    <InputAdornment position="end">
+                                        <IconButton
+                                            color='warning'
+                                            onClick={() => setDisabled({ ...disabled, latitude: !disabled.latitude })}
+                                        >
+                                            <EditIcon />
+                                        </IconButton>
+                                    </InputAdornment>
+                                ),
+                            }}
+
+                        />
                     </Grid>
                     <Grid item xs={12} sm={6} sx={{ display: 'flex', gap: '10px' }}>
                         <TextField
@@ -174,6 +193,19 @@ export const StreetMarkerDetails: FC<{
                             name="longitude"
                             label="Longitudine"
                             onChange={handleChange}
+                            disabled={disabled.longitude}
+                            InputProps={{
+                                endAdornment: (
+                                    <InputAdornment position="end">
+                                        <IconButton
+                                            color='warning'
+                                            onClick={() => setDisabled({ ...disabled, longitude: !disabled.longitude })}
+                                        >
+                                            <EditIcon />
+                                        </IconButton>
+                                    </InputAdornment>
+                                ),
+                            }}
                         />
                     </Grid>
 
@@ -272,6 +304,19 @@ export const StreetMarkerDetails: FC<{
                             fullWidth
                             value={form.observatii ?? ''}
                             name="observatii"
+                            disabled={disabled.observatii}
+                            InputProps={{
+                                endAdornment: (
+                                    <InputAdornment position="end">
+                                        <IconButton
+                                            color='warning'
+                                            onClick={() => setDisabled({ ...disabled, observatii: !disabled.observatii })}
+                                        >
+                                            <EditIcon />
+                                        </IconButton>
+                                    </InputAdornment>
+                                ),
+                            }}
                             onChange={(e) => handleChange(e)}
                         />
                     </Grid>
