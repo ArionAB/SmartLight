@@ -10,5 +10,6 @@ export const poleTypeItems = [
     'Metal h6',
     'Metal h8',
     'Lampadar beton',
-    'Lemn'
+    'Lemn',
+    'Panou solar'
 ]

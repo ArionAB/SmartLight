@@ -2,7 +2,7 @@ import { Tables, TablesUpdate } from '@/utils/Store/Models/Database'
 import { lampItems } from '@/utils/Store/items/lampItems'
 import { poleTypeItems } from '@/utils/Store/items/poleTypeItems'
 import { getImage } from '@/utils/supabase/getImage'
-import { Box, Container, DialogTitle, FormControl, Grid, InputLabel, Select, SelectChangeEvent, Typography, MenuItem, Switch, SwitchProps, TextField, Button, IconButton, FormControlLabel, FilledInput, InputAdornment, } from '@mui/material'
+import { Box, Container, DialogTitle, FormControl, Grid, InputLabel, Select, SelectChangeEvent, Typography, MenuItem, Switch, SwitchProps, TextField, Button, IconButton, FormControlLabel, FilledInput, InputAdornment, Dialog, } from '@mui/material'
 import Image from 'next/image'
 import React, { FC, useState } from 'react'
 import FileUploadComponent from '../FileUpload/FileUploadComponent'
@@ -36,6 +36,8 @@ export const StreetMarkerDetails: FC<{
         power_type: marker.power_type,
         hub_c: marker.hub_c
     })
+
+    const [url, setUrl] = useState<string>('')
     const [uploadedFiles, setUploadedFiles] = useState<File[]>([])
     const [loading, setLoading] = useState(false)
     const [deletedImages, setDeletedImages] = useState<string[]>([])
@@ -44,6 +46,7 @@ export const StreetMarkerDetails: FC<{
         longitude: true,
         observatii: true
     })
+    const [imageDialog, setImageDialog] = useState<boolean>(false)
 
     const dispatch = useAppDispatch();
     const currentUser = useAppSelector(selectCurrentUser)
@@ -143,9 +146,37 @@ export const StreetMarkerDetails: FC<{
         setForm({ ...form, images: images })
     }
 
+    const handleDisplayImage = (image: string) => {
+        setUrl(getImage(image))
+        setImageDialog(true)
+    }
+
 
     return (
         <Container max-width='1200' >
+            <Dialog open={imageDialog} onClose={() => setImageDialog(false)} fullScreen>
+                <Box sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    gap: '1rem'
+                }}>
+                </Box>
+                <Box sx={{
+                    height: "90dvh"
+                }}>
+                    <Image src={url}
+                        alt={url}
+                        objectFit="contain"
+                        placeholder='blur'
+                        quality="100"
+                        layout="fill"
+                        blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxwYXRoIGQ9Ik0xMDAgMjAwQzE1NS4yMjkgMjAwIDIwMCAxNTUuMjI5IDIwMCAxMDBDMjAwIDQ0Ljc3MSAxNTUuMjI5IDAgMTAwIDBDMzQuNzcxIDAgMCA0NC43NzEgMCAxMDBDMCAxNTUuMjI5IDQ0Ljc3MSAyMDAgMTAwIDIwMFoiIGZpbGw9IiNDNkM2QzYiLz4KPC9zdmc+Cg=="
+                    />
+                </Box>
+
+                <Button variant="contained" sx={{ minWidth: 200, maxWidth: "500px", margin: "0 auto" }} onClick={() => setImageDialog(false)}>Închide</Button>
+            </Dialog>
             <form onSubmit={hasInternet ? handleSubmit : handleOfflineSave}>
                 <Box sx={{ display: 'flex', flexDirection: 'column', justifyContent: "space-between", alignItems: 'center' }}>
                     <DialogTitle sx={{
@@ -332,6 +363,7 @@ export const StreetMarkerDetails: FC<{
                                     return (
                                         <Box sx={{
                                             position: 'relative',
+                                            cursor: 'pointer',
                                             display: form.images.includes(image) ? 'flex' : 'none'
                                         }}>
                                             <Image src={getImage(image)}
@@ -341,6 +373,7 @@ export const StreetMarkerDetails: FC<{
                                                 height={300}
                                                 objectFit="contain"
                                                 placeholder='blur'
+                                                onClick={() => handleDisplayImage(image)}
                                                 blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxwYXRoIGQ9Ik0xMDAgMjAwQzE1NS4yMjkgMjAwIDIwMCAxNTUuMjI5IDIwMCAxMDBDMjAwIDQ0Ljc3MSAxNTUuMjI5IDAgMTAwIDBDMzQuNzcxIDAgMCA0NC43NzEgMCAxMDBDMCAxNTUuMjI5IDQ0Ljc3MSAyMDAgMTAwIDIwMFoiIGZpbGw9IiNDNkM2QzYiLz4KPC9zdmc+Cg=="
                                             />
 
