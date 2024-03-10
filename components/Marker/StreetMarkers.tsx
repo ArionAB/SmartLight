@@ -186,6 +186,13 @@ export const StreetMarkers = () => {
                 return false;
             }
 
+            if (
+                (filters.observatii === 'with' && !marker.observatii) ||
+                (filters.observatii === 'no' && marker.observatii)
+            ) {
+                return false;
+            }
+
             // If all conditions pass, include the marker in the filtered array
             return true;
         });

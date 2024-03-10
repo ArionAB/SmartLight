@@ -68,6 +68,20 @@ const Filter: FC<{ anchor: Element | null, setFilterAnchor: Function }> = ({ anc
                 </RadioGroup>
             </FormControl>
             <Divider></Divider>
+            <FormControl sx={{
+                padding: "1rem"
+            }}>
+                <FormLabel >Observații</FormLabel>
+                <RadioGroup
+                    value={filters.observatii}
+                    name="observatii"
+                    onChange={(e) => handleChange(e)}
+                >
+                    <FormControlLabel value="with" control={<Radio />} label="Cu observații" />
+                    <FormControlLabel value="no" control={<Radio />} label="Fără observații" />
+                    <FormControlLabel value="both" control={<Radio />} label="Toate" />
+                </RadioGroup>
+            </FormControl>
 
 
         </Menu>

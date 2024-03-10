@@ -8,7 +8,8 @@ const initialState: miscState = {
     filters: {
         pictures: 'all_pictures',
         lamps: "all_lamps",
-        type: "both"
+        type: "both",
+        observatii: 'both'
     }
 };
 
