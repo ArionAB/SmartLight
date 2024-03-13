@@ -28,6 +28,7 @@ export const AddOrEditProject: FC<{
     project?: ProjectModel
 }> = ({ setOpenAddMarker, project }) => {
     const [name, setName] = useState<string>(project?.name ?? '')
+    const [info, setInfo] = useState<string>(project?.info ?? '')
     const [loading, setLoading] = useState(false)
     const [counties, setCounties] = useState<CountyModel[]>([])
     const [cities, setCities] = useState<LocalityModel[]>([])
@@ -48,7 +49,8 @@ export const AddOrEditProject: FC<{
                 lat: Number(selectedCity?.lat),
                 project_type: projectType,
                 county: selectedCounty!.auto,
-                city: selectedCity!.nume
+                city: selectedCity!.nume,
+                info: info
             })).then(() => {
                 setLoading(false)
                 setOpenAddMarker(false)
@@ -61,7 +63,8 @@ export const AddOrEditProject: FC<{
                 lat: Number(selectedCity!.lat),
                 project_type: projectType,
                 county: selectedCounty?.auto,
-                city: selectedCity?.nume
+                city: selectedCity?.nume,
+                info: info
             })).then((res) => {
                 if (res?.severity === 'success') {
                     const usersWithProject: TablesInsert<'users_projects'>[] = usersArray.map((chip: UserChip) => {
@@ -70,7 +73,6 @@ export const AddOrEditProject: FC<{
                             project_id: project.id
                         }
                     })
-
                     dispatch(assignUsersToProjectAction(usersWithProject, project))
                     setLoading(false)
                     setOpenAddMarker(false)
@@ -178,6 +180,7 @@ export const AddOrEditProject: FC<{
                 getOptionKey={(option) => option.id}
                 renderInput={(params) => <TextField {...params} label="Oraș" />}
             />
+            <TextField value={info} onChange={(e) => setInfo(e.target.value)} label='Info' />
             {project && (
                 <>
                     <Typography>Lista access:</Typography>

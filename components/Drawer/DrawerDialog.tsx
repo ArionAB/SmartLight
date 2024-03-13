@@ -206,7 +206,7 @@ export const DrawerDialog = () => {
                                                             color: item.project_type === 'Stalpi' ? '#F8D775' : '#CC5500'
                                                         }} />
                                                     </Badge>
-                                                    <Typography variant='caption'>[{item?.county}] {item?.city}</Typography>
+                                                    <Typography variant='caption'>[{item?.county}] {item?.city} <Box component={'span'} sx={{ fontSize: '10px' }}>{item?.info}</Box></Typography>
                                                 </Box>
                                                 <Box sx={{
                                                     display: 'flex',

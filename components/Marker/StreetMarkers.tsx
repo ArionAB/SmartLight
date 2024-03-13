@@ -12,8 +12,7 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { deleteMarkerAction } from '@/utils/Store/Actions/MarkerActions'
 import { selectFilters, selectHasInternet, selectIsTooltipOpen } from '@/utils/Store/Selectors/miscSelectors'
 import { selectCurrentUser } from '@/utils/Store/Selectors/usersSelectors'
-import { deleteMarker, deleteOfflineMarker } from '@/utils/Store/Slices/projectSlice'
-import { addAppNotification } from '@/utils/Store/Slices/appNotificationSlice'
+import { deleteOfflineMarker } from '@/utils/Store/Slices/projectSlice'
 import { ProjectModel } from '@/utils/Store/Models/Project/ProjectModel'
 import { StreetModel } from '@/utils/Store/Models/Street/StreetModel'
 
@@ -66,17 +65,19 @@ export const StreetMarkers = () => {
 
 
 
-    const lampColor = (power_type: Enums<'power_type'>, hub_c: boolean) => {
-        switch (power_type) {
+    const lampColor = (marker: Tables<'markers'>) => {
+        console.log(marker)
+        switch (marker.power_type) {
             case '30W':
-                return customLampIcon30(hub_c)
+                return customLampIcon30(marker)
             case '60W':
-                return customLampIcon60(hub_c)
+                return customLampIcon60(marker)
             case '80W':
-                return customLampIcon80(hub_c)
+                return customLampIcon80(marker)
             default: 'black'
         }
     }
+
 
     const poleColor = (lamp_type: Enums<'lamp_type'>) => {
         switch (lamp_type) {
@@ -86,18 +87,18 @@ export const StreetMarkers = () => {
                 return customPoleIconNoLamp
         }
     }
-    const lampHTML30 = (hub_c: boolean) => renderToStaticMarkup(
-        <svg fill="#f44336" width="12px" height="12px" viewBox="0 0 32 32" style={{ border: hub_c ? "#FFD700 2px solid" : "rgba(89,89,89,1) 1px solid", borderRadius: "50%" }}>
+    const lampHTML30 = (marker: Tables<'markers'>) => renderToStaticMarkup(
+        <svg fill='#42a5f5' width="12px" height="12px" viewBox="0 0 32 32" style={{ border: marker.hub_c ? "#FFD700 2px solid" : marker.marker_status === 'Bad' ? '#c62828 2px solid' : "rgba(89,89,89,1) 1px solid", borderRadius: "50%" }}>
             <circle cx="16" cy="16" r="16" />
         </svg>
     );
-    const lampHTML60 = (hub_c: boolean) => renderToStaticMarkup(
-        <svg fill="#4caf50" width="12px" height="12px" viewBox="0 0 32 32" style={{ border: hub_c ? "#FFD700 2px solid" : "rgba(89,89,89,1) 1px solid", borderRadius: "50%" }}>
+    const lampHTML60 = (marker: Tables<'markers'>) => renderToStaticMarkup(
+        < svg fill='#4caf50' width="12px" height="12px" viewBox="0 0 32 32" style={{ border: marker.hub_c ? "#FFD700 2px solid" : marker.marker_status === 'Bad' ? '#c62828 2px solid' : "rgba(89,89,89,1) 1px solid", borderRadius: "50%" }}>
             <circle cx="16" cy="16" r="16" />
-        </svg>
+        </svg >
     );
-    const lampHTML80 = (hub_c: boolean) => renderToStaticMarkup(
-        <svg fill="#673ab7" width="12px" height="12px" viewBox="0 0 32 32" style={{ border: hub_c ? "#FFD700 2px solid" : "rgba(89,89,89,1) 1px solid", borderRadius: "50%" }}>
+    const lampHTML80 = (marker: Tables<'markers'>) => renderToStaticMarkup(
+        <svg fill="#673ab7" width="12px" height="12px" viewBox="0 0 32 32" style={{ border: marker.hub_c ? "#FFD700 2px solid" : marker.marker_status === 'Bad' ? '#c62828 2px solid' : "rgba(89,89,89,1) 1px solid", borderRadius: "50%" }}>
             <circle cx="16" cy="16" r="16" />
         </svg>
     );
@@ -124,20 +125,20 @@ export const StreetMarkers = () => {
 
     })
 
-    const customLampIcon30 = (hub_c: boolean) => divIcon({
-        html: lampHTML30(hub_c),
+    const customLampIcon30 = (marker: Tables<'markers'>) => divIcon({
+        html: lampHTML30(marker),
         iconSize: [0, 0],
 
     });
 
-    const customLampIcon60 = (hub_c: boolean) => divIcon({
-        html: lampHTML60(hub_c),
+    const customLampIcon60 = (marker: Tables<'markers'>) => divIcon({
+        html: lampHTML60(marker),
         iconSize: [0, 0],
 
     });
 
-    const customLampIcon80 = (hub_c: boolean) => divIcon({
-        html: lampHTML80(hub_c),
+    const customLampIcon80 = (marker: Tables<'markers'>) => divIcon({
+        html: lampHTML80(marker),
         iconSize: [0, 0],
 
     });
@@ -216,7 +217,7 @@ export const StreetMarkers = () => {
                             key={marker.id}
                             position={[Number(marker.latitude), Number(marker.longitude)]}
                             //@ts-ignore
-                            icon={marker.marker_type === 'Lampa' ? lampColor(marker.power_type, marker.hub_c) : marker.marker_type === 'Stalp' ? poleColor(marker.lamp_type) : customSensorIcon}
+                            icon={marker.marker_type === 'Lampa' ? lampColor(marker) : marker.marker_type === 'Stalp' ? poleColor(marker.lamp_type) : customSensorIcon}
                         >
                             <Popup >
                                 <Box sx={{ display: 'flex', justifyContent: 'space-between' }} >

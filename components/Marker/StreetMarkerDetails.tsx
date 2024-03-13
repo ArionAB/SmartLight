@@ -88,7 +88,6 @@ export const StreetMarkerDetails: FC<{
 
         let markerData: TablesUpdate<'markers'> = {
             ...form,
-            marker_status: 'Ok',
             marker_type: marker.marker_type,
             id: marker.id
         }
@@ -109,7 +108,6 @@ export const StreetMarkerDetails: FC<{
             })
         }
 
-
     }
 
     const handleOfflineSave = (e: React.FormEvent<HTMLFormElement>) => {
@@ -123,7 +121,7 @@ export const StreetMarkerDetails: FC<{
             if (markerIndex !== -1) {
                 let markerData = {
                     ...form,
-                    marker_status: 'Ok',
+                    marker_status: marker.marker_status,
                     marker_type: marker.marker_type,
                     number: marker.number,
                     street_id: marker.street_id,
@@ -151,6 +149,7 @@ export const StreetMarkerDetails: FC<{
         setImageDialog(true)
     }
 
+    console.log(form)
 
     return (
         <Container max-width='1200' >
@@ -186,6 +185,10 @@ export const StreetMarkerDetails: FC<{
                         width: '100%'
                     }}>
                         <Typography textAlign={'center'} fontWeight={600}>{marker?.marker_type === 'Senzor' ? marker?.sensor_type : marker.marker_type} #{marker?.number}</Typography>
+                        <FormControlLabel
+                            control={<IOSSwitch sx={{ m: 1 }} onChange={(e) => setForm({ ...form, marker_status: e.target.checked ? 'Ok' : 'Bad' })} checked={form.marker_status === "Ok" ? true : false} />}
+                            label="Status"
+                        />
                         <IconButton onClick={() => setOpen(false)}>
                             <Close />
                         </IconButton>
@@ -292,7 +295,7 @@ export const StreetMarkerDetails: FC<{
                                     </FormControl>
                                     <FormControlLabel
                                         control={<IOSSwitch sx={{ m: 1 }} onChange={(e) => setForm({ ...form, hub_c: e.target.checked })} checked={form.hub_c} />}
-                                        label="HUB-C"
+                                        label="HUB-C/S"
                                     />
                                 </>
                             )

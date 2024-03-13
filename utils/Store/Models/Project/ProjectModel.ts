@@ -9,6 +9,7 @@ export interface ProjectModel {
     name: string | null,
     city: string,
     county: string,
+    info: string | null,
     markers: [{
         count: number
     }],
