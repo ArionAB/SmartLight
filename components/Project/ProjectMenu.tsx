@@ -108,6 +108,7 @@ const ProjectMenu: FC<{ project: ProjectModel, setMoreInfo: Function }> = ({ pro
             </IconButton>
             <Dialog open={openEditDialog} onClose={() => setOpenEditDialog(false)} >
                 <AddOrEditProject setOpenAddMarker={setOpenEditDialog} project={project} />
+                <Button sx={{ marginBottom: '1rem', marginX: '24px' }} variant='outlined' onClick={() => setOpenEditDialog(false)}>Anulează</Button>
             </Dialog>
             <Dialog open={deleteDialog} onClose={() => setDeleteDialog(false)}>
                 <DeleteProject project={project} onClose={setDeleteDialog} />

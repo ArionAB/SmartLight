@@ -111,7 +111,7 @@ export const DrawerDialog = () => {
         <>
             <Dialog open={openAddMarker} onClose={() => setOpenAddMarker(false)} fullScreen={isMobile}>
                 <AddOrEditProject setOpenAddMarker={setOpenAddMarker} />
-                <Button sx={{ marginX: "1rem" }} variant='outlined' onClick={() => setOpenAddMarker(false)}>Anulează</Button>
+                <Button sx={{ marginBottom: '1rem', marginX: '24px' }} variant='outlined' onClick={() => setOpenAddMarker(false)}>Anulează</Button>
             </Dialog>
             <Dialog open={openStreet} onClose={() => setOpenStreet(false)}>
                 <AddStreet project={selectedProject!} setOpenStreet={setOpenStreet} />

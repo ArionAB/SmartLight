@@ -205,7 +205,6 @@ export const AddOrEditProject: FC<{
                 </>
 
             )}
-
             <Button disabled={loading} onClick={() => handleSubmit()} variant="contained" color='secondary'>{project ? `Modifică proiect` : "Adaugă proiect"}</Button>
         </Container>
     )
