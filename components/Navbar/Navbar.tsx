@@ -68,14 +68,7 @@ const Navbar: FC = () => {
                 project.strazi.forEach((street: any) => {
                     if (street?.markersArray) {
                         let offlineMarkers = street?.markersArray?.filter((marker: any) => !marker.id)
-                        let markersWithPole = offlineMarkers.map((item: Tables<'markers'>) => {
-                            return {
-                                ...item,
-                                //@ts-ignore
-                                pole_type: item.pole_type === "" ? 'Lemn' : item.pole_type
-                            }
-                        })
-                        markersArray = markersArray.concat(markersWithPole)
+                        markersArray = markersArray.concat(offlineMarkers)
                     }
                 })
 

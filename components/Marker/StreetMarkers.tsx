@@ -66,7 +66,6 @@ export const StreetMarkers = () => {
 
 
     const lampColor = (marker: Tables<'markers'>) => {
-        console.log(marker)
         switch (marker.power_type) {
             case '30W':
                 return customLampIcon30(marker)

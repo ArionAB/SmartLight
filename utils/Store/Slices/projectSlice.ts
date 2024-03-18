@@ -115,6 +115,15 @@ const projectSlice = createSlice({
             const street = project.strazi.find((street) => street.id === action.payload.street_id);
             const markerIndex = street?.markersArray.findIndex((marker) => marker.id === action.payload.id);
             if (markerIndex !== -1) {
+
+                if (project.markers && project.markers.length > 0) {
+                    project.markers[0].count--;
+                }
+
+                if (street && street.markers && street.markers.length > 0) {
+                    street.markers[0].count--;
+                }
+
                 street!.markersArray.splice(markerIndex!, 1);
                 state.focusedProject.street.markersArray.splice(markerIndex!, 1)
             }
@@ -124,6 +133,15 @@ const projectSlice = createSlice({
             const street = project.strazi.find((street) => street.id === action.payload.street_id);
             const markerIndex = street?.markersArray.findIndex((marker) => marker.number === action.payload.number);
             if (markerIndex !== -1) {
+
+                if (project.markers && project.markers.length > 0) {
+                    project.markers[0].count--;
+                }
+
+                if (street && street.markers && street.markers.length > 0) {
+                    street.markers[0].count--;
+                }
+
                 street!.markersArray.splice(markerIndex!, 1);
                 state.focusedProject.street.markersArray.splice(markerIndex!, 1)
             }

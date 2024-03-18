@@ -149,7 +149,6 @@ export const StreetMarkerDetails: FC<{
         setImageDialog(true)
     }
 
-    console.log(form)
 
     return (
         <Container max-width='1200' >
