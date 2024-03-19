@@ -39,7 +39,7 @@ export default function BottomTabs() {
                     <Tab icon={<MapIcon />} component={Link} href='/' />
                     <Tab icon={<GroupIcon />} component={Link} href='/users' />
                     <Tab icon={<SettingsIcon />} component={Link} href='/settings' />
-                    <Tab icon={<LeaderboardIcon />} />
+                    <Tab icon={<LeaderboardIcon />} component={Link} href='/statistics' />
                 </Tabs>
             ) : (
                 <Tabs
