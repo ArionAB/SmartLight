@@ -2,8 +2,8 @@ import { Enums, Tables } from '@/utils/Store/Models/Database'
 import { selectFocusedProject } from '@/utils/Store/Selectors/projectSelectors'
 import { useAppDispatch, useAppSelector } from '@/utils/Store/hooks'
 import { Box, Button, Dialog, IconButton, Popover, Typography } from '@mui/material'
-import React, { useMemo, useState } from 'react'
-import { Marker, Popup, Tooltip } from 'react-leaflet'
+import React, { useEffect, useMemo, useState } from 'react'
+import { Marker, Popup, Tooltip, useMap } from 'react-leaflet'
 import { StreetMarkerDetails } from './StreetMarkerDetails'
 import { renderToStaticMarkup } from 'react-dom/server'
 import { divIcon } from 'leaflet'
@@ -20,6 +20,9 @@ export const StreetMarkers = () => {
     const [selectedMarker, setSelectedMarker] = useState<Tables<'markers'>>(null!)
     const [open, setOpen] = useState(false)
     const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
+    const [circleSize, setCircleSize] = useState<string>('10px')
+    const map = useMap()
+    const [zoomLevel, setZoomLevel] = useState(map.getZoom());
 
     const dispatch = useAppDispatch()
     const focusedProject = useAppSelector(selectFocusedProject)
@@ -76,8 +79,6 @@ export const StreetMarkers = () => {
             default: 'black'
         }
     }
-
-
     const poleColor = (lamp_type: Enums<'lamp_type'>) => {
         switch (lamp_type) {
             case 'Cu lampa':
@@ -86,34 +87,54 @@ export const StreetMarkers = () => {
                 return customPoleIconNoLamp
         }
     }
+    useEffect(() => {
+        const handleZoomChange = () => {
+            setZoomLevel(map.getZoom());
+        };
+
+        map.on('zoom', handleZoomChange);
+
+        return () => {
+            map.off('zoom', handleZoomChange);
+        };
+    }, [map]);
+
+    useEffect(() => {
+        if (zoomLevel < 15) {
+            setCircleSize('6px');
+        } else {
+            setCircleSize('10px');
+        }
+    }, [zoomLevel]);
+
     const lampHTML30 = (marker: Tables<'markers'>) => renderToStaticMarkup(
-        <svg fill='#42a5f5' width="12px" height="12px" viewBox="0 0 32 32" style={{ border: marker.hub_c ? "#FFD700 2px solid" : marker.marker_status === 'Bad' ? '#c62828 2px solid' : "rgba(89,89,89,1) 1px solid", borderRadius: "50%" }}>
+        <svg fill='#42a5f5' width={circleSize} height={circleSize} viewBox="0 0 32 32" style={{ border: marker.hub_c ? "#FFD700 2px solid" : marker.marker_status === 'Bad' ? '#c62828 2px solid' : "rgba(89,89,89,1) 1px solid", borderRadius: "50%" }}>
             <circle cx="16" cy="16" r="16" />
         </svg>
     );
     const lampHTML60 = (marker: Tables<'markers'>) => renderToStaticMarkup(
-        < svg fill='#4caf50' width="12px" height="12px" viewBox="0 0 32 32" style={{ border: marker.hub_c ? "#FFD700 2px solid" : marker.marker_status === 'Bad' ? '#c62828 2px solid' : "rgba(89,89,89,1) 1px solid", borderRadius: "50%" }}>
+        < svg fill='#4caf50' width={circleSize} height={circleSize} viewBox="0 0 32 32" style={{ border: marker.hub_c ? "#FFD700 2px solid" : marker.marker_status === 'Bad' ? '#c62828 2px solid' : "rgba(89,89,89,1) 1px solid", borderRadius: "50%" }}>
             <circle cx="16" cy="16" r="16" />
         </svg >
     );
     const lampHTML80 = (marker: Tables<'markers'>) => renderToStaticMarkup(
-        <svg fill="#673ab7" width="12px" height="12px" viewBox="0 0 32 32" style={{ border: marker.hub_c ? "#FFD700 2px solid" : marker.marker_status === 'Bad' ? '#c62828 2px solid' : "rgba(89,89,89,1) 1px solid", borderRadius: "50%" }}>
+        <svg fill="#673ab7" width={circleSize} height={circleSize} viewBox="0 0 32 32" style={{ border: marker.hub_c ? "#FFD700 2px solid" : marker.marker_status === 'Bad' ? '#c62828 2px solid' : "rgba(89,89,89,1) 1px solid", borderRadius: "50%" }}>
             <circle cx="16" cy="16" r="16" />
         </svg>
     );
     const poleHTMLwithLamp = renderToStaticMarkup(
-        <svg fill="#4caf50" width="12px" height="12px" viewBox="0 0 32 32" style={{ border: "rgba(89,89,89,1) 1px solid", borderRadius: "50%" }}>
+        <svg fill="#4caf50" width={circleSize} height={circleSize} viewBox="0 0 32 32" style={{ border: "rgba(89,89,89,1) 1px solid", borderRadius: "50%" }}>
             <circle cx="16" cy="16" r="16" />
         </svg>
     );
     const poleHTMLNoLamp = renderToStaticMarkup(
-        <svg fill="#b22a00" width="15px" height="15px" viewBox="0 0 32 32">
+        <svg fill="#b22a00" width={circleSize} height={circleSize} viewBox="0 0 32 32">
             <circle cx="16" cy="16" r="16" />
         </svg>
     );
 
     const sensorHTML = renderToStaticMarkup(
-        <svg width="20px" height="20px" viewBox="0 0 24 24" fill="none">
+        <svg width="14px" height="14px" viewBox="0 0 24 24" fill="none">
             <rect x="4" y="4" width="16" height="16" rx="2" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
     )

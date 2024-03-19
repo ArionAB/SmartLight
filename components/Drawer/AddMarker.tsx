@@ -38,6 +38,7 @@ export const AddMarker: FC<{
             power_type: '60W',
             sensor_type: '',
             hub_c: false,
+            series_number: ''
         })
         const [uploadedFiles, setUploadedFiles] = useState<File[]>([])
         const [loading, setLoading] = useState(false)
@@ -137,6 +138,7 @@ export const AddMarker: FC<{
             if (selectedMarker === 'Lampa') {
                 //@ts-ignore
                 markerData.power_type = marker.power_type ?? '60W'
+                markerData.series_number = marker.series_number
             }
             if (selectedMarker === 'Stalp') {
                 //@ts-ignore
@@ -253,7 +255,15 @@ export const AddMarker: FC<{
                                 </FormControl>
                                 <FormControlLabel
                                     control={<IOSSwitch sx={{ m: 1 }} onChange={(e) => setMarker({ ...marker, hub_c: e.target.checked })} checked={marker.hub_c} />}
-                                    label="HUB-C"
+                                    label="HUB-C/S"
+                                />
+                                <TextField
+                                    id="outlined-multiline-flexible"
+                                    label="Serie controller"
+                                    fullWidth
+                                    name="series_number"
+                                    value={marker.series_number ?? ''}
+                                    onChange={(e) => handleChange(e)}
                                 />
                             </>
 

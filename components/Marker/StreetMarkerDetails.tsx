@@ -6,7 +6,7 @@ import { Box, Container, DialogTitle, FormControl, Grid, InputLabel, Select, Sel
 import Image from 'next/image'
 import React, { FC, useState } from 'react'
 import FileUploadComponent from '../FileUpload/FileUploadComponent'
-import { Close, HighlightOff, RemoveCircle } from '@mui/icons-material'
+import { Close, HighlightOff } from '@mui/icons-material'
 import supabase from '@/utils/supabase/createClient'
 import { updateMarkerAction } from '@/utils/Store/Actions/MarkerActions'
 import { useAppDispatch, useAppSelector } from '@/utils/Store/hooks'
@@ -34,7 +34,8 @@ export const StreetMarkerDetails: FC<{
         latitude: marker.latitude,
         longitude: marker.longitude,
         power_type: marker.power_type,
-        hub_c: marker.hub_c
+        hub_c: marker.hub_c,
+        series_number: marker.series_number
     })
 
     const [url, setUrl] = useState<string>('')
@@ -44,7 +45,8 @@ export const StreetMarkerDetails: FC<{
     const [disabled, setDisabled] = useState({
         latitude: true,
         longitude: true,
-        observatii: true
+        observatii: true,
+        series_number: true
     })
     const [imageDialog, setImageDialog] = useState<boolean>(false)
 
@@ -301,7 +303,7 @@ export const StreetMarkerDetails: FC<{
                         }
                     </Grid>
                     {
-                        marker.marker_type !== 'Senzor' && (
+                        marker.marker_type === 'Stalp' && (
                             <Grid item xs={12} sm={6}>
                                 <FormControl fullWidth>
                                     <InputLabel id="demo-simple-select-label">Tip stalp</InputLabel>
@@ -326,6 +328,30 @@ export const StreetMarkerDetails: FC<{
                                 </FormControl>
                             </Grid>
                         )
+                    }
+                    {
+                        <Grid item xs={12} sm={6}>
+                            <TextField
+                                id="outlined-multiline-flexible"
+                                label="Serie controller"
+                                fullWidth
+                                name="series_number"
+                                value={form.series_number ?? ''}
+                                onChange={(e) => handleChange(e)}
+                                InputProps={{
+                                    endAdornment: (
+                                        <InputAdornment position="end">
+                                            <IconButton
+                                                color='warning'
+                                                onClick={() => setDisabled({ ...disabled, series_number: !disabled.series_number })}
+                                            >
+                                                <EditIcon />
+                                            </IconButton>
+                                        </InputAdornment>
+                                    ),
+                                }}
+                            />
+                        </Grid>
                     }
 
                     <Grid item xs={12}>
