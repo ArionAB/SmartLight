@@ -7,6 +7,7 @@ import { PieChart } from '@mui/x-charts/PieChart';
 import { selectCurrentUser } from '@/utils/Store/Selectors/usersSelectors';
 import { getProjectAction } from '@/utils/Store/Actions/ProjectAction';
 import { Box, Card, Typography } from '@mui/material';
+import useBreakpointDown from '@/utils/Hooks/useBreakpoints';
 
 
 const ProjectTab = () => {
@@ -62,52 +63,53 @@ const ProjectTab = () => {
         }));
     }, [counties]);
 
-
+    const lessThan1200 = useBreakpointDown('lg');
     return (
-        <Box>
-            <Box sx={{
-                display: 'flex',
-                justifyContent: 'space-around',
-                gap: '1rem',
-                minWidth: '500px'
+        <Box sx={{
+            display: 'flex',
+            flexDirection: lessThan1200 ? 'column' : 'row',
+            justifyContent: 'space-around',
+            gap: '1rem',
+        }}>
+            <Card sx={{
+                padding: '1rem',
+                minWidth: '100px',
+                overflowX: 'auto',
             }}>
-                <Card sx={{
-                    padding: '1rem'
-                }}>
-                    <Typography textAlign={'center'} variant='h6'>Statistici proiecte / județ</Typography>
-                    <PieChart
-                        colors={['#f44336', '#9c27b0', '#3f51b5', '#00bcd4', '#009688', '#4caf50', '#cddc39', '#ffeb3b', '#ff9800', '#d1c4e9', '#0d47a1']}
-                        series={[
-                            {
-                                data: countiesArray,
-                                highlightScope: { faded: 'global', highlighted: 'item' },
-                            },
-                        ]}
-                        width={700}
-                        height={200}
-                    />
-                </Card>
-                <Card sx={{
-                    padding: '1rem'
-                }}>
-                    <Typography textAlign={'center'} variant='h6'>Tipuri de proiect</Typography>
-                    <PieChart
-                        colors={['#f44336', '#9c27b0', '#3f51b5', '#00bcd4', '#009688', '#4caf50', '#cddc39', '#ffeb3b', '#ff9800', '#d1c4e9', '#0d47a1']}
-                        series={[
-                            {
-                                data: project_typesArray,
-                                highlightScope: { faded: 'global', highlighted: 'item' },
-                            },
-                        ]}
-                        width={400}
-                        height={200}
-                    />
-                </Card>
+                <Typography textAlign={'center'} variant='h6'>Statistici proiecte / județ</Typography>
+                <PieChart
+                    colors={['#f44336', '#9c27b0', '#3f51b5', '#00bcd4', '#009688', '#4caf50', '#cddc39', '#ffeb3b', '#ff9800', '#d1c4e9', '#0d47a1']}
+                    series={[
+                        {
+                            data: countiesArray,
+                            highlightScope: { faded: 'global', highlighted: 'item' },
+                        },
+                    ]}
+                    width={lessThan1200 ? 500 : 700}
+                    height={200}
+                />
+            </Card>
+            <Card sx={{
+                padding: '1rem',
+                overflowX: 'auto',
+                minWidth: '100px'
 
-            </Box>
+            }}>
+                <Typography textAlign={'center'} variant='h6'>Tipuri de proiect</Typography>
+                <PieChart
+                    colors={['#f44336', '#9c27b0', '#3f51b5', '#00bcd4', '#009688', '#4caf50', '#cddc39', '#ffeb3b', '#ff9800', '#d1c4e9', '#0d47a1']}
+                    series={[
+                        {
+                            data: project_typesArray,
+                            highlightScope: { faded: 'global', highlighted: 'item' },
+                        },
+                    ]}
+                    width={400}
+                    height={200}
+                />
+            </Card>
 
         </Box>
-
     )
 }
 

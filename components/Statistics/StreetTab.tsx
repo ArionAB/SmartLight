@@ -6,6 +6,7 @@ import { PieChart } from '@mui/x-charts/PieChart';
 import { Box, Card, Container, Typography } from '@mui/material';
 import { fetchNetworkRoadTypesCount } from '@/utils/Store/Actions/StreetActions';
 import { Enums } from '@/utils/Store/Models/Database';
+import { ResponsiveChartContainer } from '@mui/x-charts';
 
 interface Count {
     count: number,
@@ -36,15 +37,23 @@ const StreetTab = () => {
 
 
     return (
-        <Container sx={{
+        <Box sx={{
             display: 'flex',
+            flexDirection: 'column',
             gap: '1rem',
         }}>
+            <Typography textAlign={'center'} variant='h6'>Statistici tip strada si tip drum</Typography>
             <Card sx={{
-                padding: '1rem'
+                padding: '1rem',
+                minWidth: '100px',
+                overflowX: 'auto',
             }}>
-                <Typography textAlign={'center'} variant='h6'>Statistici tip strada si tip drum</Typography>
                 <PieChart
+                    sx={{
+                        display: 'flex',
+                        justifyContent: 'center',
+
+                    }}
                     colors={['#f44336', '#9c27b0', '#3f51b5', '#00bcd4', '#009688', '#4caf50', '#cddc39', '#ffeb3b', '#ff9800', '#d1c4e9', '#0d47a1']}
                     series={[
                         {
@@ -52,11 +61,12 @@ const StreetTab = () => {
                             highlightScope: { faded: 'global', highlighted: 'item' },
                         },
                     ]}
-                    width={1000}
-                    height={200}
+                    width={900}
+                    height={300}
+
                 />
             </Card>
-        </Container>
+        </Box>
     )
 }
 
