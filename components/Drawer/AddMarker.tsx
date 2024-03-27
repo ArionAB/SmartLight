@@ -84,6 +84,8 @@ export const AddMarker: FC<{
                     let lastMarker = { ...focusedProject.street.markersArray[focusedProject.street.markersArray.length - 1] }
                     const increment = Number(lastMarker.number!) + 1
                     markerNumber = increment
+                    // console.log(focusedProject.street)
+                    // markerNumber = focusedProject.street.markers[0].count
                 }
             }
 
@@ -176,10 +178,10 @@ export const AddMarker: FC<{
                             if (!street.markersArray.length) {
                                 markerNumber = 1;
                             } else {
-                                // let lastMarker = { ...street.markersArray[street.markersArray.length - 1] };
-                                // const increment = Number(lastMarker.number!) + 1;
-                                // markerNumber = increment;
-                                markerNumber = street.markers[0].count + 1
+                                let lastMarker = { ...street.markersArray[street.markersArray.length - 1] };
+                                const increment = Number(lastMarker.number!) + 1;
+                                markerNumber = increment;
+                                // markerNumber = street.markers[0].count + 1
                             }
 
                             markerData.number = markerNumber;
