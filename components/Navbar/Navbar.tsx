@@ -26,6 +26,7 @@ import Filter from '../Filter/Filter';
 const Navbar: FC = () => {
     const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>(null);
     const [filterAnchor, setFilterAnchor] = useState<HTMLButtonElement | null>(null);
+    const [mount, setMount] = useState(false)
 
 
     const router = useRouter()
@@ -57,9 +58,9 @@ const Navbar: FC = () => {
     }, [])
 
     useEffect(() => {
+        setMount(true)
         const offlineProject = localStorage.getItem('project')
-
-        if (offlineProject && hasInternet) {
+        if (offlineProject && hasInternet && !mount) {
             let parsedProject = [JSON.parse(offlineProject)]
 
             let markersArray: any[] = []
@@ -79,7 +80,7 @@ const Navbar: FC = () => {
 
         }
 
-    }, [hasInternet])
+    }, [])
 
     const handleSignOut = async () => {
         handleClose()
