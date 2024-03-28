@@ -72,7 +72,6 @@ const Navbar: FC = () => {
                         markersArray = markersArray.concat(offlineMarkers)
                     }
                 })
-
             })
             if (markersArray.length > 0) {
                 dispatch(addOfflineMarkers(markersArray))

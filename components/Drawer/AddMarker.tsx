@@ -81,11 +81,7 @@ export const AddMarker: FC<{
                 if (!focusedProject.street?.markersArray?.length) {
                     markerNumber = 1
                 } else {
-                    let lastMarker = { ...focusedProject.street.markersArray[focusedProject.street.markersArray.length - 1] }
-                    const increment = Number(lastMarker.number!) + 1
-                    markerNumber = increment
-                    // console.log(focusedProject.street)
-                    // markerNumber = focusedProject.street.markers[0].count
+                    markerNumber = focusedProject.street.markers[0].count + 1
                 }
             }
 
@@ -175,13 +171,8 @@ export const AddMarker: FC<{
 
                             let markerNumber = 1;
 
-                            if (!street.markersArray.length) {
-                                markerNumber = 1;
-                            } else {
-                                let lastMarker = { ...street.markersArray[street.markersArray.length - 1] };
-                                const increment = Number(lastMarker.number!) + 1;
-                                markerNumber = increment;
-                                // markerNumber = street.markers[0].count + 1
+                            if (street.markers) {
+                                markerNumber = street.markers[0].count + 1
                             }
 
                             markerData.number = markerNumber;
@@ -194,7 +185,6 @@ export const AddMarker: FC<{
                             } else {
                                 street.markers[0].count++;
                             }
-
                             if (!project.markers || Number(project.markers.length) === 0) {
                                 project.markers = [{ count: 0 }];
                             } else {

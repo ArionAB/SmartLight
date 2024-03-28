@@ -7,7 +7,6 @@ function useBreakpointDown(breakpointKey: 'sm' | 'md' | 'lg') {
 
     useEffect(() => {
         const updateMatch = () => {
-            console.log(theme.breakpoints.values)
             setIsMatch(window.innerWidth < theme.breakpoints.values[breakpointKey]);
         };
 
