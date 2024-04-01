@@ -2,7 +2,7 @@
 
 import Box from '@mui/material/Box';
 import React, { FC, MouseEvent, useEffect, useState } from 'react'
-import { Button, Divider, FormControlLabel, IconButton, Popover, Typography } from '@mui/material';
+import { Button, CircularProgress, Divider, FormControlLabel, IconButton, Popover, Typography } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '@/utils/Store/hooks';
 import { selectFocusedProject } from '@/utils/Store/Selectors/projectSelectors';
 import FolderIcon from '@mui/icons-material/Folder';
@@ -22,11 +22,12 @@ import { IOSSwitch } from '../Material/iOSSwitch';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import SortIcon from '@mui/icons-material/Sort';
 import Filter from '../Filter/Filter';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 
 const Navbar: FC = () => {
     const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>(null);
     const [filterAnchor, setFilterAnchor] = useState<HTMLButtonElement | null>(null);
-    const [mount, setMount] = useState(false)
+    const [loadingUpload, setLoadingUpload] = useState(false)
 
 
     const router = useRouter()
@@ -57,10 +58,10 @@ const Navbar: FC = () => {
         currentUser()
     }, [])
 
-    useEffect(() => {
-        setMount(true)
+    const handleUploadOfflineMarkers = () => {
+        setLoadingUpload(true)
         const offlineProject = localStorage.getItem('project')
-        if (offlineProject && hasInternet && !mount) {
+        if (offlineProject && hasInternet) {
             let parsedProject = [JSON.parse(offlineProject)]
 
             let markersArray: any[] = []
@@ -74,12 +75,13 @@ const Navbar: FC = () => {
                 })
             })
             if (markersArray.length > 0) {
-                dispatch(addOfflineMarkers(markersArray))
+                dispatch(addOfflineMarkers(markersArray)).then(() => {
+                    setLoadingUpload(false)
+                })
             }
 
-        }
-
-    }, [])
+        } else setLoadingUpload(false)
+    }
 
     const handleSignOut = async () => {
         handleClose()
@@ -170,6 +172,19 @@ const Navbar: FC = () => {
                         control={<IOSSwitch sx={{ m: 1 }} onChange={handleTooltipChange} checked={isTooltips} />}
                         label="Detalii markeri"
                     />
+                    <Divider sx={{ my: 0.5 }} />
+                    {loadingUpload ? (
+                        <CircularProgress sx={{ color: "rgba(0, 0, 0, 0.26)" }} />
+                    ) : (
+                        <Button
+                            startIcon={<CloudUploadIcon />}
+                            variant='contained'
+                            color='success'
+                            onClick={() => handleUploadOfflineMarkers()}
+                        >
+                            Încarcă markerii offline
+                        </Button>
+                    )}
                     <Divider sx={{ my: 0.5 }} />
                     <Button fullWidth variant='contained' color='info' onClick={() => handleSignOut()}>LOGOUT</Button>
                 </Box>

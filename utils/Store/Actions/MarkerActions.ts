@@ -187,6 +187,11 @@ export const addOfflineMarkers = (markers: Tables<'markers'>[]) => {
             if (!error) {
                 localStorage.removeItem('project')
                 dispatch(addAppNotification({ message: `Markerii offline au fost adaugati cu success!`, severity: 'success' }))
+                return {
+                    data: data,
+                    message: "Markerii offline au fost adaugati cu success!",
+                    severity: "success"
+                }
             }
 
             if (error) {
