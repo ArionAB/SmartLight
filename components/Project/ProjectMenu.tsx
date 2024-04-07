@@ -16,6 +16,7 @@ import { flyToLocation } from '../Map/FlyToLocation';
 import { selectCurrentUser } from '@/utils/Store/Selectors/usersSelectors';
 import DownloadForOfflineIcon from '@mui/icons-material/DownloadForOffline';
 import { addAppNotification } from '@/utils/Store/Slices/appNotificationSlice';
+import { DeleteDialog } from '../Notifications/DeleteDialog';
 
 const StyledMenu = styled((props: MenuProps) => (
     <Menu
@@ -69,6 +70,7 @@ const ProjectMenu: FC<{ project: ProjectModel, setMoreInfo: Function }> = ({ pro
     const [deleteDialog, setDeleteDialog] = useState<boolean>(false)
     const [openTable, setOpenTable] = useState(false)
     const [openEditDialog, setOpenEditDialog] = useState(false)
+    const [existingProject, setExistingProject] = useState<ProjectModel | null>(null)
 
     const currentUser = useAppSelector(selectCurrentUser)
     const map = useMap();
@@ -83,13 +85,25 @@ const ProjectMenu: FC<{ project: ProjectModel, setMoreInfo: Function }> = ({ pro
         setAnchor(null)
     }
 
-    const saveProjectToLocalStorage = (project: ProjectModel) => {
+    const checkIfProjectExists = () => {
+        const offlineProject = localStorage.getItem('project')
+        if (offlineProject) {
+            setExistingProject(JSON.parse(offlineProject))
+        } else {
+            saveProjectToLocalStorage()
+        }
+    }
+
+    const saveProjectToLocalStorage = () => {
         localStorage.setItem("project", JSON.stringify(project))
         dispatch(addAppNotification({
             severity: 'success',
             message: "Proiectul a fost descărcat!"
         }))
+        setExistingProject(null)
     }
+
+
 
     const handleGoToLocation = (lat: number, lng: number) => {
         flyToLocation(map, lat, lng)
@@ -103,6 +117,13 @@ const ProjectMenu: FC<{ project: ProjectModel, setMoreInfo: Function }> = ({ pro
 
     return (
         <>
+            <DeleteDialog
+                open={existingProject ? true : false}
+                setOpen={setExistingProject}
+                yesAction={saveProjectToLocalStorage}
+                title='Aveți deja un proiect descărcat!'
+                message={`Sunteți sigur că doriți să descărcați un alt proiect și să-l ștergeți pe cel deja descărcat "${existingProject?.city}"?`}
+            />
             <IconButton color='info' size='small' onClick={handleOpenProjectMenu}>
                 <MoreVertIcon />
             </IconButton>
@@ -139,8 +160,7 @@ const ProjectMenu: FC<{ project: ProjectModel, setMoreInfo: Function }> = ({ pro
                 </MenuItem>
                 <Divider sx={{ my: 0.5 }} />
                 <MenuItem onClick={() => {
-                    saveProjectToLocalStorage(project),
-                        handleClose()
+                    checkIfProjectExists()
                 }} disableRipple>
                     <DownloadForOfflineIcon color="primary" />
                     Descarcă offline

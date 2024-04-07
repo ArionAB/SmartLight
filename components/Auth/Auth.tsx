@@ -37,7 +37,6 @@ const Auth = () => {
                 severity: "error",
                 message: "Email sau parola incorecte"
             }))
-            console.error('no USer')
         }
     }
 

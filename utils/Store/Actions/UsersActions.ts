@@ -19,7 +19,7 @@ export const createUserAction = (form: CreateUserModel) => {
                     severity: 'success',
                     message: 'User creat cu success!'
                 }))
-                dispatch(addUser(data.user))
+                dispatch(addUser({ ...data.user, role_type: form.role }))
             }
 
 

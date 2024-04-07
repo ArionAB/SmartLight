@@ -45,7 +45,6 @@ export const DrawerDialog = () => {
     const [expanded, setExpanded] = React.useState<string | false>(false);
     const [search, setSearch] = useState<string>('')
     const [moreInfo, setMoreInfo] = useState(false)
-
     const map = useMap();
 
 
@@ -57,10 +56,14 @@ export const DrawerDialog = () => {
     const loadingMarkers = useAppSelector(selectMarkersLoading)
     const currentUser = useAppSelector(selectCurrentUser)
     const hasInternet = useAppSelector(selectHasInternet)
+
+
+
     useEffect(() => {
         if (currentUser && projectItems.length === 0) {
             dispatch(getProjectAction(currentUser))
         }
+
     }, [currentUser])
 
 

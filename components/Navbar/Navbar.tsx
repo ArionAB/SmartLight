@@ -14,7 +14,7 @@ import { setCurrentUser } from '@/utils/Store/Slices/usersSlice';
 import { getUserAction } from '@/utils/Store/Actions/UsersActions';
 import Link from 'next/link';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
-import { Database, Tables } from '@/utils/Store/Models/Database';
+import { Database } from '@/utils/Store/Models/Database';
 import { useRouter } from "next/navigation";
 import { addOfflineMarkers } from '@/utils/Store/Actions/MarkerActions';
 import BackgroundLetterAvatars from '../Material/StringAvatar';
@@ -23,6 +23,7 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 import SortIcon from '@mui/icons-material/Sort';
 import Filter from '../Filter/Filter';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import { addAppNotification } from '@/utils/Store/Slices/appNotificationSlice';
 
 const Navbar: FC = () => {
     const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>(null);
@@ -47,12 +48,16 @@ const Navbar: FC = () => {
 
         const currentUser = async () => {
             const {
-                data: { user }
+                data: { user }, error
             } = await supabase.auth.getUser()
             if (user) {
                 dispatch(getUserAction(user.id))
                 dispatch(setCurrentUser(user))
             }
+            if (error) {
+                router.push('/login')
+            }
+
         }
 
         currentUser()
@@ -87,7 +92,7 @@ const Navbar: FC = () => {
         handleClose()
         await supabase.auth.signOut()
         dispatch(setCurrentUser(null))
-        router.push('/')
+        router.push('/login')
     }
 
     const handleClick = (event: MouseEvent<HTMLDivElement, globalThis.MouseEvent>) => {

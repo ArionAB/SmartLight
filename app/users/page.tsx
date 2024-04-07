@@ -148,14 +148,16 @@ const Users = () => {
     const CustomFooter = () => {
         return (
             <Box sx={{ p: 1, display: 'flex', justifyContent: 'space-between' }}>
-                <Button onClick={() => setAddUserDialog(true)} variant="contained" color="success" startIcon={<AddIcon />}>User</Button>
+                <Button onClick={() => setAddUserDialog(true)} variant="contained" size='small' color="success" startIcon={<AddIcon />}>User</Button>
                 <GridPagination />
             </Box>
         );
     };
 
     return (
-        <Container>
+        <Box sx={{
+            margin: '0 2rem'
+        }}>
             <Dialog open={addUserDialog} onClose={() => setAddUserDialog(false)}>
                 <AddUser onClose={setAddUserDialog} />
             </Dialog>
@@ -208,7 +210,7 @@ const Users = () => {
                     footer: CustomFooter
                 }}
             ></DataGrid>
-        </Container>
+        </Box>
 
     )
 }

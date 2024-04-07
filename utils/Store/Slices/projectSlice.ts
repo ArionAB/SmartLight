@@ -83,15 +83,15 @@ const projectSlice = createSlice({
                 }
 
                 if (!state.focusedProject.street.markers) {
-                    state.focusedProject.street.markers = [{ count: 0 }]
+                    state.focusedProject.street.markers = [{ count: 1 }]
                 } else state.focusedProject.street.markers[0].count++
 
                 if (!project.markers) {
-                    project.markers = [{ count: 0 }]
+                    project.markers = [{ count: 1 }]
                 } else project.markers[0].count++
 
                 if (!street.markers) {
-                    street.markers = [{ count: 0 }]
+                    street.markers = [{ count: 1 }]
                 } else street.markers[0].count++
                 state.focusedProject.street.markersArray.push(action.payload);
             }
