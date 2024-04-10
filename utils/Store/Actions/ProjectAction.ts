@@ -33,7 +33,8 @@ export const getProjectAction = (currentUser: getUserModel) => {
                     throw error;
                 }
 
-            } else {
+            }
+            if (currentUser.role_type === 'Admin' || currentUser.role_type === 'Visitor') {
                 const { data: proiecte, error } = await supabase
                     .from('proiecte')
                     .select('*, markers(count)')

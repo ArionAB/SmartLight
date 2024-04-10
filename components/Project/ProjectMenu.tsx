@@ -1,4 +1,4 @@
-import { Box, IconButton, Menu, Dialog, Button, Stack, Paper, MenuList, MenuItem, Popper, Grow, ClickAwayListener, MenuProps, alpha, Divider } from '@mui/material'
+import { Box, IconButton, Menu, Dialog, Button, MenuItem, MenuProps, alpha, Divider } from '@mui/material'
 import React, { FC, useEffect, useState } from 'react'
 import EditIcon from '@mui/icons-material/Edit';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
@@ -17,10 +17,14 @@ import { selectCurrentUser } from '@/utils/Store/Selectors/usersSelectors';
 import DownloadForOfflineIcon from '@mui/icons-material/DownloadForOffline';
 import { addAppNotification } from '@/utils/Store/Slices/appNotificationSlice';
 import { DeleteDialog } from '../Notifications/DeleteDialog';
+import GetAppIcon from '@mui/icons-material/GetApp';
+import * as XLSX from 'xlsx';
+
 
 const StyledMenu = styled((props: MenuProps) => (
     <Menu
         elevation={10}
+
         anchorOrigin={{
             vertical: 'bottom',
             horizontal: 'right',
@@ -72,12 +76,12 @@ const ProjectMenu: FC<{ project: ProjectModel, setMoreInfo: Function }> = ({ pro
     const [openEditDialog, setOpenEditDialog] = useState(false)
     const [existingProject, setExistingProject] = useState<ProjectModel | null>(null)
 
+
     const currentUser = useAppSelector(selectCurrentUser)
     const map = useMap();
     const dispatch = useAppDispatch()
 
     const handleOpenProjectMenu = (event: React.MouseEvent<HTMLElement>) => {
-
         setAnchor(event.currentTarget);
     }
 
@@ -108,12 +112,45 @@ const ProjectMenu: FC<{ project: ProjectModel, setMoreInfo: Function }> = ({ pro
     const handleGoToLocation = (lat: number, lng: number) => {
         flyToLocation(map, lat, lng)
     }
-
     useEffect(() => {
         if (anchor) {
             setMoreInfo(true)
         } else setMoreInfo(false)
     }, [anchor])
+
+    const handleExportExcel = () => {
+        const data = [
+            { name: "John", email: "john@example.com", age: 28 },
+            { name: "Jane", email: "jane@example.com", age: 32 }
+        ];
+
+        const worksheet = XLSX.utils.json_to_sheet(data);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+
+        const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+        const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8' });
+
+        const blobURL = URL.createObjectURL(blob);
+
+        // Create a temporary anchor element
+        const tempLink = document.createElement('a');
+        tempLink.href = blobURL;
+        tempLink.setAttribute('download', 'data.xlsx'); // Set the file name
+        tempLink.style.display = 'none'; // Make sure it's not visible
+
+        // Append the anchor to the document body
+        document.body.appendChild(tempLink);
+
+        // Programmatically click the anchor to initiate download
+        tempLink.click();
+
+        // Clean up: remove the anchor from the document
+        document.body.removeChild(tempLink);
+
+        // Revoke the Blob URL to free up memory
+        URL.revokeObjectURL(blobURL);
+    }
 
     return (
         <>
@@ -145,7 +182,6 @@ const ProjectMenu: FC<{ project: ProjectModel, setMoreInfo: Function }> = ({ pro
             >
                 <MenuItem onClick={() => {
                     handleGoToLocation(Number(project.lat), Number(project.long))
-                    handleClose()
                 }} disableRipple>
                     <MapIcon />
                     Locație
@@ -153,7 +189,6 @@ const ProjectMenu: FC<{ project: ProjectModel, setMoreInfo: Function }> = ({ pro
                 <Divider sx={{ my: 0.5 }} />
                 <MenuItem onClick={() => {
                     dispatch(getMarkersAction(undefined, project))
-                    handleClose()
                 }} disableRipple>
                     <VisibilityIcon color='info' />
                     Afișează proiect
@@ -165,13 +200,19 @@ const ProjectMenu: FC<{ project: ProjectModel, setMoreInfo: Function }> = ({ pro
                     <DownloadForOfflineIcon color="primary" />
                     Descarcă offline
                 </MenuItem>
+                {/* <Divider sx={{ my: 0.5 }} />
+                <MenuItem onClick={() => {
+                    handleExportExcel()
+                }} disableRipple>
+                    <GetAppIcon color="success" />
+                    Export ca Excel
+                </MenuItem> */}
                 <Divider sx={{ my: 0.5 }} />
                 {
                     currentUser?.role_type === 'Admin' && (
                         <Box>
                             <MenuItem onClick={() => {
                                 setOpenEditDialog(true)
-                                handleClose()
                             }} disableRipple>
                                 <EditIcon color='warning' />
                                 Edit
@@ -185,8 +226,7 @@ const ProjectMenu: FC<{ project: ProjectModel, setMoreInfo: Function }> = ({ pro
                 {
                     currentUser?.role_type === 'Admin' && (
                         <MenuItem onClick={() => {
-                            setDeleteDialog(true),
-                                handleClose()
+                            setDeleteDialog(true)
                         }} disableRipple>
                             <Delete color="error" />
                             Șterge

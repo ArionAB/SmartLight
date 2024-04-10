@@ -31,7 +31,8 @@
   "react-redux": "^9.1.0",
   "supabase": "^1.131.5",
   "tailwindcss": "3.4.1",
-  "typescript": "5.3.3"
+  "typescript": "5.3.3",
+  "xlsx": "^0.18.5"
  },
  "devDependencies": {
   "@types/leaflet": "^1.9.8",

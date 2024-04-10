@@ -8,7 +8,8 @@ import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import { AddOrEditProject } from '../Project/AddOrEditProject';
 import { useAppDispatch, useAppSelector } from '@/utils/Store/hooks';
 import { selectMarkersLoading, selectProjectItems, selectProjectLoading, selectStreetsLoading } from '@/utils/Store/Selectors/projectSelectors';
-import { Add, AddRoad } from '@mui/icons-material';
+import { AddRoad } from '@mui/icons-material';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { AddStreet } from './AddStreet';
 import { Tables } from '@/utils/Store/Models/Database';
 import { ProjectModel } from '@/utils/Store/Models/Project/ProjectModel';
@@ -45,6 +46,7 @@ export const DrawerDialog = () => {
     const [expanded, setExpanded] = React.useState<string | false>(false);
     const [search, setSearch] = useState<string>('')
     const [moreInfo, setMoreInfo] = useState(false)
+
     const map = useMap();
 
 
@@ -109,6 +111,7 @@ export const DrawerDialog = () => {
             return [JSON.parse(offlineProjects)]
         }
     }
+
 
     return (
         <>
@@ -216,7 +219,6 @@ export const DrawerDialog = () => {
                                                     alignItems: 'center'
                                                 }}>
                                                     <ProjectMenu project={item} setMoreInfo={setMoreInfo} />
-
                                                 </Box>
                                             </Box>
                                         </AccordionSummary>
