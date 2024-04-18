@@ -1,14 +1,15 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useRouter } from "next/navigation";
 import { Box, Button, Card, TextField } from '@mui/material';
 import Image from 'next/image';
-import { useAppDispatch } from '@/utils/Store/hooks';
+import { useAppDispatch, useAppSelector } from '@/utils/Store/hooks';
 import { getUserAction } from '@/utils/Store/Actions/UsersActions';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { Database } from '@/utils/Store/Models/Database';
 import { addAppNotification } from '@/utils/Store/Slices/appNotificationSlice';
+import { selectCurrentUser } from '@/utils/Store/Selectors/usersSelectors';
 
 
 const Auth = () => {
@@ -17,6 +18,9 @@ const Auth = () => {
     const router = useRouter()
     const dispatch = useAppDispatch()
     const supabase = createClientComponentClient<Database>()
+    const currentUser = useAppSelector(selectCurrentUser)
+
+
     const signIn = async () => {
         const { data } = await supabase.auth.signInWithPassword({
             email,
@@ -29,7 +33,7 @@ const Auth = () => {
         if (user) {
             localStorage.setItem('user', JSON.stringify(user))
             dispatch(getUserAction(user.id))
-            router.push('/')
+            location.reload();
 
         }
         if (!user) {
@@ -39,6 +43,12 @@ const Auth = () => {
             }))
         }
     }
+
+    useEffect(() => {
+        if (currentUser) {
+            router.push('/')
+        }
+    }, [currentUser])
 
     return (
         <Box sx={{
