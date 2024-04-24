@@ -10,7 +10,8 @@ const initialState: miscState = {
         lamps: "all_lamps",
         type: "both",
         observatii: 'both'
-    }
+    },
+    myProjects: true
 };
 
 const miscSlice = createSlice({
@@ -28,10 +29,13 @@ const miscSlice = createSlice({
         },
         setFilters: (state, action) => {
             state.filters = action.payload
+        },
+        setMyProjects: (state, action) => {
+            state.myProjects = action.payload
         }
     },
 });
 
-export const { setDrawer, setTooltips, setHasInternet, setFilters } = miscSlice.actions;
+export const { setDrawer, setTooltips, setHasInternet, setFilters, setMyProjects } = miscSlice.actions;
 
 export default miscSlice.reducer;

@@ -4,5 +4,6 @@ export interface miscState {
     drawer: boolean,
     tooltips: boolean,
     hasInternet: boolean,
-    filters: FilterModel
+    filters: FilterModel,
+    myProjects: boolean
 }

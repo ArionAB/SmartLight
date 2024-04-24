@@ -16,3 +16,7 @@ export const selectHasInternet = (state: RootState): boolean => {
 export const selectFilters = (state: RootState): FilterModel => {
     return state.misc.filters
 }
+
+export const selectMyProjects = (state: RootState): boolean => {
+    return state.misc.myProjects
+}

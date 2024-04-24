@@ -35,20 +35,44 @@ export const getProjectAction = (currentUser: getUserModel) => {
 
             }
             if (currentUser.role_type === 'Admin' || currentUser.role_type === 'Visitor') {
-                const { data: proiecte, error } = await supabase
-                    .from('proiecte')
-                    .select('*, markers(count)')
-                    .order('county', { ascending: true })
+                const { misc } = getState()
 
-                if (!error) {
-                    dispatch(setProjectItems(proiecte))
+                if (misc.myProjects) {
+                    const { data: proiecte, error } = await supabase
+                        .from('users_projects')
+                        .select('*, proiecte (*, markers(count))')
+                        .eq('user_id', currentUser.id);
+
+                    if (!error) {
+                        let projects: ProjectModel[] = []
+                        proiecte?.map((project: any) => {
+                            projects.push(project.proiecte)
+                        })
+                        dispatch(setProjectItems(projects))
+                    }
+
+
+                    if (error) {
+                        dispatch(setProjectsLoading(false))
+                        throw error;
+                    }
+                } else {
+                    const { data: proiecte, error } = await supabase
+                        .from('proiecte')
+                        .select('*, markers(count)')
+                        .order('county', { ascending: true })
+
+                    if (!error) {
+                        dispatch(setProjectItems(proiecte))
+                    }
+
+
+                    if (error) {
+                        dispatch(setProjectsLoading(false))
+                        throw error;
+                    }
                 }
 
-
-                if (error) {
-                    dispatch(setProjectsLoading(false))
-                    throw error;
-                }
 
             }
 

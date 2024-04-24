@@ -7,8 +7,8 @@ import { useAppDispatch, useAppSelector } from '@/utils/Store/hooks';
 import { selectFocusedProject } from '@/utils/Store/Selectors/projectSelectors';
 import FolderIcon from '@mui/icons-material/Folder';
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
-import { selectHasInternet, selectIsTooltipOpen } from '@/utils/Store/Selectors/miscSelectors';
-import { setDrawer, setTooltips } from '@/utils/Store/Slices/miscSlice';
+import { selectHasInternet, selectIsTooltipOpen, selectMyProjects } from '@/utils/Store/Selectors/miscSelectors';
+import { setDrawer, setMyProjects, setTooltips } from '@/utils/Store/Slices/miscSlice';
 import { selectCurrentUser } from '@/utils/Store/Selectors/usersSelectors';
 import { setCurrentUser } from '@/utils/Store/Slices/usersSlice';
 import { getUserAction } from '@/utils/Store/Actions/UsersActions';
@@ -24,6 +24,7 @@ import SortIcon from '@mui/icons-material/Sort';
 import Filter from '../Filter/Filter';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import { addAppNotification } from '@/utils/Store/Slices/appNotificationSlice';
+import { getProjectAction } from '@/utils/Store/Actions/ProjectAction';
 
 const Navbar: FC = () => {
     const [anchorEl, setAnchorEl] = useState<HTMLDivElement | null>(null);
@@ -38,6 +39,7 @@ const Navbar: FC = () => {
     const supabase = createClientComponentClient<Database>()
     const hasInternet = useAppSelector(selectHasInternet)
     const isTooltips = useAppSelector(selectIsTooltipOpen)
+    const myProjects = useAppSelector(selectMyProjects)
 
 
     const handleToggleDrawer = () => {
@@ -55,7 +57,10 @@ const Navbar: FC = () => {
                 dispatch(setCurrentUser(user))
             }
             if (error) {
-                router.push('/login')
+                dispatch(addAppNotification({
+                    severity: "error",
+                    message: "Nu sunteți logat!"
+                }))
             }
 
         }
@@ -107,6 +112,10 @@ const Navbar: FC = () => {
 
     const handleTooltipChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         dispatch(setTooltips(event.target.checked));
+    };
+    const handleMyProjectsChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        dispatch(setMyProjects(event.target.checked));
+        dispatch(getProjectAction(currentUser!))
     };
 
     return (
@@ -176,6 +185,11 @@ const Navbar: FC = () => {
                     <FormControlLabel
                         control={<IOSSwitch sx={{ m: 1 }} onChange={handleTooltipChange} checked={isTooltips} />}
                         label="Detalii markeri"
+                    />
+                    <Divider sx={{ my: 0.5 }} />
+                    <FormControlLabel
+                        control={<IOSSwitch sx={{ m: 1 }} onChange={handleMyProjectsChange} checked={myProjects} />}
+                        label="Proiectele mele"
                     />
                     <Divider sx={{ my: 0.5 }} />
                     {loadingUpload ? (
