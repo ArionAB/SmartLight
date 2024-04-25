@@ -6,7 +6,7 @@ import { setTooltips } from "../Slices/miscSlice";
 import { deleteMarker, setFocusedProject, setMarker, setMarkersItems, setMarkersLoading, updateMarker } from "../Slices/projectSlice";
 
 let fetchedStreets: string[] = []
-export const getMarkersAction = (street_id?: string, project?: ProjectModel, without_notification?: boolean) => {
+export const getMarkersAction = (street_id?: string, project?: ProjectModel) => {
     return async (dispatch: any, getState: () => any) => {
         try {
 
@@ -30,6 +30,7 @@ export const getMarkersAction = (street_id?: string, project?: ProjectModel, wit
                     } else {
                         dispatch(setMarkersLoading(false))
                     }
+
                 }
 
                 if (error) {
@@ -64,16 +65,10 @@ export const getMarkersAction = (street_id?: string, project?: ProjectModel, wit
                             totalMarkers.push(...markers)
                         }
 
-                        if (!without_notification) {
-                            dispatch(addAppNotification({
-                                severity: 'success',
-                                message: "Markerii sunt afișati pe hartă!"
-                            }))
-                        }
-
-
-                        return markers
-
+                        dispatch(addAppNotification({
+                            severity: 'success',
+                            message: "Markerii sunt afișati pe hartă!"
+                        }))
                     }
 
                     if (error) {
