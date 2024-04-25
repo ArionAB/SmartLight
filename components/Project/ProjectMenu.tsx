@@ -19,6 +19,8 @@ import { addAppNotification } from '@/utils/Store/Slices/appNotificationSlice';
 import { DeleteDialog } from '../Notifications/DeleteDialog';
 import GetAppIcon from '@mui/icons-material/GetApp';
 import * as XLSX from 'xlsx';
+import { selectHasInternet } from '@/utils/Store/Selectors/miscSelectors';
+import { MarkersExcelModel } from '@/utils/Store/Models/Markers/MarkersExcelModel';
 
 
 const StyledMenu = styled((props: MenuProps) => (
@@ -76,7 +78,7 @@ const ProjectMenu: FC<{ project: ProjectModel, setMoreInfo: Function }> = ({ pro
     const [openEditDialog, setOpenEditDialog] = useState(false)
     const [existingProject, setExistingProject] = useState<ProjectModel | null>(null)
 
-
+    const hasInternet = useAppSelector(selectHasInternet)
     const currentUser = useAppSelector(selectCurrentUser)
     const map = useMap();
     const dispatch = useAppDispatch()
@@ -119,37 +121,69 @@ const ProjectMenu: FC<{ project: ProjectModel, setMoreInfo: Function }> = ({ pro
     }, [anchor])
 
     const handleExportExcel = () => {
-        const data = [
-            { name: "John", email: "john@example.com", age: 28 },
-            { name: "Jane", email: "jane@example.com", age: 32 }
-        ];
 
-        const worksheet = XLSX.utils.json_to_sheet(data);
-        const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+        let markersForExcel: MarkersExcelModel[] = []
+        dispatch(getMarkersAction(undefined, project)).then((res) => {
+            res?.map((marker) => {
+                let data: MarkersExcelModel = {
+                    strada: '',
+                    numar: 0,
+                    latitudine: '',
+                    longitudine: '',
+                    stalp: '',
+                    lampa: '',
+                    tip: '',
+                    observatii: '',
+                    putere: '',
+                    hub_c: ''
+                };
+                let street = project.strazi.find((strada) => strada.id === marker.street_id);
+                data.strada = street!.name;
+                data.numar = marker.number;
+                data.latitudine = marker.latitude;
+                data.longitudine = marker.longitude;
+                data.stalp = marker.pole_type;
+                data.lampa = marker.lamp_type;
+                data.tip = marker.marker_type;
+                data.observatii = marker.observatii;
+                data.putere = marker.power_type;
+                data.hub_c = marker.hub_c ? 'Da' : "Nu";
+                markersForExcel.push(data);
+            });
 
-        const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
-        const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8' });
+            // Sort the markers alphabetically by street name
+            markersForExcel.sort((a, b) => (a.strada > b.strada) ? 1 : ((b.strada > a.strada) ? -1 : 0));
 
-        const blobURL = URL.createObjectURL(blob);
+            const worksheet = XLSX.utils.json_to_sheet(markersForExcel);
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
 
-        // Create a temporary anchor element
-        const tempLink = document.createElement('a');
-        tempLink.href = blobURL;
-        tempLink.setAttribute('download', 'data.xlsx'); // Set the file name
-        tempLink.style.display = 'none'; // Make sure it's not visible
+            const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+            const blob = new Blob([excelBuffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8' });
 
-        // Append the anchor to the document body
-        document.body.appendChild(tempLink);
+            const blobURL = URL.createObjectURL(blob);
 
-        // Programmatically click the anchor to initiate download
-        tempLink.click();
+            // Create a temporary anchor element
+            const tempLink = document.createElement('a');
+            tempLink.href = blobURL;
+            tempLink.setAttribute('download', `${project.city}.xlsx`); // Set the file name
+            tempLink.style.display = 'none'; // Make sure it's not visible
 
-        // Clean up: remove the anchor from the document
-        document.body.removeChild(tempLink);
+            // Append the anchor to the document body
+            document.body.appendChild(tempLink);
 
-        // Revoke the Blob URL to free up memory
-        URL.revokeObjectURL(blobURL);
+            // Programmatically click the anchor to initiate download
+            tempLink.click();
+
+            // Clean up: remove the anchor from the document
+            document.body.removeChild(tempLink);
+
+            // Revoke the Blob URL to free up memory
+            URL.revokeObjectURL(blobURL);
+
+            console.log(res)
+        })
+
     }
 
     return (
@@ -200,13 +234,13 @@ const ProjectMenu: FC<{ project: ProjectModel, setMoreInfo: Function }> = ({ pro
                     <DownloadForOfflineIcon color="primary" />
                     Descarcă offline
                 </MenuItem>
-                {/* <Divider sx={{ my: 0.5 }} />
-                <MenuItem onClick={() => {
+                <Divider sx={{ my: 0.5 }} />
+                <MenuItem disabled={!hasInternet} onClick={() => {
                     handleExportExcel()
                 }} disableRipple>
                     <GetAppIcon color="success" />
                     Export ca Excel
-                </MenuItem> */}
+                </MenuItem>
                 <Divider sx={{ my: 0.5 }} />
                 {
                     currentUser?.role_type === 'Admin' && (
