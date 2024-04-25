@@ -123,7 +123,7 @@ const ProjectMenu: FC<{ project: ProjectModel, setMoreInfo: Function }> = ({ pro
     const handleExportExcel = () => {
 
         let markersForExcel: MarkersExcelModel[] = []
-        dispatch(getMarkersAction(undefined, project)).then((res) => {
+        dispatch(getMarkersAction(undefined, project, true)).then((res) => {
             res?.map((marker) => {
                 let data: MarkersExcelModel = {
                     strada: '',
