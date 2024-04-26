@@ -9,8 +9,6 @@ let fetchedStreets: string[] = []
 export const getMarkersAction = (street_id?: string, project?: ProjectModel) => {
     return async (dispatch: any, getState: () => any) => {
         try {
-
-
             if (street_id) {
                 if (fetchedStreets.includes(street_id)) {
                     return
@@ -30,7 +28,6 @@ export const getMarkersAction = (street_id?: string, project?: ProjectModel) => 
                     } else {
                         dispatch(setMarkersLoading(false))
                     }
-
                 }
 
                 if (error) {
