@@ -66,6 +66,7 @@ export const getMarkersAction = (street_id?: string, project?: ProjectModel) => 
                             severity: 'success',
                             message: "Markerii sunt afișati pe hartă!"
                         }))
+
                     }
 
                     if (error) {

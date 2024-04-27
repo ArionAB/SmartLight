@@ -3,10 +3,9 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { useAppDispatch } from '@/utils/Store/hooks'
 import { PieChart } from '@mui/x-charts/PieChart';
-import { Box, Card, Container, Typography } from '@mui/material';
-import { fetchNetworkRoadTypesCount } from '@/utils/Store/Actions/StreetActions';
+import { Box, Card, Typography } from '@mui/material';
 import { Enums } from '@/utils/Store/Models/Database';
-import { ResponsiveChartContainer } from '@mui/x-charts';
+import { fetchNetworkRoadTypesCount } from '@/utils/Store/Actions/StatisticsAction';
 
 interface Count {
     count: number,

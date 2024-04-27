@@ -21,6 +21,8 @@ import GetAppIcon from '@mui/icons-material/GetApp';
 import * as XLSX from 'xlsx';
 import { selectHasInternet } from '@/utils/Store/Selectors/miscSelectors';
 import { MarkersExcelModel } from '@/utils/Store/Models/Markers/MarkersExcelModel';
+import { exportProjectAsExcel } from '@/utils/Store/Actions/ExcelActions';
+import { Tables } from '@/utils/Store/Models/Database';
 
 
 const StyledMenu = styled((props: MenuProps) => (
@@ -121,9 +123,10 @@ const ProjectMenu: FC<{ project: ProjectModel, setMoreInfo: Function }> = ({ pro
     }, [anchor])
 
     const handleExportExcel = () => {
-
         let markersForExcel: MarkersExcelModel[] = []
-        dispatch(getMarkersAction(undefined, project)).then((res: any) => {
+        dispatch(exportProjectAsExcel(project)).then((res: any) => {
+            console.log(res)
+
             res.map((marker: any) => {
                 let data: MarkersExcelModel = {
                     strada: '',
@@ -181,7 +184,6 @@ const ProjectMenu: FC<{ project: ProjectModel, setMoreInfo: Function }> = ({ pro
             // Revoke the Blob URL to free up memory
             URL.revokeObjectURL(blobURL);
 
-            console.log(res)
         })
 
     }
