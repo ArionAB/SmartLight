@@ -76,17 +76,21 @@ export const StreetMarkerDetails: FC<{
         const minute = timestamp.slice(11, 13);
         const second = timestamp.slice(13, 15);
 
-        const imageUrls: string[] = [];
-        for (let file of uploadedFiles) {
-            const randomNumber = Math.floor(Math.random() * 1000) + 1;
-            let { data, error } = await supabase.storage.from('illumitech-bucket')
-                .upload(focusedProject.item.city + '/' + focusedProject.street.name + "/" + `${marker.number}/${file.name}-${year}-${month}-${day}-${hour}-${minute}-${second}-${randomNumber}`, file);
-            if (error) throw error;
-            imageUrls.push(data!.path);
+        if (uploadedFiles.length) {
+            const imageUrls: string[] = [];
+            for (let file of uploadedFiles) {
+                const randomNumber = Math.floor(Math.random() * 1000) + 1;
+                let { data, error } = await supabase.storage.from('illumitech-bucket')
+                    .upload(focusedProject.item.city + '/' + focusedProject.street.name + "/" + `${marker.number}/${file.name}-${year}-${month}-${day}-${hour}-${minute}-${second}-${randomNumber}`, file);
+                if (error) throw error;
+                imageUrls.push(data!.path);
+            }
+
+            //@ts-ignore
+            form.images = imageUrls
+
         }
 
-        //@ts-ignore
-        form.images = imageUrls
 
         let markerData: TablesUpdate<'markers'> = {
             ...form,
