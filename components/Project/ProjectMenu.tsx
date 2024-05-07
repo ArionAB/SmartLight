@@ -125,8 +125,6 @@ const ProjectMenu: FC<{ project: ProjectModel, setMoreInfo: Function }> = ({ pro
     const handleExportExcel = () => {
         let markersForExcel: MarkersExcelModel[] = []
         dispatch(exportProjectAsExcel(project)).then((res: any) => {
-            console.log(res)
-
             res.map((marker: any) => {
                 let data: MarkersExcelModel = {
                     strada: '',
@@ -138,7 +136,8 @@ const ProjectMenu: FC<{ project: ProjectModel, setMoreInfo: Function }> = ({ pro
                     tip: '',
                     observatii: '',
                     putere: '',
-                    hub_c: ''
+                    hub_c: '',
+                    'serie controller': ''
                 };
                 let street = project.strazi.find((strada) => strada.id === marker.street_id);
                 data.strada = street!.name;
@@ -150,6 +149,7 @@ const ProjectMenu: FC<{ project: ProjectModel, setMoreInfo: Function }> = ({ pro
                 data.tip = marker.marker_type;
                 data.observatii = marker.observatii;
                 data.putere = marker.power_type;
+                data['serie controller'] = marker.series_number
                 data.hub_c = marker.hub_c ? 'Da' : "Nu";
                 markersForExcel.push(data);
             });
