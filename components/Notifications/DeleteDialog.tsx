@@ -34,6 +34,9 @@ export const DeleteDialog: FC<{ open: boolean, setOpen: Function, title: string,
                 TransitionComponent={Transition}
                 keepMounted
                 onClose={handleClose}
+                sx={{
+                    zIndex: 1500
+                }}
                 aria-describedby="alert-dialog-slide-description"
             >
                 <DialogTitle>

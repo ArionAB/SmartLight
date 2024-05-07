@@ -1,7 +1,6 @@
 import { Box, IconButton, Menu, Dialog, Button, MenuItem, MenuProps, alpha, Divider } from '@mui/material'
-import React, { FC, useEffect, useState } from 'react'
+import React, { FC, useState } from 'react'
 import EditIcon from '@mui/icons-material/Edit';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
 import styled from '@emotion/styled';
 import { Delete } from '@mui/icons-material';
 import { ProjectModel } from '@/utils/Store/Models/Project/ProjectModel';
@@ -22,13 +21,11 @@ import * as XLSX from 'xlsx';
 import { selectHasInternet } from '@/utils/Store/Selectors/miscSelectors';
 import { MarkersExcelModel } from '@/utils/Store/Models/Markers/MarkersExcelModel';
 import { exportProjectAsExcel } from '@/utils/Store/Actions/ExcelActions';
-import { Tables } from '@/utils/Store/Models/Database';
 
 
 const StyledMenu = styled((props: MenuProps) => (
     <Menu
         elevation={10}
-
         anchorOrigin={{
             vertical: 'bottom',
             horizontal: 'right',
@@ -73,8 +70,9 @@ const StyledMenu = styled((props: MenuProps) => (
 
 
 
-const ProjectMenu: FC<{ project: ProjectModel, setMoreInfo: Function }> = ({ project, setMoreInfo }) => {
-    const [anchor, setAnchor] = useState<null | HTMLElement>(null);
+const ProjectMenu: FC<{
+    project: ProjectModel, anchor: null | HTMLElement, handleClose: (event: {}, reason: "backdropClick" | "escapeKeyDown") => void, setAnchor: Function
+}> = ({ project, anchor, handleClose, setAnchor }) => {
     const [deleteDialog, setDeleteDialog] = useState<boolean>(false)
     const [openTable, setOpenTable] = useState(false)
     const [openEditDialog, setOpenEditDialog] = useState(false)
@@ -84,14 +82,6 @@ const ProjectMenu: FC<{ project: ProjectModel, setMoreInfo: Function }> = ({ pro
     const currentUser = useAppSelector(selectCurrentUser)
     const map = useMap();
     const dispatch = useAppDispatch()
-
-    const handleOpenProjectMenu = (event: React.MouseEvent<HTMLElement>) => {
-        setAnchor(event.currentTarget);
-    }
-
-    const handleClose = () => {
-        setAnchor(null)
-    }
 
     const checkIfProjectExists = () => {
         const offlineProject = localStorage.getItem('project')
@@ -116,11 +106,6 @@ const ProjectMenu: FC<{ project: ProjectModel, setMoreInfo: Function }> = ({ pro
     const handleGoToLocation = (lat: number, lng: number) => {
         flyToLocation(map, lat, lng)
     }
-    useEffect(() => {
-        if (anchor) {
-            setMoreInfo(true)
-        } else setMoreInfo(false)
-    }, [anchor])
 
     const handleExportExcel = () => {
         let markersForExcel: MarkersExcelModel[] = []
@@ -188,6 +173,7 @@ const ProjectMenu: FC<{ project: ProjectModel, setMoreInfo: Function }> = ({ pro
 
     }
 
+
     return (
         <>
             <DeleteDialog
@@ -197,9 +183,7 @@ const ProjectMenu: FC<{ project: ProjectModel, setMoreInfo: Function }> = ({ pro
                 title='Aveți deja un proiect descărcat!'
                 message={`Sunteți sigur că doriți să descărcați un alt proiect și să-l ștergeți pe cel deja descărcat "${existingProject?.city}"?`}
             />
-            <IconButton color='info' size='small' onClick={handleOpenProjectMenu}>
-                <MoreVertIcon />
-            </IconButton>
+
             <Dialog open={openEditDialog} onClose={() => setOpenEditDialog(false)} >
                 <AddOrEditProject setOpenAddMarker={setOpenEditDialog} project={project} />
                 <Button sx={{ marginBottom: '1rem', marginX: '24px' }} variant='outlined' onClick={() => setOpenEditDialog(false)}>Anulează</Button>

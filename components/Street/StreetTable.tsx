@@ -57,32 +57,39 @@ const StreetTable: FC<{
     const rows = useMemo(() => {
         if (counter) {
             return Object.entries(counter).map(([key, value]: any) => {
-                const item = {
+                let item: any = {
                     name: key,
                     total: value['total'],
                     lamp: value['Cu lampa'],
                     noLamp: value['Fara lampa']
                 };
-                return createData(item.name, Number(item.total), Number(item.lamp), Number(item.noLamp));
-            });
-        }
 
+                return createData(item.name, Number(item.total), Number(item.lamp ?? 0), Number(item.noLamp ?? 0));
+            });
+        } else {
+            return [];
+        }
     }, [counter]);
+
 
     const countTotal = () => {
         let total = {
             poles: 0,
             lamp: 0,
             noLamp: 0
-        }
-        rows?.forEach((row) => {
-            total.poles += row.total,
-                total.lamp += row.lamp,
-                total.noLamp += row.noLamp
-        })
+        };
 
-        return total
-    }
+        if (rows) {
+            rows.forEach((row) => {
+                total.poles += row.total;
+                total.lamp += row.lamp;
+                total.noLamp += row.noLamp;
+
+            });
+        }
+
+        return total;
+    };
 
 
     const StyledTableCell = styled(TableCell)(({ theme }) => ({

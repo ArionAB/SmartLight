@@ -1,8 +1,7 @@
-import { Box, IconButton, Menu, Dialog, Button, Stack, Paper, MenuList, MenuItem, Popper, Grow, ClickAwayListener, MenuProps, alpha, Divider } from '@mui/material'
+import { Box, Menu, Dialog, Button, MenuItem, MenuProps, alpha, Divider } from '@mui/material'
 import React, { FC, useState } from 'react'
 import InfoIcon from '@mui/icons-material/Info';
 import EditIcon from '@mui/icons-material/Edit';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { StreetModel } from '@/utils/Store/Models/Street/StreetModel';
 import { StreetEdit } from './StreetEdit';
 import DeleteStreet from './DeleteStreet';
@@ -11,7 +10,6 @@ import styled from '@emotion/styled';
 import { Delete } from '@mui/icons-material';
 import { useAppSelector } from '@/utils/Store/hooks';
 import { selectCurrentUser } from '@/utils/Store/Selectors/usersSelectors';
-import LampTable from './LampTable';
 
 const StyledMenu = styled((props: MenuProps) => (
     <Menu
@@ -23,6 +21,9 @@ const StyledMenu = styled((props: MenuProps) => (
         transformOrigin={{
             vertical: 'top',
             horizontal: 'right',
+        }}
+        sx={{
+            zIndex: '1'
         }}
         {...props}
     />
@@ -60,27 +61,18 @@ const StyledMenu = styled((props: MenuProps) => (
 
 
 
-const StreetMenu: FC<{ street: StreetModel }> = ({ street }) => {
-    const [anchor, setAnchor] = useState<null | HTMLElement>(null);
+const StreetMenu: FC<{
+    street: StreetModel, anchor: null | HTMLElement, handleClose: (event: {}, reason: "backdropClick" | "escapeKeyDown") => void
+}> = ({ street, anchor, handleClose }) => {
     const [deleteDialog, setDeleteDialog] = useState<boolean>(false)
     const [openTable, setOpenTable] = useState(false)
     const [openEditDialog, setOpenEditDialog] = useState(false)
 
     const currentUser = useAppSelector(selectCurrentUser)
 
-    const handleOpenStreetMenu = (event: React.MouseEvent<HTMLElement>) => {
-        setAnchor(event.currentTarget);
-    }
-
-    const handleClose = () => {
-        setAnchor(null)
-    }
-
     return (
         <>
-            <IconButton color='info' onClick={handleOpenStreetMenu}>
-                <MoreVertIcon />
-            </IconButton>
+
             <Dialog open={openEditDialog} onClose={() => setOpenEditDialog(false)} >
                 <StreetEdit street={street} onClose={setOpenEditDialog} />
             </Dialog>
@@ -99,7 +91,7 @@ const StreetMenu: FC<{ street: StreetModel }> = ({ street }) => {
 
                 <MenuItem onClick={() => {
                     setOpenTable(true),
-                        handleClose()
+                        handleClose
                 }} disableRipple>
                     <InfoIcon color='success' />
                     Info
@@ -110,7 +102,7 @@ const StreetMenu: FC<{ street: StreetModel }> = ({ street }) => {
                         <Box>
                             <MenuItem onClick={() => {
                                 setOpenEditDialog(true)
-                                handleClose()
+                                handleClose
                             }} disableRipple>
                                 <EditIcon color='warning' />
                                 Edit
@@ -118,7 +110,7 @@ const StreetMenu: FC<{ street: StreetModel }> = ({ street }) => {
                             <Divider sx={{ my: 0.5 }} />
                             <MenuItem onClick={() => {
                                 setDeleteDialog(true),
-                                    handleClose()
+                                    handleClose
                             }} disableRipple>
                                 <Delete color='error' />
                                 Șterge
@@ -131,7 +123,6 @@ const StreetMenu: FC<{ street: StreetModel }> = ({ street }) => {
             </StyledMenu>
             <Dialog fullScreen maxWidth="md" open={openTable} onClose={() => setOpenTable(false)}>
                 <StreetTable street={street} />
-                {/* <LampTable street={street} /> */}
                 <Box sx={{
                     margin: "1rem",
                     display: 'flex',

@@ -341,6 +341,7 @@ export const StreetMarkerDetails: FC<{
                                 fullWidth
                                 name="series_number"
                                 value={form.series_number ?? ''}
+                                disabled={disabled.series_number}
                                 onChange={(e) => handleChange(e)}
                                 InputProps={{
                                     endAdornment: (

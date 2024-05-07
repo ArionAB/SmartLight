@@ -45,7 +45,10 @@ export const DrawerDialog = () => {
     const [street, setStreet] = useState<StreetModel | null>(null)
     const [expanded, setExpanded] = React.useState<string | false>(false);
     const [search, setSearch] = useState<string>('')
-    const [moreInfo, setMoreInfo] = useState(false)
+    const [anchor, setAnchor] = useState<null | HTMLElement>(null);
+    const [streetAnchor, setStreetAnchor] = useState<null | HTMLElement>(null);
+
+
 
     const map = useMap();
 
@@ -112,7 +115,21 @@ export const DrawerDialog = () => {
         }
     }
 
+    const handleOpenProjectMenu = (event: React.MouseEvent<HTMLElement>) => {
+        setAnchor(event.currentTarget);
+    }
 
+    const handleCloseProjectMenu = () => {
+        setAnchor(null)
+    }
+
+    const handleOpenStreetMenu = (event: React.MouseEvent<HTMLElement>) => {
+        setStreetAnchor(event.currentTarget);
+    }
+
+    const handleCloseStreetMenu = () => {
+        setStreetAnchor(null)
+    }
     return (
         <>
             <Dialog open={openAddMarker} onClose={() => setOpenAddMarker(false)} fullScreen={isMobile}>
@@ -185,7 +202,7 @@ export const DrawerDialog = () => {
                         if (item?.city?.toLowerCase().includes(search.toLowerCase())) {
                             return (
                                 <List key={item.id}>
-                                    <Accordion expanded={expanded === item.id && !moreInfo} onChange={handleChange(item.id)} sx={selectedProject?.id === item.id ? { border: "2px solid #0052cc" } : {}}>
+                                    <Accordion expanded={expanded === item.id && !anchor} onChange={handleChange(item.id)} sx={selectedProject?.id === item.id ? { border: "2px solid #0052cc" } : {}}>
                                         <AccordionSummary
                                             expandIcon={<ArrowDownwardIcon />}
                                             aria-controls="panel1-content"
@@ -218,7 +235,12 @@ export const DrawerDialog = () => {
                                                     display: 'flex',
                                                     alignItems: 'center'
                                                 }}>
-                                                    <ProjectMenu project={item} setMoreInfo={setMoreInfo} />
+                                                    <IconButton color='info' size='small' onClick={handleOpenProjectMenu}>
+                                                        <MoreVertIcon />
+                                                    </IconButton>
+                                                    {anchor && (selectedProject && selectedProject.id === item.id) ? (
+                                                        <ProjectMenu anchor={anchor} setAnchor={setAnchor} handleClose={handleCloseProjectMenu} project={item} />
+                                                    ) : null}
                                                 </Box>
                                             </Box>
                                         </AccordionSummary>
@@ -300,7 +322,13 @@ export const DrawerDialog = () => {
                                                                                 <Typography variant='caption'>{streetItem.network_type}</Typography>
                                                                                 <Typography variant='caption'>{streetItem.road_type}</Typography>
                                                                             </Box>
-                                                                            <StreetMenu street={street!} />
+                                                                            <IconButton color='info' onClick={handleOpenStreetMenu}>
+                                                                                <MoreVertIcon />
+                                                                            </IconButton>
+                                                                            {streetAnchor && (street && street.id === streetItem.id) ? (
+                                                                                <StreetMenu street={street!} anchor={streetAnchor} handleClose={handleCloseStreetMenu} />
+                                                                            ) : null}
+
                                                                         </Box>
                                                                     </AccordionSummary>
                                                                 </Badge>
