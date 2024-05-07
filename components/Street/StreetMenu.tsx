@@ -22,9 +22,6 @@ const StyledMenu = styled((props: MenuProps) => (
             vertical: 'top',
             horizontal: 'right',
         }}
-        sx={{
-            zIndex: '1'
-        }}
         {...props}
     />
 ))(({ theme }) => ({
