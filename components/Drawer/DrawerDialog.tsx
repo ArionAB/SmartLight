@@ -1,8 +1,7 @@
-
 'use client'
 
 import React, { useEffect, useState } from 'react'
-import { Accordion, AccordionDetails, AccordionSummary, Avatar, Badge, Box, Button, Dialog, Divider, Fab, IconButton, InputAdornment, List, ListItem, ListItemAvatar, ListItemText, Menu, MenuItem, Paper, Skeleton, TextField, Typography } from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, Avatar, Badge, Box, Button, Dialog, Divider, Fab, IconButton, InputAdornment, List, ListItem, ListItemAvatar, ListItemText, Skeleton, TextField, Typography } from '@mui/material';
 import CreateNewFolderIcon from '@mui/icons-material/CreateNewFolder';
 import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import { AddOrEditProject } from '../Project/AddOrEditProject';
@@ -32,8 +31,7 @@ import { getStreetAction } from '@/utils/Store/Actions/StreetActions';
 import { getMarkersAction } from '@/utils/Store/Actions/MarkerActions';
 import useBreakpointDown from '@/utils/Hooks/useBreakpoints';
 import { selectCurrentUser } from '@/utils/Store/Selectors/usersSelectors';
-
-
+import MenuOpenIcon from '@mui/icons-material/MenuOpen';
 
 export const DrawerDialog = () => {
     const [open, setOpen] = useState(true)
@@ -48,10 +46,7 @@ export const DrawerDialog = () => {
     const [anchor, setAnchor] = useState<null | HTMLElement>(null);
     const [streetAnchor, setStreetAnchor] = useState<null | HTMLElement>(null);
 
-
-
     const map = useMap();
-
 
     const dispatch = useAppDispatch();
     const isDrawerOpen = useAppSelector(selectIsDrawerOpen)
@@ -61,8 +56,6 @@ export const DrawerDialog = () => {
     const loadingMarkers = useAppSelector(selectMarkersLoading)
     const currentUser = useAppSelector(selectCurrentUser)
     const hasInternet = useAppSelector(selectHasInternet)
-
-
 
     useEffect(() => {
         if (currentUser && projectItems.length === 0) {
@@ -181,10 +174,16 @@ export const DrawerDialog = () => {
                             ),
                         }}></TextField>
                         {currentUser?.role_type === 'Admin' && (
-                            <Fab onClick={() => setOpenAddMarker(true)} color='primary'>
+                            <Fab onClick={() => setOpenAddMarker(true)} size="small" color='primary'>
                                 <CreateNewFolderIcon />
                             </Fab>
                         )}
+                        <IconButton onClick={() => {
+                            setOpen(false)
+                            dispatch(setDrawer(false))
+                        }}>
+                            <MenuOpenIcon />
+                        </IconButton>
 
                     </ListItem>
                 </List>
