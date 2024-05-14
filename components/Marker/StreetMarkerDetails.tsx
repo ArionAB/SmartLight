@@ -170,10 +170,10 @@ export const StreetMarkerDetails: FC<{
                     height: "90dvh"
                 }}>
                     <Image src={url}
+                        unoptimized
                         alt={url}
                         objectFit="contain"
                         placeholder='blur'
-                        quality="100"
                         layout="fill"
                         blurDataURL="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxwYXRoIGQ9Ik0xMDAgMjAwQzE1NS4yMjkgMjAwIDIwMCAxNTUuMjI5IDIwMCAxMDBDMjAwIDQ0Ljc3MSAxNTUuMjI5IDAgMTAwIDBDMzQuNzcxIDAgMCA0NC43NzEgMCAxMDBDMCAxNTUuMjI5IDQ0Ljc3MSAyMDAgMTAwIDIwMFoiIGZpbGw9IiNDNkM2QzYiLz4KPC9zdmc+Cg=="
                     />
@@ -400,6 +400,7 @@ export const StreetMarkerDetails: FC<{
                                             display: form.images.includes(image) ? 'flex' : 'none'
                                         }}>
                                             <Image src={getImage(image)}
+                                                unoptimized
                                                 key={index}
                                                 alt={image}
                                                 width={250}
