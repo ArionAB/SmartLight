@@ -175,8 +175,8 @@ export const StreetMarkers = () => {
     });
 
     const handleOpenDialog = (marker: Tables<'markers'>) => {
-        setOpen(true),
-            setSelectedMarker(marker)
+        setSelectedMarker(marker),
+            setOpen(true)
     }
 
     const anchor = Boolean(anchorEl)
@@ -247,35 +247,42 @@ export const StreetMarkers = () => {
                                     </IconButton>
                                     {
                                         currentUser?.role_type !== 'Visitor' && (
-                                            <IconButton color='error' onClick={handleClick} aria-describedby='delete'>
+                                            <IconButton color='error' onClick={(e) => {
+                                                handleClick(e)
+                                                setSelectedMarker(marker)
+                                            }} aria-describedby='delete'>
                                                 <DeleteForeverIcon />
                                             </IconButton>
                                         )
                                     }
+                                    {
+                                        selectedMarker?.id === marker?.id && (
+                                            <Popover
+                                                id='delete'
+                                                open={anchor}
+                                                anchorEl={anchorEl}
+                                                onClose={handleClose}
+                                                anchorOrigin={{
+                                                    vertical: 'bottom',
+                                                    horizontal: 'left',
+                                                }}
+                                            >
+                                                <Typography sx={{ p: 2 }} textAlign={'center'}>Sunteti sigur ca doriti sa stergeti markerul cu nr. {marker?.number}?</Typography>
+                                                <Box sx={{
+                                                    display: 'flex',
+                                                    justifyContent: 'space-around',
+                                                    marginBottom: 2
+                                                }}>
+                                                    <Button variant='outlined' onClick={() => setAnchorEl(null)}>Anuleaza</Button>
+                                                    <Button variant='contained' color='error' onClick={() => {
+                                                        handleDeleteMarker(marker)
+                                                    }}>Da</Button>
+                                                </Box>
 
-                                    <Popover
-                                        id='delete'
-                                        open={anchor}
-                                        anchorEl={anchorEl}
-                                        onClose={handleClose}
-                                        anchorOrigin={{
-                                            vertical: 'bottom',
-                                            horizontal: 'left',
-                                        }}
-                                    >
-                                        <Typography sx={{ p: 2 }} textAlign={'center'}>Sunteti sigur ca doriti sa stergeti markerul cu nr. {marker?.number}?</Typography>
-                                        <Box sx={{
-                                            display: 'flex',
-                                            justifyContent: 'space-around',
-                                            marginBottom: 2
-                                        }}>
-                                            <Button variant='outlined' onClick={() => setAnchorEl(null)}>Anuleaza</Button>
-                                            <Button variant='contained' color='error' onClick={() => {
-                                                handleDeleteMarker(marker)
-                                            }}>Da</Button>
-                                        </Box>
+                                            </Popover>
+                                        )
+                                    }
 
-                                    </Popover>
                                 </Box>
 
 
