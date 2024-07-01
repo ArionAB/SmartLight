@@ -26,7 +26,7 @@ export const exportProjectAsExcel = (project: ProjectModel) => {
 
                 if (!error) {
                     if (markers && markers.length > 0) {
-                        totalMarkers.push(...markers)
+                        totalMarkers.push(...markers as any)
                     }
                 }
 
