@@ -2,6 +2,7 @@ import supabase from "@/utils/supabase/createClient";
 import { ProjectModel } from "../Models/Project/ProjectModel";
 import { addAppNotification } from "../Slices/appNotificationSlice";
 import { Tables } from "../Models/Database";
+import { MarkerModel } from "../Models/Markers/MarkerModel";
 
 export const exportProjectAsExcel = (project: ProjectModel) => {
     return async (dispatch: any, getState: () => any) => {
@@ -13,7 +14,7 @@ export const exportProjectAsExcel = (project: ProjectModel) => {
                 numberOfPages = Math.ceil(project.markers[0].count / 1000)
             }
 
-            let totalMarkers: Tables<'markers'>[] = []
+            let totalMarkers: MarkerModel[] = []
             for (let i = 1; i <= numberOfPages; i++) {
                 let offset = (i - 1) * 1000;
 

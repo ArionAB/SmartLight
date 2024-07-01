@@ -15,9 +15,10 @@ import { selectCurrentUser } from '@/utils/Store/Selectors/usersSelectors'
 import { deleteOfflineMarker } from '@/utils/Store/Slices/projectSlice'
 import { ProjectModel } from '@/utils/Store/Models/Project/ProjectModel'
 import { StreetModel } from '@/utils/Store/Models/Street/StreetModel'
+import { MarkerModel } from '@/utils/Store/Models/Markers/MarkerModel'
 
 export const StreetMarkers = () => {
-    const [selectedMarker, setSelectedMarker] = useState<Tables<'markers'>>(null!)
+    const [selectedMarker, setSelectedMarker] = useState<MarkerModel>(null!)
     const [open, setOpen] = useState(false)
     const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
     const [circleSize, setCircleSize] = useState<string>('10px')
@@ -39,7 +40,7 @@ export const StreetMarkers = () => {
         setAnchorEl(null);
     };
 
-    const handleDeleteMarker = (marker: Tables<'markers'>) => {
+    const handleDeleteMarker = (marker: MarkerModel) => {
         if (hasInternet) {
             dispatch(deleteMarkerAction(marker)).then(() => {
                 setAnchorEl(null)
@@ -68,7 +69,7 @@ export const StreetMarkers = () => {
 
 
 
-    const lampColor = (marker: Tables<'markers'>) => {
+    const lampColor = (marker: MarkerModel) => {
         switch (marker.power_type) {
             case '30W':
                 return customLampIcon30(marker)
@@ -107,17 +108,17 @@ export const StreetMarkers = () => {
         }
     }, [zoomLevel]);
 
-    const lampHTML30 = (marker: Tables<'markers'>) => renderToStaticMarkup(
+    const lampHTML30 = (marker: MarkerModel) => renderToStaticMarkup(
         <svg fill='#42a5f5' width={circleSize} height={circleSize} viewBox="0 0 32 32" style={{ border: marker.hub_c ? "#FFD700 2px solid" : marker.marker_status === 'Bad' ? '#c62828 2px solid' : "rgba(89,89,89,1) 1px solid", borderRadius: "50%" }}>
             <circle cx="16" cy="16" r="16" />
         </svg>
     );
-    const lampHTML60 = (marker: Tables<'markers'>) => renderToStaticMarkup(
+    const lampHTML60 = (marker: MarkerModel) => renderToStaticMarkup(
         < svg fill='#4caf50' width={circleSize} height={circleSize} viewBox="0 0 32 32" style={{ border: marker.hub_c ? "#FFD700 2px solid" : marker.marker_status === 'Bad' ? '#c62828 2px solid' : "rgba(89,89,89,1) 1px solid", borderRadius: "50%" }}>
             <circle cx="16" cy="16" r="16" />
         </svg >
     );
-    const lampHTML80 = (marker: Tables<'markers'>) => renderToStaticMarkup(
+    const lampHTML80 = (marker: MarkerModel) => renderToStaticMarkup(
         <svg fill="#673ab7" width={circleSize} height={circleSize} viewBox="0 0 32 32" style={{ border: marker.hub_c ? "#FFD700 2px solid" : marker.marker_status === 'Bad' ? '#c62828 2px solid' : "rgba(89,89,89,1) 1px solid", borderRadius: "50%" }}>
             <circle cx="16" cy="16" r="16" />
         </svg>
@@ -145,19 +146,19 @@ export const StreetMarkers = () => {
 
     })
 
-    const customLampIcon30 = (marker: Tables<'markers'>) => divIcon({
+    const customLampIcon30 = (marker: MarkerModel) => divIcon({
         html: lampHTML30(marker),
         iconSize: [0, 0],
 
     });
 
-    const customLampIcon60 = (marker: Tables<'markers'>) => divIcon({
+    const customLampIcon60 = (marker: MarkerModel) => divIcon({
         html: lampHTML60(marker),
         iconSize: [0, 0],
 
     });
 
-    const customLampIcon80 = (marker: Tables<'markers'>) => divIcon({
+    const customLampIcon80 = (marker: MarkerModel) => divIcon({
         html: lampHTML80(marker),
         iconSize: [0, 0],
 
@@ -174,7 +175,7 @@ export const StreetMarkers = () => {
 
     });
 
-    const handleOpenDialog = (marker: Tables<'markers'>) => {
+    const handleOpenDialog = (marker: MarkerModel) => {
         setSelectedMarker(marker),
             setOpen(true)
     }
@@ -227,11 +228,10 @@ export const StreetMarkers = () => {
             return [];
         }
     }, [filters, focusedProject]);
-
     return (
         <>
             {
-                markers?.map((marker: Tables<'markers'>) => {
+                markers?.map((marker: MarkerModel) => {
                     return (
                         <Marker
                             key={marker.id}
@@ -240,11 +240,13 @@ export const StreetMarkers = () => {
                             icon={marker.marker_type === 'Lampa' ? lampColor(marker) : marker.marker_type === 'Stalp' ? poleColor(marker.lamp_type) : customSensorIcon}
                         >
                             <Popup >
+                                <Typography variant='caption'>{marker?.strazi?.name}</Typography>
                                 <Box sx={{ display: 'flex', justifyContent: 'space-between' }} >
-                                    <Typography>{marker.number}</Typography>
+                                    <Typography sx={{ fontWeight: 'bold' }}>#{marker.number}</Typography>
                                     <IconButton onClick={() => handleOpenDialog(marker)} color='warning'>
                                         <EditIcon />
                                     </IconButton>
+
                                     {
                                         currentUser?.role_type !== 'Visitor' && (
                                             <IconButton color='error' onClick={(e) => {
@@ -255,6 +257,7 @@ export const StreetMarkers = () => {
                                             </IconButton>
                                         )
                                     }
+
                                     {
                                         selectedMarker?.id === marker?.id && (
                                             <Popover
@@ -284,7 +287,6 @@ export const StreetMarkers = () => {
                                     }
 
                                 </Box>
-
 
                             </Popup>
 

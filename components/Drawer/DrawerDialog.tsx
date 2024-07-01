@@ -32,6 +32,7 @@ import { getMarkersAction } from '@/utils/Store/Actions/MarkerActions';
 import useBreakpointDown from '@/utils/Hooks/useBreakpoints';
 import { selectCurrentUser } from '@/utils/Store/Selectors/usersSelectors';
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
+import { MarkerModel } from '@/utils/Store/Models/Markers/MarkerModel';
 
 export const DrawerDialog = () => {
     const [open, setOpen] = useState(true)
@@ -39,7 +40,7 @@ export const DrawerDialog = () => {
     const [openStreet, setOpenStreet] = useState(false)
     const [openMarker, setOpenMarker] = useState(false)
     const [selectedProject, setSelectedProject] = useState<ProjectModel | null>(null)
-    const [selectedMarker, setSelectedMarker] = useState<Tables<'markers'> | null>(null)
+    const [selectedMarker, setSelectedMarker] = useState<MarkerModel | null>(null)
     const [street, setStreet] = useState<StreetModel | null>(null)
     const [expanded, setExpanded] = React.useState<string | false>(false);
     const [search, setSearch] = useState<string>('')
@@ -82,7 +83,7 @@ export const DrawerDialog = () => {
         }
     }, [street])
 
-    const handleOpenMarkerDetails = (marker: Tables<'markers'>) => {
+    const handleOpenMarkerDetails = (marker: MarkerModel) => {
         setOpenMarker(true)
         setSelectedMarker(marker)
     }
@@ -342,7 +343,7 @@ export const DrawerDialog = () => {
                                                                                 </Box>
                                                                             )
                                                                         }
-                                                                        {streetItem?.markersArray?.map((marker: Tables<'markers'>, index: number) => {
+                                                                        {streetItem?.markersArray?.map((marker: MarkerModel, index: number) => {
                                                                             return (
                                                                                 <ListItem key={marker.id}
                                                                                     sx={{ borderBottom: '2px solid #eaeaea' }}

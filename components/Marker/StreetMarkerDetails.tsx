@@ -20,9 +20,10 @@ import { ProjectModel } from '@/utils/Store/Models/Project/ProjectModel'
 import { StreetModel } from '@/utils/Store/Models/Street/StreetModel'
 import { updateOfflineMarker } from '@/utils/Store/Slices/projectSlice'
 import EditIcon from '@mui/icons-material/Edit';
+import { MarkerModel } from '@/utils/Store/Models/Markers/MarkerModel'
 
 export const StreetMarkerDetails: FC<{
-    marker: Tables<'markers'>,
+    marker: MarkerModel,
     setOpen: Function,
 }> = ({ marker, setOpen }) => {
     const [form, setForm] = useState<any>({

@@ -1,5 +1,6 @@
 import supabase from "../../supabase/createClient";
 import { Tables, TablesInsert, TablesUpdate } from "../Models/Database";
+import { MarkerModel } from "../Models/Markers/MarkerModel";
 import { ProjectModel } from "../Models/Project/ProjectModel";
 import { addAppNotification } from "../Slices/appNotificationSlice";
 import { setTooltips } from "../Slices/miscSlice";
@@ -47,13 +48,16 @@ export const getMarkersAction = (street_id?: string, project?: ProjectModel) => 
                     numberOfPages = Math.ceil(project.markers[0].count / 1000)
                 }
 
-                let totalMarkers: Tables<'markers'>[] = []
+                let totalMarkers: MarkerModel[] = []
                 for (let i = 1; i <= numberOfPages; i++) {
                     let offset = (i - 1) * 1000;
 
                     let { data: markers, error } = await supabase
                         .from('markers')
-                        .select('*')
+                        .select(`
+                            *,
+                            strazi (name)
+                        `)
                         .eq('proiect_id', project.id)
                         .range(offset, offset + 999);
 
@@ -148,7 +152,7 @@ export const updateMarkerAction = (marker: TablesUpdate<'markers'>) => {
     };
 };
 
-export const deleteMarkerAction = (marker: Tables<'markers'>) => {
+export const deleteMarkerAction = (marker: MarkerModel) => {
     return async (dispatch: any, getState: () => any) => {
         try {
             const { error } = await supabase
@@ -171,7 +175,7 @@ export const deleteMarkerAction = (marker: Tables<'markers'>) => {
     };
 }
 
-export const addOfflineMarkers = (markers: Tables<'markers'>[]) => {
+export const addOfflineMarkers = (markers: MarkerModel[]) => {
     return async (dispatch: any, getState: () => any) => {
         try {
 

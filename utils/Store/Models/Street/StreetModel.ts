@@ -1,4 +1,5 @@
 import { Enums, Tables } from "../Database";
+import { MarkerModel } from "../Markers/MarkerModel";
 
 export interface StreetModel {
     created_at: string,
@@ -7,7 +8,7 @@ export interface StreetModel {
     network_type: Enums<'network_type'>,
     proiect_id: string,
     road_type: Enums<'road_type'>,
-    markersArray: Tables<'markers'>[],
+    markersArray: MarkerModel[],
     markers: [{
         count: number
     }]
