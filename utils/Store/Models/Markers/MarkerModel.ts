@@ -22,5 +22,6 @@ export interface MarkerModel {
     series_number: string | null
     street_id: string
     user_id: string | null,
-    strazi: StreetModel | any
+    strazi: StreetModel | any,
+    is_on: Enums<'marker_is_functional_type'> | null
 }

@@ -1,4 +1,4 @@
-import { Tables, TablesUpdate } from '@/utils/Store/Models/Database'
+import { TablesUpdate } from '@/utils/Store/Models/Database'
 import { lampItems } from '@/utils/Store/items/lampItems'
 import { poleTypeItems } from '@/utils/Store/items/poleTypeItems'
 import { getImage } from '@/utils/supabase/getImage'
@@ -36,7 +36,8 @@ export const StreetMarkerDetails: FC<{
         longitude: marker.longitude,
         power_type: marker.power_type,
         hub_c: marker.hub_c,
-        series_number: marker.series_number
+        series_number: marker.series_number,
+        is_on: marker.is_on
     })
 
     const [url, setUrl] = useState<string>('')
@@ -132,7 +133,8 @@ export const StreetMarkerDetails: FC<{
                     marker_type: marker.marker_type,
                     number: marker.number,
                     street_id: marker.street_id,
-                    proiect_id: marker.proiect_id
+                    proiect_id: marker.proiect_id,
+                    is_on: marker.is_on
                 }
 
                 street!.markersArray[markerIndex] = markerData
@@ -191,17 +193,28 @@ export const StreetMarkerDetails: FC<{
                         width: '100%'
                     }}>
                         <Typography textAlign={'center'} fontWeight={600}>{marker?.marker_type === 'Senzor' ? marker?.sensor_type : marker.marker_type} #{marker?.number}</Typography>
-                        <FormControlLabel
-                            control={<IOSSwitch sx={{ m: 1 }} onChange={(e) => setForm({ ...form, marker_status: e.target.checked ? 'Ok' : 'Bad' })} checked={form.marker_status === "Ok" ? true : false} />}
-                            label="Status"
-                        />
+
                         <IconButton onClick={() => setOpen(false)}>
                             <Close />
                         </IconButton>
                     </DialogTitle>
 
+
+
                 </Box>
                 <Grid container spacing={2}>
+                    <Grid item xs={12} sm={6} sx={{ display: 'flex', gap: '10px' }}>
+                        <FormControlLabel
+                            control={<IOSSwitch sx={{ m: 1 }} onChange={(e) => setForm({ ...form, marker_status: e.target.checked ? 'Ok' : 'Bad' })} checked={form.marker_status === "Ok" ? true : false} />}
+                            label="Status lipsa comunicare e-save"
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={6} sx={{ display: 'flex', gap: '10px' }}>
+                        <FormControlLabel
+                            control={<IOSSwitch sx={{ m: 1, }} onChange={(e) => setForm({ ...form, is_on: e.target.checked ? 'Functional' : 'Nefunctional' })} checked={form.is_on === "Functional" ? true : false} />}
+                            label="Functional"
+                        />
+                    </Grid>
                     <Grid item xs={12} sm={6} sx={{ display: 'flex', gap: '10px' }}>
                         <TextField
                             fullWidth

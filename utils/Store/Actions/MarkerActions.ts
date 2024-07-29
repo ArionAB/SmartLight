@@ -1,5 +1,5 @@
 import supabase from "../../supabase/createClient";
-import { Tables, TablesInsert, TablesUpdate } from "../Models/Database";
+import { TablesInsert, TablesUpdate } from "../Models/Database";
 import { MarkerModel } from "../Models/Markers/MarkerModel";
 import { ProjectModel } from "../Models/Project/ProjectModel";
 import { addAppNotification } from "../Slices/appNotificationSlice";

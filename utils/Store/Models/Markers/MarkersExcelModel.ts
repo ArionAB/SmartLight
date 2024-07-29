@@ -9,5 +9,5 @@ export interface MarkersExcelModel {
     observatii: string | null,
     putere: string | null,
     hub_c: string,
-    'serie controller': string | null
+    'serie controller': string | null,
 }

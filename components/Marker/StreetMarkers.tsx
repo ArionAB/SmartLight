@@ -1,4 +1,4 @@
-import { Enums, Tables } from '@/utils/Store/Models/Database'
+import { Enums } from '@/utils/Store/Models/Database'
 import { selectFocusedProject } from '@/utils/Store/Selectors/projectSelectors'
 import { useAppDispatch, useAppSelector } from '@/utils/Store/hooks'
 import { Box, Button, Dialog, IconButton, Popover, Typography } from '@mui/material'
@@ -139,9 +139,20 @@ export const StreetMarkers = () => {
             <rect x="4" y="4" width="16" height="16" rx="2" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
     )
+    const notFunctionalHtml = renderToStaticMarkup(
+        <svg fill="gray" width={circleSize} height={circleSize} viewBox="0 0 32 32" style={{ border: "#000 2px solid", borderRadius: "50%" }}>
+            <circle cx="16" cy="16" r="16" />
+        </svg>
+    )
 
     const customSensorIcon = divIcon({
         html: sensorHTML,
+        iconSize: [0, 0],
+
+    })
+
+    const notFunctionalIcon = divIcon({
+        html: notFunctionalHtml,
         iconSize: [0, 0],
 
     })
@@ -237,7 +248,7 @@ export const StreetMarkers = () => {
                             key={marker.id}
                             position={[Number(marker.latitude), Number(marker.longitude)]}
                             //@ts-ignore
-                            icon={marker.marker_type === 'Lampa' ? lampColor(marker) : marker.marker_type === 'Stalp' ? poleColor(marker.lamp_type) : customSensorIcon}
+                            icon={marker.is_on === 'Nefunctional' ? notFunctionalIcon : marker.marker_type === 'Lampa' ? lampColor(marker) : marker.marker_type === 'Stalp' ? poleColor(marker.lamp_type) : customSensorIcon}
                         >
                             <Popup >
                                 <Typography variant='caption'>{marker?.strazi?.name}</Typography>

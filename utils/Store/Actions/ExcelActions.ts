@@ -1,7 +1,6 @@
 import supabase from "@/utils/supabase/createClient";
 import { ProjectModel } from "../Models/Project/ProjectModel";
 import { addAppNotification } from "../Slices/appNotificationSlice";
-import { Tables } from "../Models/Database";
 import { MarkerModel } from "../Models/Markers/MarkerModel";
 
 export const exportProjectAsExcel = (project: ProjectModel) => {

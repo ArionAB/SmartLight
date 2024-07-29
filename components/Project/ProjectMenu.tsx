@@ -122,7 +122,7 @@ const ProjectMenu: FC<{
                     observatii: '',
                     putere: '',
                     hub_c: '',
-                    'serie controller': ''
+                    'serie controller': '',
                 };
                 let street = project.strazi.find((strada) => strada.id === marker.street_id);
                 data.strada = street!.name;
