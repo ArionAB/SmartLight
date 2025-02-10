@@ -134,7 +134,7 @@ const FileUploadComponent: FC<FileUploadProps> = ({
                     elevation={isDragActive ? 15 : 5}
                     onClick={(e: any) => openExplorerDialog(e)}
                 >
-                    <input {...getInputProps()} />
+                    <input {...getInputProps()} capture="environment" />
                     {!hasFiles && (
                         <Grid
                             container
