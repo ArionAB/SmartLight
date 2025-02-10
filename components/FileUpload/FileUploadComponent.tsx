@@ -83,7 +83,7 @@ const FileUploadComponent: FC<FileUploadProps> = ({
         noClick: true,
         maxFiles: fileLimit,
         //@ts-ignore
-        accept: acceptedFileformats,
+        accept: acceptedFileformats?.length ? acceptedFileformats.join(",") : "image/*"
     });
     const hasFiles = files.length > 0;
 
