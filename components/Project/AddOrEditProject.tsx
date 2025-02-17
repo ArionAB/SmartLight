@@ -15,6 +15,7 @@ import { getUsersAction } from '@/utils/Store/Actions/UsersActions';
 import { selectAssignedUsers, selectUsers } from '@/utils/Store/Selectors/usersSelectors';
 import { ChipsArray } from '../Material/ChipArray';
 import { assignUsersToProjectAction, getAssignedUsersAction } from '@/utils/Store/Actions/PermissionActions';
+import { counties_list } from "@/utils/counties";
 
 type UserChip = {
     id: string,
@@ -84,16 +85,23 @@ export const AddOrEditProject: FC<{
 
     }
     const getCounties = async () => {
-        await fetch(`https://roloca.coldfuse.io/judete`, { cache: 'force-cache' }).then((res) => {
-            res.json().then((data) => {
-                setCounties(data)
-                if (project) {
-                    const county: CountyModel = data.find((item: CountyModel) => item.auto === project?.county)
-                    setSelectedCounty({ nume: county.nume, auto: county.auto })
-                    setSelectedCity({ auto: project.city, lat: project.lat!, lng: project?.long!, nume: project.city, id: 0 })
-                }
-            })
-        })
+        //serverul de la roloca este picat. Momentan fetchuim local
+        // await fetch(`https://roloca.coldfuse.io/judete`, { cache: 'force-cache' }).then((res) => {
+        //     res.json().then((data) => {
+        //         setCounties(data)
+        //         if (project) {
+        //             const county: CountyModel = data.find((item: CountyModel) => item.auto === project?.county)
+        //             setSelectedCounty({ nume: county.nume, auto: county.auto })
+        //             setSelectedCity({ auto: project.city, lat: project.lat!, lng: project?.long!, nume: project.city, id: 0 })
+        //         }
+        //     })
+        // })
+        setCounties(counties_list)
+        if (project) {
+            const county: CountyModel | undefined = counties_list?.find((item: CountyModel) => item.auto === project?.county)
+            setSelectedCounty({ nume: county?.nume ?? '', auto: county?.auto ?? '' })
+            setSelectedCity({ auto: project.city, lat: project.lat!, lng: project?.long!, nume: project.city, id: 0 })
+        }
 
     }
     useEffect(() => {
